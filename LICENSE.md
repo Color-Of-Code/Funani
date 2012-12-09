@@ -1,4 +1,4 @@
-Copyright (c) 2010-2013, Jaap de Haan
+Copyright (c) 2008-2013, Jaap de Haan <jaap.dehaan@color-of-code.de>
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
