@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright (c) 2008-2010, Jaap de Haan <jaap.dehaan@color-of-code.de>
+ * Copyright (c) 2008-2013, Jaap de Haan <jaap.dehaan@color-of-code.de>
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -28,46 +28,46 @@
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.IO;
-using System.Security.Cryptography;
-
 namespace Funani.FileStorage.Utils
 {
-    class ComputeHash
-    {
-        public static String SHA1(FileInfo file)
-        {
-            return Execute(file, new SHA1CryptoServiceProvider());
-        }
+	using System;
+	using System.Collections.Generic;
+	using System.Linq;
+	using System.Text;
+	using System.IO;
+	using System.Security.Cryptography;
 
-        public static String SHA256(FileInfo file)
-        {
-            return Execute(file, new SHA256Managed());
-        }
+	class ComputeHash
+	{
+		public static String SHA1(FileInfo file)
+		{
+			return Execute(file, new SHA1CryptoServiceProvider());
+		}
 
-        public static String MD5(FileInfo file)
-        {
-            return Execute(file, new MD5CryptoServiceProvider());
-        }
+		public static String SHA256(FileInfo file)
+		{
+			return Execute(file, new SHA256Managed());
+		}
 
-        private static String Execute(FileInfo file, HashAlgorithm hashAlgorithm)
-        {
-            String hashCode;
-            using (var fileStream = new FileStream(file.FullName, FileMode.Open, FileAccess.Read))
-            {
-                hashAlgorithm.ComputeHash(fileStream);
-                StringBuilder buff = new StringBuilder();
-                foreach (byte hashByte in hashAlgorithm.Hash)
-                {
-                    buff.Append(String.Format("{0:X2}", hashByte));
-                }
-                hashCode = buff.ToString();
-            }
-            return hashCode;
-        }
-    }
+		public static String MD5(FileInfo file)
+		{
+			return Execute(file, new MD5CryptoServiceProvider());
+		}
+
+		private static String Execute(FileInfo file, HashAlgorithm hashAlgorithm)
+		{
+			String hashCode;
+			using (var fileStream = new FileStream(file.FullName, FileMode.Open, FileAccess.Read))
+			{
+				hashAlgorithm.ComputeHash(fileStream);
+				StringBuilder buff = new StringBuilder();
+				foreach (byte hashByte in hashAlgorithm.Hash)
+				{
+					buff.Append(String.Format("{0:X2}", hashByte));
+				}
+				hashCode = buff.ToString();
+			}
+			return hashCode;
+		}
+	}
 }

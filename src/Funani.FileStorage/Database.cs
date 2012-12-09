@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright (c) 2008-2010, Jaap de Haan <jaap.dehaan@color-of-code.de>
+ * Copyright (c) 2008-2013, Jaap de Haan <jaap.dehaan@color-of-code.de>
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -135,26 +135,36 @@ namespace Funani.FileStorage
 		{
 			get
 			{
-				return BaseDirectory + @"\Data\";
+				return Path.Combine(BaseDirectory, Data);
 			}
 		}
 
 		private String GetDataPath(String hash)
 		{
-			return DataPath + hash.Substring(0, 3) + @"\" + hash.Substring(3);
+			return Path.Combine(DataPath, hash.Substring(0, 2), hash.Substring(2, 2), hash.Substring(4));
 		}
 
 		private void CreateDataPaths()
 		{
 			string baseDir = DataPath;
-			Directory.CreateDirectory(baseDir);
-			for (int i = 0; i < 4096; i++)
+			CreateDirectory(baseDir);
+			for (int i = 0; i < 256; i++)
 			{
-				String dirName = baseDir + @"\" + i.ToString("X03");
-				DirectoryInfo dir = new DirectoryInfo(dirName);
-				dir.Create();
-				dir.Attributes = FileAttributes.Directory | FileAttributes.Hidden;
+				String dirName = Path.Combine(baseDir, i.ToString("X02"));
+				CreateDirectory(dirName);
+				for (int j = 0; j < 256; j++)
+				{
+					String dirName2 = Path.Combine(dirName, j.ToString("X02"));
+					CreateDirectory(dirName2);
+				}
 			}
+		}
+
+		private void CreateDirectory(String dirName)
+		{
+			DirectoryInfo dir = new DirectoryInfo(dirName);
+			dir.Create();
+			dir.Attributes = FileAttributes.Directory | FileAttributes.Hidden;
 		}
 
 		#endregion
