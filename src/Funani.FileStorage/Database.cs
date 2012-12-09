@@ -135,7 +135,7 @@ namespace Funani.FileStorage
 		{
 			get
 			{
-				return Path.Combine(BaseDirectory, Data);
+				return Path.Combine(BaseDirectory, "Data");
 			}
 		}
 
