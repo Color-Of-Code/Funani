@@ -39,9 +39,9 @@ namespace Funani.FileStorage
 
 	using Funani.Api;
 
-	public class Database : IFileStorage
+	public class FileDatabase : IFileStorage
 	{
-		public Database()
+        public FileDatabase()
 		{
 		}
 
@@ -120,12 +120,15 @@ namespace Funani.FileStorage
 			}
 		}
 
-		private void Create()
-		{
-			if (Directory.GetFileSystemEntries(BaseDirectory).Count() != 0)
-				throw new Exception("Directory is not empty!");
+        private static bool IsDirectoryEmpty(string path)
+        {
+            return !Directory.EnumerateFileSystemEntries(path).Any();
+        }
 
-			CreateDataPaths();
+        private void Create()
+		{
+            if (IsDirectoryEmpty(BaseDirectory))
+    			CreateDataPaths();
 		}
 
 		private string BaseDirectory

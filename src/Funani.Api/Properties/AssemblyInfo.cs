@@ -12,9 +12,9 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("Funani.Api")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
+[assembly: AssemblyCompany("ColorOfCode")]
 [assembly: AssemblyProduct("Funani.Api")]
-[assembly: AssemblyCopyright("Copyright 2012")]
+[assembly: AssemblyCopyright("Copyright © Jaap de Haan - Color of Code")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

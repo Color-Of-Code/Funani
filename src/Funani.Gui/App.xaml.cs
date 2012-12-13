@@ -27,34 +27,19 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
-
-namespace Funani.Api
+namespace Funani.Gui
 {
     using System;
-    using System.IO;
+    using System.Collections.Generic;
+    using System.Configuration;
+    using System.Data;
+    using System.Linq;
+    using System.Windows;
 
     /// <summary>
-    /// Description of IFileStorage.
+    /// Interaction logic for App.xaml
     /// </summary>
-    public interface IFileStorage
+    public partial class App : Application
     {
-        /// <summary>
-        /// Initialize and start the file storage service
-        /// </summary>
-        /// <param name="baseDirectory"></param>
-        void Start(String baseDirectory);
-
-        /// <summary>
-        /// Stop the file storage service
-        /// </summary>
-        void Stop();
-
-        Boolean FileExists(string hash);
-
-        void DeleteFile(string hash);
-
-        String StoreFile(FileInfo file);
-
-        byte[] LoadFile(string hash);
     }
 }

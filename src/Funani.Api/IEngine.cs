@@ -31,30 +31,21 @@
 namespace Funani.Api
 {
     using System;
-    using System.IO;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Text;
 
-    /// <summary>
-    /// Description of IFileStorage.
-    /// </summary>
-    public interface IFileStorage
+    public interface IEngine
     {
         /// <summary>
-        /// Initialize and start the file storage service
+        /// Opens a funani database initializing the path if it is initially empty
         /// </summary>
-        /// <param name="baseDirectory"></param>
-        void Start(String baseDirectory);
+        /// <param name="path">Path to the directory containing the funani data</param>
+        void OpenDatabase(String path);
 
         /// <summary>
-        /// Stop the file storage service
+        /// Closes the funani database and flushes any pending operation to disk
         /// </summary>
-        void Stop();
-
-        Boolean FileExists(string hash);
-
-        void DeleteFile(string hash);
-
-        String StoreFile(FileInfo file);
-
-        byte[] LoadFile(string hash);
+        void CloseDatabase();
     }
 }

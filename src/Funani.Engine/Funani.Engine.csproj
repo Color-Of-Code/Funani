@@ -3,19 +3,15 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>9.0.21022</ProductVersion>
+    <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{AE28652D-3B84-4477-A119-6109619F6CD2}</ProjectGuid>
+    <ProjectGuid>{5E00AF3C-5557-4619-80F0-83BCF42F1AD2}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Funani.FileStorage</RootNamespace>
-    <AssemblyName>Funani.FileStorage</AssemblyName>
+    <RootNamespace>Funani.Engine</RootNamespace>
+    <AssemblyName>Funani.Engine</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <FileUpgradeFlags>
-    </FileUpgradeFlags>
-    <OldToolsVersion>3.5</OldToolsVersion>
-    <UpgradeBackupLocation />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -36,28 +32,29 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
-    <Reference Include="System.Core">
-      <RequiredTargetFramework>3.5</RequiredTargetFramework>
-    </Reference>
-    <Reference Include="System.Drawing" />
-    <Reference Include="System.Xml.Linq">
-      <RequiredTargetFramework>3.5</RequiredTargetFramework>
-    </Reference>
-    <Reference Include="System.Data.DataSetExtensions">
-      <RequiredTargetFramework>3.5</RequiredTargetFramework>
-    </Reference>
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ComputeHash.cs" />
-    <Compile Include="FileDatabase.cs" />
+    <Compile Include="FunaniEngine.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Funani.Api\Funani.Api.csproj">
       <Project>{1FA8961F-CA82-41D2-856A-2F3732BF2E64}</Project>
       <Name>Funani.Api</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Funani.FileStorage\Funani.FileStorage.csproj">
+      <Project>{AE28652D-3B84-4477-A119-6109619F6CD2}</Project>
+      <Name>Funani.FileStorage</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Funani.Metadata\Funani.Metadata.csproj">
+      <Project>{06EDE14C-9A11-4ECB-80EF-AD14AF61EAFA}</Project>
+      <Name>Funani.Metadata</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

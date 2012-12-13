@@ -28,33 +28,61 @@
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace Funani.Api
+namespace Funani.Metadata
 {
-    using System;
-    using System.IO;
+	using System;
+	using System.Collections.Generic;
+	using System.Linq;
+	using System.Text;
+	using System.Text.RegularExpressions;
+	using System.Reflection;
+	using System.Threading;
+	using System.Diagnostics;
 
-    /// <summary>
-    /// Description of IFileStorage.
-    /// </summary>
-    public interface IFileStorage
-    {
-        /// <summary>
-        /// Initialize and start the file storage service
-        /// </summary>
-        /// <param name="baseDirectory"></param>
-        void Start(String baseDirectory);
+	using MongoDB.Driver;
 
-        /// <summary>
-        /// Stop the file storage service
-        /// </summary>
-        void Stop();
+	public class MetadataDatabase
+	{
+		public MongoDatabase Funani
+		{ get { return _funani; } }
 
-        Boolean FileExists(string hash);
+		public void Start(String connectionString, String pathToMongod, String path)
+		{
+			Stop();
 
-        void DeleteFile(string hash);
+			_config = path;
+			ProcessStartInfo psi = new ProcessStartInfo();
+			psi.FileName = pathToMongod;
+			psi.Arguments = String.Format("--dbpath \"{0}\" --port {1}",
+			                              _config, 27017);
+			_process = Process.Start(psi);
+			
+			_mongoClient = new MongoClient(connectionString);
+			_mongoServer = _mongoClient.GetServer();
+			_funani = _mongoServer.GetDatabase("Funani");
+		}
 
-        String StoreFile(FileInfo file);
+		public void Stop()
+		{
+			if (_process != null)
+			{
+				// according to the documentation there is no need to call disconnect
+				_mongoServer = null;
+				_mongoClient = null;
 
-        byte[] LoadFile(string hash);
-    }
+				_process.CloseMainWindow();
+				_process.WaitForExit();
+				_process = null;
+			}
+		}
+
+		#region Private
+		private Process _process = null;
+		private String _config;
+		private MongoClient _mongoClient = null;
+		private MongoServer _mongoServer = null;
+		private MongoDatabase _funani = null;
+		#endregion
+
+	}
 }

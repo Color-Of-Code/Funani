@@ -28,61 +28,43 @@
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace Funani.Metadata
+namespace Funani.Engine
 {
-	using System;
-	using System.Collections.Generic;
-	using System.Linq;
-	using System.Text;
-	using System.Text.RegularExpressions;
-	using System.Reflection;
-	using System.Threading;
-	using System.Diagnostics;
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Text;
 
-	using MongoDB.Driver;
+    using Funani.Api;
+    using Funani.FileStorage;
+    using Funani.Metadata;
 
-	public class Database
-	{
-		public MongoDatabase Funani
-		{ get { return _funani; } }
+    public class FunaniEngine : IEngine
+    {
+        public FunaniEngine()
+        {
+        }
 
-		public void Start(String connectionString, String pathToMongod, String path)
-		{
-			Stop();
+        private IFileStorage _fileStorage;
+        private Metadata.MetadataDatabase _metadata;
 
-			_config = path;
-			ProcessStartInfo psi = new ProcessStartInfo();
-			psi.FileName = pathToMongod;
-			psi.Arguments = String.Format("--dbpath \"{0}\" --port {1}",
-			                              _config, 27017);
-			_process = Process.Start(psi);
-			
-			_mongoClient = new MongoClient(connectionString);
-			_mongoServer = _mongoClient.GetServer();
-			_funani = _mongoServer.GetDatabase("Funani");
-		}
+        public void CreateDatabase(string path)
+        {
+        }
 
-		public void Stop()
-		{
-			if (_process != null)
-			{
-				// according to the documentation there is no need to call disconnect
-				_mongoServer = null;
-				_mongoClient = null;
+        public void OpenDatabase(string path)
+        {
+            // create the file database
+            _fileStorage = new FileDatabase();
+            _fileStorage.Start(path);
 
-				_process.CloseMainWindow();
-				_process.WaitForExit();
-				_process = null;
-			}
-		}
+            // create the mongodb
+            _metadata = new MetadataDatabase();
+        }
 
-		#region Private
-		private Process _process = null;
-		private String _config;
-		private MongoClient _mongoClient = null;
-		private MongoServer _mongoServer = null;
-		private MongoDatabase _funani = null;
-		#endregion
-
-	}
+        public void CloseDatabase()
+        {
+            _fileStorage.Stop();
+        }
+    }
 }
