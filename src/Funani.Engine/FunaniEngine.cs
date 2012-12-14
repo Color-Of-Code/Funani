@@ -74,13 +74,20 @@ namespace Funani.Engine
         public void CloseDatabase()
         {
             _fileStorage.Stop();
+            _metadata.Stop();
+            _fileStorage = null;
+            _metadata = null;
         }
-
 
         public FileInformation AddFile(FileInfo file)
         {
             var hash = _fileStorage.StoreFile(file);
             return _metadata.Retrieve(hash, file);
+        }
+        
+        public byte[] GetFileData(String hash)
+        {
+        	return _fileStorage.LoadFile(hash);
         }
     }
 }

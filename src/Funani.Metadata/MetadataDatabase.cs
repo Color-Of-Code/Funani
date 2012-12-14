@@ -58,7 +58,7 @@ namespace Funani.Metadata
         public FileInformation Retrieve(String hash, FileInfo file)
         {
             var files = Funani.GetCollection("fileinfo");
-            var info = files.FindOneAs<FileInformation>(Query.EQ("_id", hash));
+            var info = files.FindOneByIdAs<FileInformation>(hash);
             if (info == null)
             {
                 info = new FileInformation(file);

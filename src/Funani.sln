@@ -1,15 +1,18 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Funani.FileStorage", "Funani.FileStorage\Funani.FileStorage.csproj", "{AE28652D-3B84-4477-A119-6109619F6CD2}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Funani.Api", "Funani.Api\Funani.Api.csproj", "{1FA8961F-CA82-41D2-856A-2F3732BF2E64}"
-EndProject
+# SharpDevelop 4.2.2.8818
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "3rdparty", "3rdparty", "{15E73228-F271-4960-AE32-00B16366DD40}"
+	ProjectSection(SolutionItems) = postProject
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MongoDB.Driver", "mongo-csharp-driver\MongoDB.Driver\MongoDB.Driver.csproj", "{AE5166CD-76B0-4911-BD80-CED9521F37A1}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MongoDB.Bson", "mongo-csharp-driver\MongoDB.Bson\MongoDB.Bson.csproj", "{0E9A3A2A-49CD-4F6C-847C-DC79B4B65CE6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Funani.FileStorage", "Funani.FileStorage\Funani.FileStorage.csproj", "{AE28652D-3B84-4477-A119-6109619F6CD2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Funani.Api", "Funani.Api\Funani.Api.csproj", "{1FA8961F-CA82-41D2-856A-2F3732BF2E64}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Funani.Metadata", "Funani.Metadata\Funani.Metadata.csproj", "{06EDE14C-9A11-4ECB-80EF-AD14AF61EAFA}"
 EndProject

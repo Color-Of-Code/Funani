@@ -65,5 +65,12 @@ namespace Funani.Api
         /// <returns></returns>
         FileInformation AddFile(FileInfo file);
 
+        /// <summary>
+        /// Returns the file data of the file with the given hash
+        /// </summary>
+        /// <param name="hash">SHA1 hash of the file to retrieve</param>
+        /// <returns>The file contents as a byte array</returns>
+        byte[] GetFileData(String hash);
+
     }
 }

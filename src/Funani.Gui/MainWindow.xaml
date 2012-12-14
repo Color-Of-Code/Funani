@@ -1,9 +1,26 @@
 ﻿<Window x:Class="Funani.Gui.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:funani="clr-namespace:Funani.Gui.Controls"
         Title="Funani"
         Closing="Window_Closing"
-        Height="350" Width="525">
+        Height="640" Width="1024">
     <Grid>
+    	<TabControl>
+			<TabItem Header="File explorer">
+				<Grid>
+					<Grid.ColumnDefinitions>
+						<ColumnDefinition Width="1*"></ColumnDefinition>
+						<ColumnDefinition Width="10"></ColumnDefinition>
+						<ColumnDefinition Width="2*"></ColumnDefinition>
+					</Grid.ColumnDefinitions>
+	    			<funani:DirectoryExplorer Grid.Column="0">
+					</funani:DirectoryExplorer>
+					<GridSplitter Grid.Column="1"></GridSplitter>
+	    			<funani:FileView>
+					</funani:FileView>
+				</Grid>
+	    	</TabItem>
+    	</TabControl>
     </Grid>
 </Window>
