@@ -2,8 +2,9 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:funani="clr-namespace:Funani.Gui.Controls"
-        Title="Funani"
+        Title="Funani - manage big amount of files easily"
         Closing="Window_Closing"
+        Icon="pack://application:,,,/Images/logo2.png"
         Height="640" Width="1024">
     <Grid>
     	<TabControl>
@@ -14,10 +15,10 @@
 						<ColumnDefinition Width="10"></ColumnDefinition>
 						<ColumnDefinition Width="2*"></ColumnDefinition>
 					</Grid.ColumnDefinitions>
-	    			<funani:DirectoryExplorer Grid.Column="0">
+	    			<funani:DirectoryExplorer Grid.Column="0" x:Name="directoryExplorer">
 					</funani:DirectoryExplorer>
-					<GridSplitter Grid.Column="1"></GridSplitter>
-	    			<funani:FileView>
+					<GridSplitter Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"></GridSplitter>
+	    			<funani:FileView Grid.Column="2" x:Name="fileExplorer">
 					</funani:FileView>
 				</Grid>
 	    	</TabItem>

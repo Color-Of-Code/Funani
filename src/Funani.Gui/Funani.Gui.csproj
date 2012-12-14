@@ -98,9 +98,16 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <Resource Include="..\..\images\logo1.png">
+      <Link>Images\logo1.png</Link>
+    </Resource>
+    <Resource Include="..\..\images\logo2.png">
+      <Link>Images\logo2.png</Link>
+    </Resource>
     <None Include="app.config" />
     <Resource Include="Images\diskdrive.png" />
     <Resource Include="Images\folder.png" />
+    <SplashScreen Include="Images\funani.png" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
