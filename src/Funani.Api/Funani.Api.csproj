@@ -40,8 +40,10 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Utils\ComputeHash.cs" />
     <Compile Include="IEngine.cs" />
     <Compile Include="IFileStorage.cs" />
+    <Compile Include="Metadata\FileInformation.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.Targets" />

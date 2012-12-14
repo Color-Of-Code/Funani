@@ -28,32 +28,46 @@
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace Funani.Api
+namespace Funani.Api.Utils
 {
-    using System;
-    using System.IO;
+	using System;
+	using System.Collections.Generic;
+	using System.Linq;
+	using System.Text;
+	using System.IO;
+	using System.Security.Cryptography;
 
-    /// <summary>
-    /// Description of IFileStorage.
-    /// </summary>
-    public interface IFileStorage
-    {
-        /// <summary>
-        /// Initialize and start the file storage service
-        /// </summary>
-        void Start();
+	public class ComputeHash
+	{
+		public static String SHA1(FileInfo file)
+		{
+			return Execute(file, new SHA1CryptoServiceProvider());
+		}
 
-        /// <summary>
-        /// Stop the file storage service
-        /// </summary>
-        void Stop();
+		public static String SHA256(FileInfo file)
+		{
+			return Execute(file, new SHA256Managed());
+		}
 
-        Boolean FileExists(string hash);
+		public static String MD5(FileInfo file)
+		{
+			return Execute(file, new MD5CryptoServiceProvider());
+		}
 
-        void DeleteFile(string hash);
-
-        String StoreFile(FileInfo file);
-
-        byte[] LoadFile(string hash);
-    }
+		private static String Execute(FileInfo file, HashAlgorithm hashAlgorithm)
+		{
+			String hashCode;
+			using (var fileStream = new FileStream(file.FullName, FileMode.Open, FileAccess.Read))
+			{
+				hashAlgorithm.ComputeHash(fileStream);
+				StringBuilder buff = new StringBuilder();
+				foreach (byte hashByte in hashAlgorithm.Hash)
+				{
+					buff.Append(String.Format("{0:X2}", hashByte));
+				}
+				hashCode = buff.ToString();
+			}
+			return hashCode;
+		}
+	}
 }

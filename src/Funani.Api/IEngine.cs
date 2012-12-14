@@ -32,20 +32,38 @@ namespace Funani.Api
 {
     using System;
     using System.Collections.Generic;
+    using System.IO;
     using System.Linq;
     using System.Text;
+
+    using Funani.Api.Metadata;
 
     public interface IEngine
     {
         /// <summary>
+        /// Allows to check if the provided path points to a valid funani db structure
+        /// </summary>
+        /// <param name="path"></param>
+        /// <returns></returns>
+        Boolean IsValidDatabase(String path);
+
+        /// <summary>
         /// Opens a funani database initializing the path if it is initially empty
         /// </summary>
         /// <param name="path">Path to the directory containing the funani data</param>
-        void OpenDatabase(String path);
+        void OpenDatabase(String pathToMongod, String path);
 
         /// <summary>
         /// Closes the funani database and flushes any pending operation to disk
         /// </summary>
         void CloseDatabase();
+
+        /// <summary>
+        /// Add a file to the database (if not already present) and get its info back
+        /// </summary>
+        /// <param name="file"></param>
+        /// <returns></returns>
+        FileInformation AddFile(FileInfo file);
+
     }
 }

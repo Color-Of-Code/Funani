@@ -38,16 +38,17 @@ namespace Funani.FileStorage
 	using System.Text;
 
 	using Funani.Api;
+    using Funani.Api.Utils;
 
 	public class FileDatabase : IFileStorage
 	{
-        public FileDatabase()
+        public FileDatabase(String baseDirectory)
 		{
-		}
+            BaseDirectory = baseDirectory;
+        }
 
-		public void Start(String baseDirectory)
+		public void Start()
 		{
-			BaseDirectory = baseDirectory;
 			Create(); // create if empty
 			Connect();
 		}
@@ -59,7 +60,7 @@ namespace Funani.FileStorage
 
 		public String StoreFile(FileInfo file)
 		{
-			string hash = Utils.ComputeHash.SHA1(file);
+			string hash = ComputeHash.SHA1(file);
 			if (FileExists(hash))
 				return hash;
 
@@ -67,7 +68,7 @@ namespace Funani.FileStorage
 			File.Copy(file.FullName, destination);
 			
 			// verify the hash, paranoid, but would detect hardware issues
-			string hashNew = Utils.ComputeHash.SHA1(new FileInfo(destination));
+			string hashNew = ComputeHash.SHA1(new FileInfo(destination));
 			if (hash != hashNew)
 			{
 				File.Delete(destination);
@@ -138,7 +139,7 @@ namespace Funani.FileStorage
 		{
 			get
 			{
-				return Path.Combine(BaseDirectory, "Data");
+				return Path.Combine(BaseDirectory, "data");
 			}
 		}
 

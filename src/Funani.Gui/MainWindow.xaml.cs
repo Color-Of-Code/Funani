@@ -62,7 +62,10 @@ namespace Funani.Gui
             EnsureMongodbPathIsValid();
             EnsureFunanidbPathIsValid();
 
-            _funani.OpenDatabase(Properties.Settings.Default.LastFunaniDatabase);
+            _funani.OpenDatabase(Properties.Settings.Default.MongodbPath,
+                Properties.Settings.Default.LastFunaniDatabase);
+
+            //var fileinfo = _funani.AddFile(new FileInfo(@"C:\Windows\Prairie Wind.bmp"));
         }
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
@@ -70,20 +73,10 @@ namespace Funani.Gui
             _funani.CloseDatabase();
         }
 
-        private static Boolean IsFunanidbPathValid(String path)
-        {
-            if (String.IsNullOrWhiteSpace(path) ||
-                !Directory.Exists(path) ||
-                !Directory.Exists(Path.Combine(path, "mongodb")) ||
-                !Directory.Exists(Path.Combine(path, "data")))
-                return false;
-            return true;
-        }
-
         private void EnsureFunanidbPathIsValid()
         {
             String funanidbPath = Properties.Settings.Default.LastFunaniDatabase;
-            if (!IsFunanidbPathValid(funanidbPath))
+            if (!_funani.IsValidDatabase(funanidbPath))
             {
                 var ofd = new SWF.FolderBrowserDialog();
                 ofd.Description = "Browse to a valid Funani DB";
@@ -91,12 +84,9 @@ namespace Funani.Gui
                 if (ofd.ShowDialog() == SWF.DialogResult.OK)
                 {
                     var di = new DirectoryInfo(ofd.SelectedPath);
-                    if (IsFunanidbPathValid(di.FullName))
-                    {
-                        Properties.Settings.Default.LastFunaniDatabase = di.FullName;
-                        Properties.Settings.Default.Save();
-                        return;
-                    }
+                    Properties.Settings.Default.LastFunaniDatabase = di.FullName;
+                    Properties.Settings.Default.Save();
+                    return;
                 }
 
                 this.Close();

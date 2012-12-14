@@ -30,59 +30,124 @@
 
 namespace Funani.Metadata
 {
-	using System;
-	using System.Collections.Generic;
-	using System.Linq;
-	using System.Text;
-	using System.Text.RegularExpressions;
-	using System.Reflection;
-	using System.Threading;
-	using System.Diagnostics;
+    using System;
+    using System.Collections.Generic;
+    using System.IO;
+    using System.Linq;
+    using System.Text;
+    using System.Text.RegularExpressions;
+    using System.Reflection;
+    using System.Threading;
+    using System.Diagnostics;
 
-	using MongoDB.Driver;
+    using MongoDB.Driver;
+    using MongoDB.Driver.Builders;
+    using Funani.Api.Metadata;
 
-	public class MetadataDatabase
-	{
-		public MongoDatabase Funani
-		{ get { return _funani; } }
+    public class MetadataDatabase
+    {
+        public MetadataDatabase(String pathToMongod, String path)
+        {
+            _pathToMongod = pathToMongod;
+            _pathToDatabase = path;
+        }
 
-		public void Start(String connectionString, String pathToMongod, String path)
-		{
-			Stop();
+        public MongoDatabase Funani
+        { get { return _funani; } }
 
-			_config = path;
-			ProcessStartInfo psi = new ProcessStartInfo();
-			psi.FileName = pathToMongod;
-			psi.Arguments = String.Format("--dbpath \"{0}\" --port {1}",
-			                              _config, 27017);
-			_process = Process.Start(psi);
-			
-			_mongoClient = new MongoClient(connectionString);
-			_mongoServer = _mongoClient.GetServer();
-			_funani = _mongoServer.GetDatabase("Funani");
-		}
+        public FileInformation Retrieve(String hash, FileInfo file)
+        {
+            var files = Funani.GetCollection("fileinfo");
+            var info = files.FindOneAs<FileInformation>(Query.EQ("id", hash));
+            if (info == null)
+            {
+                info = new FileInformation(file);
+                files.Insert<FileInformation>(info);
+            }
+            return info;
+        }
 
-		public void Stop()
-		{
-			if (_process != null)
-			{
-				// according to the documentation there is no need to call disconnect
-				_mongoServer = null;
-				_mongoClient = null;
+        public void Start()
+        {
+            Stop();
 
-				_process.CloseMainWindow();
-				_process.WaitForExit();
-				_process = null;
-			}
-		}
+            if (!Directory.Exists(DatabasePath))
+                Directory.CreateDirectory(DatabasePath);
+            if (!Directory.Exists(JournalPath))
+                Directory.CreateDirectory(JournalPath);
 
-		#region Private
-		private Process _process = null;
-		private String _config;
-		private MongoClient _mongoClient = null;
-		private MongoServer _mongoServer = null;
-		private MongoDatabase _funani = null;
-		#endregion
+            ProcessStartInfo psi = new ProcessStartInfo();
+            psi.FileName = Path.Combine(_pathToMongod, "mongod");
+            psi.Arguments = String.Format(" --journal --dbpath \"{0}\" --port {1}",
+                                          DatabasePath, 27017);
+            _process = Process.Start(psi);
 
-	}
+            String connectionString = "mongodb://localhost:27017";
+
+            _mongoClient = new MongoClient(connectionString);
+            _mongoServer = _mongoClient.GetServer();
+            _funani = _mongoServer.GetDatabase("Funani");
+        }
+
+        public void Stop()
+        {
+            if (_process != null)
+            {
+                if (_mongoServer != null)
+                {
+                    try
+                    {
+                        // according to the documentation there should not be a need to call disconnect
+                        _mongoServer.Shutdown();
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine(ex.Message);
+                    }
+                }
+
+                _mongoServer = null;
+                _mongoClient = null;
+
+                try
+                {
+                    _process.CloseMainWindow();
+                    _process.WaitForExit();
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                }
+                _process = null;
+            }
+        }
+
+
+        private string DatabasePath
+        {
+            get
+            {
+                return Path.Combine(_pathToDatabase, "metadata");
+            }
+        }
+
+        private string JournalPath
+        {
+            get
+            {
+                return Path.Combine(DatabasePath, "journal");
+            }
+        }
+
+
+        #region Private
+        private Process _process = null;
+        private String _pathToDatabase;
+        private String _pathToMongod;
+        private MongoClient _mongoClient = null;
+        private MongoServer _mongoServer = null;
+        private MongoDatabase _funani = null;
+        #endregion
+
+    }
 }

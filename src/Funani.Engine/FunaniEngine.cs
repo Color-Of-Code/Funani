@@ -32,10 +32,12 @@ namespace Funani.Engine
 {
     using System;
     using System.Collections.Generic;
+    using System.IO;
     using System.Linq;
     using System.Text;
 
     using Funani.Api;
+    using Funani.Api.Metadata;
     using Funani.FileStorage;
     using Funani.Metadata;
 
@@ -48,23 +50,37 @@ namespace Funani.Engine
         private IFileStorage _fileStorage;
         private Metadata.MetadataDatabase _metadata;
 
-        public void CreateDatabase(string path)
+        public Boolean IsValidDatabase(String path)
         {
+            if (String.IsNullOrWhiteSpace(path) ||
+                !Directory.Exists(path) ||
+                !Directory.Exists(Path.Combine(path, "metadata")) ||
+                !Directory.Exists(Path.Combine(path, "data")))
+                return false;
+            return true;
         }
 
-        public void OpenDatabase(string path)
+        public void OpenDatabase(String pathToMongod, String path)
         {
             // create the file database
-            _fileStorage = new FileDatabase();
-            _fileStorage.Start(path);
+            _fileStorage = new FileDatabase(path);
+            _fileStorage.Start();
 
             // create the mongodb
-            _metadata = new MetadataDatabase();
+            _metadata = new MetadataDatabase(pathToMongod, path);
+            _metadata.Start();
         }
 
         public void CloseDatabase()
         {
             _fileStorage.Stop();
+        }
+
+
+        public FileInformation AddFile(FileInfo file)
+        {
+            var hash = _fileStorage.StoreFile(file);
+            return _metadata.Retrieve(hash, file);
         }
     }
 }

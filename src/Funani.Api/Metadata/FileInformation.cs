@@ -28,46 +28,36 @@
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace Funani.FileStorage.Utils
+namespace Funani.Api.Metadata
 {
-	using System;
-	using System.Collections.Generic;
-	using System.Linq;
-	using System.Text;
-	using System.IO;
-	using System.Security.Cryptography;
+    using System;
+    using System.Collections.Generic;
+    using System.IO;
+    using System.Linq;
+    using System.Text;
 
-	class ComputeHash
-	{
-		public static String SHA1(FileInfo file)
-		{
-			return Execute(file, new SHA1CryptoServiceProvider());
-		}
+    public class FileInformation
+    {
+        public FileInformation()
+        {
+            Paths = new List<String>();
+        }
 
-		public static String SHA256(FileInfo file)
-		{
-			return Execute(file, new SHA256Managed());
-		}
+        public FileInformation(FileInfo file)
+            : this()
+        {
+            Id = Utils.ComputeHash.SHA1(file);
+            FileSize = file.Length;
+            Title = file.Name;
+            if (!Paths.Contains(file.FullName))
+                Paths.Add(file.FullName);
+        }
 
-		public static String MD5(FileInfo file)
-		{
-			return Execute(file, new MD5CryptoServiceProvider());
-		}
+        public String Id { get; private set; }
+        public Int64  FileSize { get; private set; }
+        public String MimeType { get; private set; }
 
-		private static String Execute(FileInfo file, HashAlgorithm hashAlgorithm)
-		{
-			String hashCode;
-			using (var fileStream = new FileStream(file.FullName, FileMode.Open, FileAccess.Read))
-			{
-				hashAlgorithm.ComputeHash(fileStream);
-				StringBuilder buff = new StringBuilder();
-				foreach (byte hashByte in hashAlgorithm.Hash)
-				{
-					buff.Append(String.Format("{0:X2}", hashByte));
-				}
-				hashCode = buff.ToString();
-			}
-			return hashCode;
-		}
-	}
+        public String Title { get; set; }
+        public IList<String> Paths { get; private set; }
+    }
 }
