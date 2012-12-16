@@ -7,8 +7,6 @@
 	using System.Windows.Media;
 	using System.Windows.Media.Imaging;
 
-	#region HeaderToImageConverter
-
 	[ValueConversion(typeof(string), typeof(ImageSource))]
 	public class HeaderToImageConverter : IValueConverter
 	{
@@ -35,6 +33,4 @@
 			throw new NotSupportedException();
 		}
 	}
-
-	#endregion
 }

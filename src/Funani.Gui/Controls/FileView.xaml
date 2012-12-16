@@ -1,7 +1,11 @@
 <UserControl x:Class="Funani.Gui.Controls.FileView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:funani="clr-namespace:Funani.Gui.Controls">
 	<Grid>
+		<Grid.Resources>
+			<funani:UriToThumbnailConverter x:Key="uriToThumbnailConverter"></funani:UriToThumbnailConverter>
+		</Grid.Resources>
 		<Grid.RowDefinitions>
 			<RowDefinition Height="Auto"></RowDefinition>
 			<RowDefinition></RowDefinition>
@@ -36,8 +40,8 @@
 									<Run Text="{Binding LastWriteTime,Mode=OneWay}"></Run>
 								</TextBlock>
 							</StackPanel>
-							<Image Grid.Column="1" RenderOptions.BitmapScalingMode="HighQuality"
-							       Source="{Binding FullName}" Width="120" Height="120">
+							<Image Grid.Column="1" RenderOptions.BitmapScalingMode="HighQuality" 
+							       Source="{Binding FullName,Converter={StaticResource uriToThumbnailConverter}}" Width="120" Height="120">
 							</Image>
 						</Grid>
 					</DataTemplate>
