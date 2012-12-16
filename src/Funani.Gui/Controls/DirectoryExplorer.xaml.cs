@@ -20,6 +20,11 @@
 		{
 			InitializeComponent();
 		}
+
+		public void SelectPath(string path)
+		{
+			SelectedPath = path;
+		}
 		
 		private object dummyNode = null;
 

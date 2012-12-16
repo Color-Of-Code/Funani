@@ -62,15 +62,18 @@ namespace Funani.Gui
             EnsureMongodbPathIsValid();
             EnsureFunanidbPathIsValid();
 
-            _funani.OpenDatabase(Properties.Settings.Default.MongodbPath,
-                Properties.Settings.Default.LastFunaniDatabase);
-
-            //var fileinfo = _funani.AddFile(new FileInfo(@"C:\Windows\Prairie Wind.bmp"));
+            var settings = Properties.Settings.Default;
+            _funani.OpenDatabase(settings.MongodbPath, settings.LastFunaniDatabase);
+            if (!String.IsNullOrWhiteSpace(settings.LastDirectoryExplorerSelectedPath))
+	            directoryExplorer.SelectPath(settings.LastDirectoryExplorerSelectedPath);
         }
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             _funani.CloseDatabase();
+            var settings = Properties.Settings.Default;
+            settings.LastDirectoryExplorerSelectedPath = directoryExplorer.SelectedPath;
+            settings.Save();
         }
 
         private void EnsureFunanidbPathIsValid()
@@ -84,8 +87,9 @@ namespace Funani.Gui
                 if (ofd.ShowDialog() == SWF.DialogResult.OK)
                 {
                     var di = new DirectoryInfo(ofd.SelectedPath);
-                    Properties.Settings.Default.LastFunaniDatabase = di.FullName;
-                    Properties.Settings.Default.Save();
+            		var settings = Properties.Settings.Default;
+                    settings.LastFunaniDatabase = di.FullName;
+                    settings.Save();
                     return;
                 }
 
@@ -116,8 +120,9 @@ namespace Funani.Gui
                     var fi = new FileInfo(ofd.FileName);
                     if (IsMongodbPathValid(fi.DirectoryName))
                     {
-                        Properties.Settings.Default.MongodbPath = fi.DirectoryName;
-                        Properties.Settings.Default.Save();
+            			var settings = Properties.Settings.Default;
+                        settings.MongodbPath = fi.DirectoryName;
+                        settings.Save();
                         return;
                     }
                 }

@@ -1,11 +1,16 @@
-﻿<?xml version='1.0' encoding='utf-8'?>
-<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="Funani.Gui.Properties" GeneratedClassName="Settings">
-  <Profiles />
+﻿<?xml version="1.0" encoding="utf-8"?>
+<SettingsFile CurrentProfile="(Default)" GeneratedClassNamespace="Funani.Gui.Properties" GeneratedClassName="Settings" xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings">
+  <Profiles>
+    <Profile Name="(Default)" />
+  </Profiles>
   <Settings>
-    <Setting Name="MongodbPath" Type="System.String" Scope="User">
+    <Setting Name="LastDirectoryExplorerSelectedPath" Type="System.String" Scope="User" Roaming="false">
       <Value Profile="(Default)" />
     </Setting>
-    <Setting Name="LastFunaniDatabase" Type="System.String" Scope="User">
+    <Setting Name="LastFunaniDatabase" Type="System.String" Scope="User" Roaming="false">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="MongodbPath" Type="System.String" Scope="User" Roaming="false">
       <Value Profile="(Default)" />
     </Setting>
   </Settings>

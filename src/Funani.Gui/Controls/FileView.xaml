@@ -1,7 +1,49 @@
-﻿<UserControl x:Class="Funani.Gui.Controls.FileView"
-	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+<UserControl x:Class="Funani.Gui.Controls.FileView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 	<Grid>
-		
+		<Grid.RowDefinitions>
+			<RowDefinition Height="Auto"></RowDefinition>
+			<RowDefinition></RowDefinition>
+		</Grid.RowDefinitions>
+		<TextBlock Grid.Row="0" Name="pathControl" Text="{Binding SelectedPath}">
+		</TextBlock>
+		<ScrollViewer Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+			<ListView Name="listControl" ItemsSource="{Binding Files}"
+			          VirtualizingStackPanel.IsVirtualizing="True" VirtualizingStackPanel.VirtualizationMode="Recycling">
+				<ListView.ItemContainerStyle>
+					<Style TargetType="ListViewItem">
+						<Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+					</Style>
+				</ListView.ItemContainerStyle>
+				<ListView.ItemTemplate>
+					<DataTemplate>
+						<Grid>
+							<Grid.ColumnDefinitions>
+								<ColumnDefinition Width="*"></ColumnDefinition>
+								<ColumnDefinition Width="120"></ColumnDefinition>
+							</Grid.ColumnDefinitions>
+							<StackPanel Grid.Column="0" Orientation="Vertical">
+								<TextBlock Text="{Binding Name,Mode=OneWay}" FontWeight="Bold">
+								</TextBlock>
+								<TextBlock>
+									<Run>Size: </Run>
+									<Run Text="{Binding Length,Mode=OneWay}"></Run>
+									<Run> bytes</Run>
+								</TextBlock>
+								<TextBlock>
+									<Run>Last modification: </Run>
+									<Run Text="{Binding LastWriteTime,Mode=OneWay}"></Run>
+								</TextBlock>
+							</StackPanel>
+							<Image Grid.Column="1" RenderOptions.BitmapScalingMode="HighQuality"
+							       Source="{Binding FullName}" Width="120" Height="120">
+							</Image>
+						</Grid>
+					</DataTemplate>
+				</ListView.ItemTemplate>
+			
+			</ListView>
+		</ScrollViewer>
 	</Grid>
 </UserControl>

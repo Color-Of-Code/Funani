@@ -18,7 +18,7 @@
 	    			<funani:DirectoryExplorer Grid.Column="0" x:Name="directoryExplorer">
 					</funani:DirectoryExplorer>
 					<GridSplitter Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"></GridSplitter>
-	    			<funani:FileView Grid.Column="2" x:Name="fileExplorer">
+	    			<funani:FileView Grid.Column="2" x:Name="fileExplorer" SelectedPath="{Binding ElementName=directoryExplorer, Path=SelectedPath}">
 					</funani:FileView>
 				</Grid>
 	    	</TabItem>
