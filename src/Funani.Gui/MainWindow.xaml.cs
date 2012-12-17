@@ -61,11 +61,14 @@ namespace Funani.Gui
             Properties.Settings.Default.Upgrade();
             EnsureMongodbPathIsValid();
             EnsureFunanidbPathIsValid();
+        }
 
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
             var settings = Properties.Settings.Default;
             _funani.OpenDatabase(settings.MongodbPath, settings.LastFunaniDatabase);
             if (!String.IsNullOrWhiteSpace(settings.LastDirectoryExplorerSelectedPath))
-	            directoryExplorer.SelectPath(settings.LastDirectoryExplorerSelectedPath);
+                directoryExplorer.SelectPath(settings.LastDirectoryExplorerSelectedPath);
         }
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
@@ -132,5 +135,6 @@ namespace Funani.Gui
         }
 
         private IEngine _funani = new FunaniEngine();
+
     }
 }

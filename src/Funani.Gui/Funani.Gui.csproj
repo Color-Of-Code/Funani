@@ -66,6 +66,8 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Controls\FileViewModel.cs" />
+    <Compile Include="Controls\FileViewModelProvider.cs" />
     <Compile Include="Controls\DirectoryExplorer.xaml.cs">
       <DependentUpon>DirectoryExplorer.xaml</DependentUpon>
       <SubType>Code</SubType>
@@ -82,6 +84,9 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Model\AsyncVirtualizingCollection.cs" />
+    <Compile Include="Model\IItemsProvider.cs" />
+    <Compile Include="Model\VirtualizingCollection.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -125,10 +130,7 @@
       <Name>Funani.Engine</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Controls" />
-    <Folder Include="Images" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

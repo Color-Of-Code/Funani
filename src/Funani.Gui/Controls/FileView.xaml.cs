@@ -1,19 +1,20 @@
-﻿
-using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.IO;
-using System.Text;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-
-namespace Funani.Gui.Controls
+﻿namespace Funani.Gui.Controls
 {
-	/// <summary>
+    using System;
+    using System.Collections.Generic;
+    using System.Collections.ObjectModel;
+    using System.IO;
+    using System.Text;
+    using System.Windows;
+    using System.Windows.Controls;
+    using System.Windows.Data;
+    using System.Windows.Documents;
+    using System.Windows.Input;
+    using System.Windows.Media;
+
+    using Funani.Gui.Model;
+
+    /// <summary>
 	/// Interaction logic for FileView.xaml
 	/// </summary>
 	public partial class FileView : UserControl
@@ -22,7 +23,6 @@ namespace Funani.Gui.Controls
 		{
 			InitializeComponent();
 			
-			Files = new ObservableCollection<FileInfo>();
 			DataContext = this;
 		}
 
@@ -34,24 +34,9 @@ namespace Funani.Gui.Controls
 		
 		public void ReloadFiles()
 		{
-			Files.Clear();
-			DirectoryInfo di = new DirectoryInfo(SelectedPath);
-			try
-			{
-				var files = di.GetFiles();
-				foreach (var file in files)
-					Files.Add(file);
-			}
-			catch (Exception e)
-			{
-				MessageBox.Show(e.Message, "Could not get files", MessageBoxButton.OK);
-			}
-		}
-		
-		public ObservableCollection<FileInfo> Files
-		{
-			get;
-			private set;
+            var provider = new FileViewModelProvider(SelectedPath);
+            var items = new AsyncVirtualizingCollection<FileViewModel>(provider, 20, 10 * 1000);
+            listControl.DataContext = items;
 		}
 		
 		private static void OnSelectedPathChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)

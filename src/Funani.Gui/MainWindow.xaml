@@ -3,6 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:funani="clr-namespace:Funani.Gui.Controls"
         Title="Funani - manage big amount of files easily"
+        Loaded="Window_Loaded"
         Closing="Window_Closing"
         Icon="pack://application:,,,/Images/logo2.png"
         Height="640" Width="1024">
