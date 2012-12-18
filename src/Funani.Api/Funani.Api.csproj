@@ -40,6 +40,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Metadata\Orientation.cs" />
     <Compile Include="Utils\ComputeHash.cs" />
     <Compile Include="IEngine.cs" />
     <Compile Include="IFileStorage.cs" />
