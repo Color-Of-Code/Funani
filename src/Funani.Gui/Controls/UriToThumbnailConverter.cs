@@ -30,97 +30,135 @@
 
 namespace Funani.Gui.Controls
 {
-	using System;
-	using System.Windows.Data;
-	using System.Windows.Media;
-	using System.Windows.Media.Imaging;
-	
-	using Funani.Api.Metadata;
+    using System;
+    using System.Windows;
+    using System.Windows.Data;
+    using System.Windows.Media;
+    using System.Windows.Media.Imaging;
 
-	[ValueConversion(typeof(string), typeof(ImageSource))]
-	public class UriToThumbnailConverter : IValueConverter
-	{
-		public UriToThumbnailConverter()
-		{
-			ThumbnailWidth = 120;
-		}
-		
-		public int ThumbnailWidth
-		{
-			get;set;
-		}
-		
-		public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
-		{
-			try
-			{
-				var uri = new Uri(value.ToString());
-				Orientation orientation = Orientation.Normal;
+    using Funani.Api.Metadata;
 
-				BitmapSource ret = null;
-				BitmapFrame frame = BitmapFrame.Create(
-					uri, BitmapCreateOptions.DelayCreation, BitmapCacheOption.None);
-				BitmapMetadata meta = null;
-				if (frame.Thumbnail == null)
-				{
-					BitmapImage image = new BitmapImage();
-					image.DecodePixelWidth = ThumbnailWidth;
-					image.BeginInit();
-					image.UriSource = uri;
-					image.CacheOption = BitmapCacheOption.None;
-					image.CreateOptions = BitmapCreateOptions.DelayCreation;
-					image.EndInit();
+    [ValueConversion(typeof(string), typeof(ImageSource))]
+    public class UriToThumbnailConverter : IValueConverter
+    {
+        public UriToThumbnailConverter(int thumbnailHeight)
+        {
+            ThumbnailHeight = thumbnailHeight;
 
-					if (image.CanFreeze)
-						image.Freeze();
+        }
 
-					ret = image;
-				}
-				else
-				{
-					meta = frame.Metadata as BitmapMetadata;
-					ret = frame.Thumbnail;
-				}
+        static UriToThumbnailConverter()
+        {
+            var packUri = new Uri("pack://application:,,,/Images/funani.png");
+            BitmapImage image = new BitmapImage();
+            image.BeginInit();
+            image.UriSource = packUri;
+            image.CacheOption = BitmapCacheOption.OnLoad;
+            image.CreateOptions = BitmapCreateOptions.None;
+            image.EndInit();
 
-				if ((meta != null) && (ret != null))
-				{
-					double angle = 0;
-					if (meta.GetQuery("/app1/ifd/{ushort=274}") != null)
-					{
-						orientation = (Orientation)Enum.Parse(typeof(Orientation), meta.GetQuery("/app1/ifd/{ushort=274}").ToString());
-					}
+            if (image.CanFreeze)
+                image.Freeze();
 
-					switch (orientation)
-					{
-						case Orientation.Rotate90:
-							angle = -90;
-							break;
-						case Orientation.Rotate180:
-							angle = 180;
-							break;
-						case Orientation.Rotate270:
-							angle = 90;
-							break;
-					}
+            _defaultThumbnail = image;
+        }
 
-					if (angle != 0)
-					{
-						ret = new TransformedBitmap(ret.Clone(), new RotateTransform(angle));
-						ret.Freeze();
-					}
-				}
+        private static readonly BitmapSource _defaultThumbnail;
 
-				return ret;
-			}
-			catch
-			{
-				return null;
-			}
-		}
-		
-		public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
-		{
-			throw new NotSupportedException();
-		}
-	}
+        public int ThumbnailHeight
+        {
+            get;
+            private set;
+        }
+
+        public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+        {
+            try
+            {
+                var uri = new Uri(value.ToString());
+                Orientation orientation = Orientation.Normal;
+
+                BitmapFrame frame = BitmapFrame.Create(
+                    uri, BitmapCreateOptions.DelayCreation, BitmapCacheOption.None);
+                BitmapSource ret = null;
+                BitmapMetadata meta = null;
+                if (frame.PixelHeight < ThumbnailHeight && frame.PixelWidth < ThumbnailHeight)
+                {
+                    BitmapImage image = new BitmapImage();
+                    image.BeginInit();
+                    image.UriSource = uri;
+                    image.CacheOption = BitmapCacheOption.None;
+                    image.CreateOptions = BitmapCreateOptions.DelayCreation;
+                    image.EndInit();
+
+                    if (image.CanFreeze)
+                        image.Freeze();
+
+                    ret = image;
+                }
+                else
+                {
+                    if (frame.Thumbnail == null)
+                    {
+                        BitmapImage image = new BitmapImage();
+                        image.DecodePixelHeight = ThumbnailHeight;
+                        image.BeginInit();
+                        image.UriSource = uri;
+                        image.CacheOption = BitmapCacheOption.None;
+                        image.CreateOptions = BitmapCreateOptions.DelayCreation;
+                        image.EndInit();
+
+                        if (image.CanFreeze)
+                            image.Freeze();
+
+                        ret = image;
+                    }
+                    else
+                    {
+                        meta = frame.Metadata as BitmapMetadata;
+                        ret = frame.Thumbnail;
+                    }
+                }
+
+                if ((meta != null) && (ret != null))
+                {
+                    double angle = 0;
+                    if (meta.GetQuery("/app1/ifd/{ushort=274}") != null)
+                    {
+                        orientation = (Orientation)Enum.Parse(typeof(Orientation), meta.GetQuery("/app1/ifd/{ushort=274}").ToString());
+                    }
+
+                    switch (orientation)
+                    {
+                        case Orientation.Rotate90:
+                            angle = -90;
+                            break;
+                        case Orientation.Rotate180:
+                            angle = 180;
+                            break;
+                        case Orientation.Rotate270:
+                            angle = 90;
+                            break;
+                    }
+
+                    if (angle != 0)
+                    {
+                        ret = new TransformedBitmap(ret.Clone(), new RotateTransform(angle));
+                        ret.Freeze();
+                    }
+                }
+
+                return ret;
+            }
+            catch
+            {
+                return _defaultThumbnail;
+            }
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+        {
+            throw new NotSupportedException();
+        }
+    }
 }

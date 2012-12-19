@@ -45,10 +45,12 @@
                     <GridViewColumn Header="Preview">
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
-                                <Canvas Margin="2" Width="120" Height="120">
-                                    <Rectangle Margin="2" Width="120" Height="120" Fill="Gray"></Rectangle>
-                                    <Image RenderOptions.BitmapScalingMode="HighQuality" 
-							            Source="{Binding Thumbnail}" Width="120" Height="120">
+                                <Canvas Height="{Binding ThumbnailHeight}">
+                                    <!-- Rectangle Margin="2" Width="120" Height="120" Fill="Gray"></Rectangle -->
+                                    <Image Source="{Binding Thumbnail}"
+                                           Width="{Binding ThumbnailWidth}"
+                                           Height="{Binding ThumbnailHeight}"
+                                           Stretch="{Binding Stretch}">
                                     </Image>
                                 </Canvas>
                             </DataTemplate>

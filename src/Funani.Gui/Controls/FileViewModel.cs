@@ -70,14 +70,36 @@ namespace Funani.Gui.Controls
             get { return FileInfo.LastWriteTime; }
         }
 
+        public int ThumbnailWidth
+        {
+            get { return Math.Min(MaxThumbnailSize, Thumbnail.PixelWidth); }
+        }
+
+        public int ThumbnailHeight
+        {
+            get { return Math.Min(MaxThumbnailSize, Thumbnail.PixelHeight); }
+        }
+
+        public System.Windows.Media.Stretch Stretch
+        {
+            get
+            {
+                return System.Windows.Media.Stretch.Uniform;
+            }
+        }
+
         public BitmapSource Thumbnail
         {
             get 
             {
-                return converter.Convert(FullName, typeof(BitmapSource), null, null) as BitmapSource;
+                if (_thumbnail == null)
+                    _thumbnail = converter.Convert(FullName, typeof(BitmapSource), null, null) as BitmapSource;
+                return _thumbnail;
             }
         }
 
-        private static readonly UriToThumbnailConverter converter = new UriToThumbnailConverter();
+        private BitmapSource _thumbnail;
+        private const int MaxThumbnailSize = 120;
+        private static readonly UriToThumbnailConverter converter = new UriToThumbnailConverter(MaxThumbnailSize);
     }
 }
