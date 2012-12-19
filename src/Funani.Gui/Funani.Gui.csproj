@@ -66,6 +66,8 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Controls\DirectoryTreeViewModel.cs" />
+    <Compile Include="Controls\DirectoryViewModel.cs" />
     <Compile Include="Controls\FileViewModel.cs" />
     <Compile Include="Controls\FileViewModelProvider.cs" />
     <Compile Include="Controls\DirectoryExplorer.xaml.cs">
