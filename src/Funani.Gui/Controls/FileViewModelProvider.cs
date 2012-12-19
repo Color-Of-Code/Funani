@@ -30,53 +30,61 @@
 
 namespace Funani.Gui.Controls
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Diagnostics;
-    using System.IO;
-    using System.Linq;
-    using System.Threading;
+	using System;
+	using System.Collections.Generic;
+	using System.Diagnostics;
+	using System.IO;
+	using System.Linq;
+	using System.Threading;
 
-    using Funani.Gui.Model;
+	using Funani.Gui.Model;
 
-    /// <summary>
-    /// Implementation of IItemsProvider returning <see cref="FileViewModel"/> items
-    /// </summary>
-    public class FileViewModelProvider : IItemsProvider<FileViewModel>
-    {
-        private readonly int _fetchDelay;
-        private readonly DirectoryInfo _di;
-        private IEnumerable<FileInfo> _files;
+	/// <summary>
+	/// Implementation of IItemsProvider returning <see cref="FileViewModel"/> items
+	/// </summary>
+	public class FileViewModelProvider : IItemsProvider<FileViewModel>
+	{
+		private readonly int _fetchDelay;
+		private readonly DirectoryInfo _di;
+		private IEnumerable<FileInfo> _files;
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="FileViewModelProvider"/> class.
-        /// </summary>
-        public FileViewModelProvider(String path)
-        {
-            _di = new DirectoryInfo(path);
-            _files = _di.EnumerateFiles();
-        }
+		/// <summary>
+		/// Initializes a new instance of the <see cref="FileViewModelProvider"/> class.
+		/// </summary>
+		public FileViewModelProvider(String path)
+		{
+			_di = new DirectoryInfo(path);
+			try
+			{
+				_files = _di.EnumerateFiles();
+			}
+			catch(Exception ex)
+			{
+				//TODO: handle probable access rights issue in a cleaner fashion
+				_files = new List<FileInfo>(); // empty list...
+			}
+		}
 
-        /// <summary>
-        /// Fetches the total number of items available.
-        /// </summary>
-        /// <returns></returns>
-        public int FetchCount()
-        {
-            return _files.Count();
-        }
+		/// <summary>
+		/// Fetches the total number of items available.
+		/// </summary>
+		/// <returns></returns>
+		public int FetchCount()
+		{
+			return _files.Count();
+		}
 
-        /// <summary>
-        /// Fetches a range of items.
-        /// </summary>
-        /// <param name="startIndex">The start index.</param>
-        /// <param name="count">The number of items to fetch.</param>
-        /// <returns></returns>
-        public IList<FileViewModel> FetchRange(int startIndex, int count)
-        {
-            List<FileViewModel> list = new List<FileViewModel>();
-            list.AddRange(_files.Skip(startIndex).Take(count).Select(x => new FileViewModel(x)));
-            return list;
-        }
-    }
+		/// <summary>
+		/// Fetches a range of items.
+		/// </summary>
+		/// <param name="startIndex">The start index.</param>
+		/// <param name="count">The number of items to fetch.</param>
+		/// <returns></returns>
+		public IList<FileViewModel> FetchRange(int startIndex, int count)
+		{
+			List<FileViewModel> list = new List<FileViewModel>();
+			list.AddRange(_files.Skip(startIndex).Take(count).Select(x => new FileViewModel(x)));
+			return list;
+		}
+	}
 }

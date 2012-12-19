@@ -7,29 +7,28 @@
              d:DesignHeight="200" d:DesignWidth="640">
 	<Grid>
 		<TreeView x:Name="directories" SelectedItemChanged="directories_SelectedItemChanged"
-                  ItemsSource="{Binding FirstGeneration}"
-                  Background="#FFFFFFFF" BorderBrush="#FFFFFFFF" Foreground="#FFFFFFFF">
-            <TreeView.ItemContainerStyle>
-                <Style TargetType="{x:Type TreeViewItem}">
-                    <Setter Property="IsExpanded" Value="{Binding IsExpanded, Mode=TwoWay}" />
-                    <Setter Property="IsSelected" Value="{Binding IsSelected, Mode=TwoWay}" />
-                    <Setter Property="FontWeight" Value="Normal" />
-                    <Style.Triggers>
-                        <Trigger Property="IsSelected" Value="True">
-                            <Setter Property="FontWeight" Value="Bold" />
-                        </Trigger>
-                    </Style.Triggers>
-                </Style>
-            </TreeView.ItemContainerStyle>
-            <TreeView.ItemTemplate>
-                <HierarchicalDataTemplate ItemsSource="{Binding Directories}" DataType="{x:Type funani:DirectoryViewModel}">
-                    <StackPanel Orientation="Horizontal">
-                        <!-- Image Width="16" Height="16" Margin="3,0"
-                               Source="{Binding ObjectType, Converter={StaticResource IconConverter}}" / -->
-                        <TextBlock Text="{Binding Text}" />
-                    </StackPanel>
-                </HierarchicalDataTemplate>
-            </TreeView.ItemTemplate>
-        </TreeView>
+		          ItemsSource="{Binding FirstGeneration}"
+		          Background="#FFFFFFFF" BorderBrush="#FFFFFFFF" Foreground="#FFFFFFFF">
+			<TreeView.ItemContainerStyle>
+				<Style TargetType="{x:Type TreeViewItem}">
+					<Setter Property="IsExpanded" Value="{Binding IsExpanded, Mode=TwoWay}" />
+					<Setter Property="IsSelected" Value="{Binding IsSelected, Mode=TwoWay}" />
+					<Setter Property="FontWeight" Value="Normal" />
+					<Style.Triggers>
+						<Trigger Property="IsSelected" Value="True">
+							<Setter Property="FontWeight" Value="Bold" />
+						</Trigger>
+					</Style.Triggers>
+				</Style>
+			</TreeView.ItemContainerStyle>
+			<TreeView.ItemTemplate>
+				<HierarchicalDataTemplate ItemsSource="{Binding Directories}" DataType="{x:Type funani:DirectoryViewModel}">
+					<StackPanel Orientation="Horizontal">
+						<Image Width="16" Height="16" Margin="3,0" Source="{Binding Icon}" />
+						<TextBlock Text="{Binding Name}" />
+					</StackPanel>
+				</HierarchicalDataTemplate>
+			</TreeView.ItemTemplate>
+		</TreeView>
 	</Grid>
 </UserControl>

@@ -113,9 +113,11 @@
       <Link>Images\logo2.png</Link>
     </Resource>
     <None Include="app.config" />
-    <Resource Include="Images\diskdrive.png" />
     <Resource Include="Images\folder.png" />
     <SplashScreen Include="Images\funani.png" />
+    <Resource Include="Images\drive-harddisk.png" />
+    <Resource Include="Images\drive-optical.png" />
+    <Resource Include="Images\folder-open.png" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>

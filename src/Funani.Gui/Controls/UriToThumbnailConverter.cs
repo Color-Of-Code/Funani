@@ -41,9 +41,9 @@ namespace Funani.Gui.Controls
     [ValueConversion(typeof(string), typeof(ImageSource))]
     public class UriToThumbnailConverter : IValueConverter
     {
-        public UriToThumbnailConverter(int thumbnailHeight)
+        public UriToThumbnailConverter(int thumbnailSize)
         {
-            ThumbnailHeight = thumbnailHeight;
+            ThumbnailSize = thumbnailSize;
 
         }
 
@@ -65,7 +65,7 @@ namespace Funani.Gui.Controls
 
         private static readonly BitmapSource _defaultThumbnail;
 
-        public int ThumbnailHeight
+        public int ThumbnailSize
         {
             get;
             private set;
@@ -82,7 +82,7 @@ namespace Funani.Gui.Controls
                     uri, BitmapCreateOptions.DelayCreation, BitmapCacheOption.None);
                 BitmapSource ret = null;
                 BitmapMetadata meta = null;
-                if (frame.PixelHeight < ThumbnailHeight && frame.PixelWidth < ThumbnailHeight)
+                if (frame.PixelHeight < ThumbnailSize && frame.PixelWidth < ThumbnailSize)
                 {
                     BitmapImage image = new BitmapImage();
                     image.BeginInit();
@@ -101,7 +101,7 @@ namespace Funani.Gui.Controls
                     if (frame.Thumbnail == null)
                     {
                         BitmapImage image = new BitmapImage();
-                        image.DecodePixelHeight = ThumbnailHeight;
+                        image.DecodePixelHeight = ThumbnailSize;
                         image.BeginInit();
                         image.UriSource = uri;
                         image.CacheOption = BitmapCacheOption.None;

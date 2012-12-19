@@ -30,79 +30,93 @@
 
 namespace Funani.Gui.Controls
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Collections.ObjectModel;
-    using System.ComponentModel;
-    using System.Diagnostics;
-    using System.IO;
-    using System.Linq;
-    using System.Text;
+	using System;
+	using System.Collections.Generic;
+	using System.Collections.ObjectModel;
+	using System.ComponentModel;
+	using System.Diagnostics;
+	using System.IO;
+	using System.Linq;
+	using System.Text;
 
-    [DebuggerDisplay("{DirectoryInfo}")]
-    public class DirectoryViewModel : INotifyPropertyChanged
-    {
-        public DirectoryViewModel(DirectoryInfo model)
-            : this(model, null)
-        {
-        }
+	[DebuggerDisplay("{DirectoryInfo}")]
+	public class DirectoryViewModel : INotifyPropertyChanged
+	{
+		public DirectoryViewModel(DirectoryInfo model)
+			: this(model, null)
+		{
+		}
 
-        public DirectoryViewModel(DirectoryInfo model, DirectoryViewModel parent)
-        {
-            _model = model;
-            _parent = parent;
-        }
+		public DirectoryViewModel(DirectoryInfo model, DirectoryViewModel parent)
+		{
+			_model = model;
+			_parent = parent;
+		}
 
-        public DirectoryViewModel Lookup(DirectoryInfo path)
-        {
-            // if we found the path
-            if (DirectoryInfo.FullName == path.FullName)
-                return this;
+		public DirectoryViewModel Lookup(DirectoryInfo path)
+		{
+			// if we found the path
+			if (DirectoryInfo.FullName == path.FullName)
+				return this;
 
-            DirectoryInfo p = path;
-            while (p.Parent.FullName != DirectoryInfo.FullName)
-                p = p.Parent;
+			DirectoryInfo p = path;
+			while (p.Parent.FullName != DirectoryInfo.FullName)
+				p = p.Parent;
 
-            var child = Directories.FirstOrDefault(x => x.DirectoryInfo.FullName == p.FullName);
-            if (child == null)
-                return null;
-            return child.Lookup(path);
-        }
+			var child = Directories.FirstOrDefault(x => x.DirectoryInfo.FullName == p.FullName);
+			if (child == null)
+				return null;
+			return child.Lookup(path);
+		}
 
-        private void Fetch()
-        {
-            _items = new ObservableCollection<DirectoryViewModel>();
-            foreach (var d in _model.EnumerateDirectories())
-            {
-                if ((d.Attributes & FileAttributes.Hidden) != 0)
-                    continue;
-                try
-                {
-                    _items.Add(new DirectoryViewModel(d, this));
-                }
-                catch
-                {
-                }
-            }
-        }
+		private void Fetch()
+		{
+			_items = new ObservableCollection<DirectoryViewModel>();
+			foreach (var d in _model.EnumerateDirectories())
+			{
+				if ((d.Attributes & FileAttributes.Hidden) != 0)
+					continue;
+				try
+				{
+					_items.Add(new DirectoryViewModel(d, this));
+				}
+				catch
+				{
+				}
+			}
+		}
 
-        #region DirectoryViewModel Properties
+		#region DirectoryViewModel Properties
 
-        public ObservableCollection<DirectoryViewModel> Directories
+		public ObservableCollection<DirectoryViewModel> Directories
 		{
 			get
 			{
-                if (_items == null)
-                    Fetch();
+				if (_items == null)
+					Fetch();
 				return _items;
 			}
 		}
 
-		public String Text
+		public String Name
 		{
 			get
 			{
 				return _model.Name;
+			}
+		}
+
+		public String Icon
+		{
+			get
+			{
+				String basePath = "pack://application:,,,/Images/";
+				String icon = "folder";
+				if (IsSelected)
+					icon = "folder-open";
+				if (IsDrive)
+					icon = "drive-harddisk";
+				return String.Format("{0}{1}.png", basePath, icon);
 			}
 		}
 
@@ -163,6 +177,7 @@ namespace Funani.Gui.Controls
 				{
 					_isSelected = value;
 					this.OnPropertyChanged("IsSelected");
+					this.OnPropertyChanged("Icon");
 				}
 			}
 		}
@@ -171,7 +186,7 @@ namespace Funani.Gui.Controls
 
 		#region Parent
 
-        public DirectoryViewModel Parent
+		public DirectoryViewModel Parent
 		{
 			get
 			{
@@ -189,19 +204,19 @@ namespace Funani.Gui.Controls
 
 		protected virtual void OnPropertyChanged(string propertyName)
 		{
-            var handler = this.PropertyChanged;
+			var handler = this.PropertyChanged;
 			if (handler != null)
 				handler(this, new PropertyChangedEventArgs(propertyName));
 		}
 
 		#endregion
 
-        private ObservableCollection<DirectoryViewModel> _items;
+		private ObservableCollection<DirectoryViewModel> _items;
 		private readonly DirectoryViewModel _parent;
 
 		private bool _isExpanded;
 		private bool _isSelected;
 
-        private DirectoryInfo _model;
-    }
+		private DirectoryInfo _model;
+	}
 }
