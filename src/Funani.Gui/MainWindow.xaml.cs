@@ -134,7 +134,7 @@ namespace Funani.Gui
             }
         }
 
-        private IEngine _funani = new FunaniEngine();
+        private IEngine _funani = Engine.Funani;
 
     }
 }

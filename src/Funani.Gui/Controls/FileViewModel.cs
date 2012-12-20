@@ -32,7 +32,10 @@ namespace Funani.Gui.Controls
 {
     using System;
     using System.IO;
+    using System.Windows.Media;
     using System.Windows.Media.Imaging;
+
+    using Funani.Api;
 
     /// <summary>
     /// FileViewModel
@@ -50,19 +53,19 @@ namespace Funani.Gui.Controls
             private set;
         }
 
-        public string Name 
+        public string Name
         {
             get { return FileInfo.Name; }
         }
 
-        public string FullName 
+        public string FullName
         {
             get { return FileInfo.FullName; }
         }
 
-        public long Length 
+        public long Length
         {
-            get { return FileInfo.Length; } 
+            get { return FileInfo.Length; }
         }
 
         public DateTime LastWriteTime
@@ -80,21 +83,52 @@ namespace Funani.Gui.Controls
             get { return Math.Min(MaxThumbnailSize, Thumbnail.PixelHeight); }
         }
 
-        public System.Windows.Media.Stretch Stretch
+        public Stretch Stretch
         {
             get
             {
-                return System.Windows.Media.Stretch.Uniform;
+                return Stretch.Uniform;
             }
         }
 
         public BitmapSource Thumbnail
         {
-            get 
+            get
             {
                 if (_thumbnail == null)
                     _thumbnail = converter.Convert(FullName, typeof(BitmapSource), null, null) as BitmapSource;
                 return _thumbnail;
+            }
+        }
+
+        public BitmapScalingMode ScalingMode
+        {
+            get
+            {
+                if (ThumbnailWidth < MaxThumbnailSize && ThumbnailHeight < MaxThumbnailSize)
+                    return BitmapScalingMode.Linear;
+                return BitmapScalingMode.HighQuality;
+            }
+        }
+
+        public Boolean InsideFunani
+        {
+            get
+            {
+                return Engine.Funani.GetFileInformation(FileInfo) != null;
+            }
+            set
+            {
+                if (value)
+                {
+                    // add
+                    Engine.Funani.AddFile(FileInfo);
+                }
+                else
+                {
+                    // remove
+                    Engine.Funani.RemoveFile(FileInfo);
+                }
             }
         }
 

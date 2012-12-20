@@ -42,16 +42,24 @@
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>
-                    <GridViewColumn Header="Preview">
+                    <GridViewColumn Header="Preview" Width="200">
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
-                                <Canvas Height="{Binding ThumbnailHeight}">
-                                    <!-- Rectangle Margin="2" Width="120" Height="120" Fill="Gray"></Rectangle -->
-                                    <Image Source="{Binding Thumbnail}"
+                                <Canvas Height="{Binding ThumbnailHeight}" Margin="4,4,4,32" Background="LightGray">
+                                    <Image RenderOptions.BitmapScalingMode="{Binding ScalingMode}"
+                                           Source="{Binding Thumbnail}"
                                            Width="{Binding ThumbnailWidth}"
                                            Height="{Binding ThumbnailHeight}"
-                                           Stretch="{Binding Stretch}">
+                                           Stretch="{Binding Stretch}"
+                                           Canvas.Left="2"
+                                           Canvas.Top="2"
+                                           >
                                     </Image>
+                                    <CheckBox IsChecked="{Binding InsideFunani}"
+                                              Canvas.Bottom="-16"
+                                              Canvas.Left="0"
+                                              >
+                                    </CheckBox>
                                 </Canvas>
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>

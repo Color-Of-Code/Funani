@@ -49,6 +49,11 @@ namespace Funani.Api.Metadata
             Id = Utils.ComputeHash.SHA1(file);
             FileSize = file.Length;
             Title = file.Name;
+            AddPath(file);
+        }
+
+        public void AddPath(FileInfo file)
+        {
             if (!Paths.Contains(file.FullName))
                 Paths.Add(file.FullName);
         }

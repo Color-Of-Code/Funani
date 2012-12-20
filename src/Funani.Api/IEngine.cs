@@ -66,6 +66,24 @@ namespace Funani.Api
         FileInformation AddFile(FileInfo file);
 
         /// <summary>
+        /// Remove a file path from the metadata but leaves the file inside the storage area.
+        /// A file gets physically removed only by purging the database.
+        /// </summary>
+        /// <param name="file"></param>
+        /// <returns></returns>
+        void RemoveFile(FileInfo file);
+
+        /// <summary>
+        /// Get the info associated in mongodb for the path of the specified file.
+        /// If no info could be found, null is returned. This method is intended for
+        /// frequent use and does not make any other check than the path/size/timestamp
+        /// check
+        /// </summary>
+        /// <param name="file"></param>
+        /// <returns></returns>
+        FileInformation GetFileInformation(FileInfo file);
+
+        /// <summary>
         /// Returns the file data of the file with the given hash
         /// </summary>
         /// <param name="hash">SHA1 hash of the file to retrieve</param>

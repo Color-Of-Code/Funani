@@ -28,76 +28,23 @@
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace Funani.Engine
+namespace Funani.Gui
 {
     using System;
     using System.Collections.Generic;
-    using System.IO;
     using System.Linq;
     using System.Text;
 
     using Funani.Api;
-    using Funani.Api.Metadata;
-    using Funani.FileStorage;
-    using Funani.Metadata;
+    using Funani.Engine;
 
-    public class FunaniEngine : IEngine
+    internal static class Engine
     {
-        public FunaniEngine()
+        static Engine()
         {
+            Funani = new FunaniEngine();
         }
 
-        private IFileStorage _fileStorage;
-        private Metadata.MetadataDatabase _metadata;
-
-        public Boolean IsValidDatabase(String path)
-        {
-            if (String.IsNullOrWhiteSpace(path) ||
-                !Directory.Exists(path) ||
-                !Directory.Exists(Path.Combine(path, "metadata")) ||
-                !Directory.Exists(Path.Combine(path, "data")))
-                return false;
-            return true;
-        }
-
-        public void OpenDatabase(String pathToMongod, String path)
-        {
-            // create the file database
-            _fileStorage = new FileDatabase(path);
-            _fileStorage.Start();
-
-            // create the mongodb
-            _metadata = new MetadataDatabase(pathToMongod, path);
-            _metadata.Start();
-        }
-
-        public void CloseDatabase()
-        {
-            _fileStorage.Stop();
-            _metadata.Stop();
-            _fileStorage = null;
-            _metadata = null;
-        }
-
-        public FileInformation AddFile(FileInfo file)
-        {
-            var hash = _fileStorage.StoreFile(file);
-            return _metadata.Retrieve(hash, file);
-        }
-
-        public void RemoveFile(FileInfo file)
-        {
-            _metadata.RemovePath(file);
-        }
-
-        public FileInformation GetFileInformation(FileInfo file)
-        {
-            return _metadata.Retrieve(file);
-        }
-
-        public byte[] GetFileData(String hash)
-        {
-        	return _fileStorage.LoadFile(hash);
-        }
+        public static IEngine Funani;
     }
 }

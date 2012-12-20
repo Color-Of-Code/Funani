@@ -64,8 +64,40 @@ namespace Funani.Metadata
                 info = new FileInformation(file);
                 files.Insert<FileInformation>(info);
             }
+            else
+            {
+                info.AddPath(file);
+                files.Save(info);
+            }
             return info;
         }
+
+        public FileInformation Retrieve(FileInfo file)
+        {
+            var files = Funani.GetCollection("fileinfo");
+            string path = file.FullName;
+            var list = new String[] { path };
+            var queryBuilder = new QueryBuilder<FileInformation>();
+            var query = queryBuilder.In(x => x.Paths, list);
+            var info = files.FindOneAs<FileInformation>(query);
+            return info;
+        }
+
+        public void RemovePath(FileInfo file)
+        {
+            var files = Funani.GetCollection("fileinfo");
+            string path = file.FullName;
+            var list = new String[] { path };
+            var queryBuilder = new QueryBuilder<FileInformation>();
+            var query = queryBuilder.In(x => x.Paths, list);
+            var info = files.FindOneAs<FileInformation>(query);
+            if (info != null)
+            {
+                info.Paths.Remove(file.FullName);
+                files.Save(info);
+            }
+        }
+
 
         public void Start()
         {
