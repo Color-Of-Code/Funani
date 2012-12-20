@@ -9,7 +9,27 @@
         Height="640" Width="1024">
     <Grid>
     	<TabControl>
-			<TabItem Header="File explorer">
+			<TabItem>
+                <TabItem.Header>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock  VerticalAlignment="Center">File explorer</TextBlock>
+                        <Rectangle Name="rectangle" Width="20" Height="20" Fill="Blue" Margin="5" VerticalAlignment="Center">
+                            <Rectangle.RenderTransform>
+                                <RotateTransform Angle="0" CenterX="10" CenterY="10"/>
+                            </Rectangle.RenderTransform>
+                            <Rectangle.Triggers>
+                                <EventTrigger RoutedEvent="Rectangle.Loaded">
+                                    <BeginStoryboard>
+                                        <Storyboard>
+                                            <DoubleAnimation Storyboard.TargetName="rectangle" Storyboard.TargetProperty="(TextBlock.RenderTransform).(RotateTransform.Angle)" From="0" To="360" Duration="0:0:5" RepeatBehavior="Forever" />
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </EventTrigger>
+                            </Rectangle.Triggers>
+                        </Rectangle>
+
+                    </StackPanel>
+                </TabItem.Header>
 				<Grid>
 					<Grid.ColumnDefinitions>
 						<ColumnDefinition Width="1*"></ColumnDefinition>
