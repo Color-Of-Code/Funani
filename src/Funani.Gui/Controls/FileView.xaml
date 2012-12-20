@@ -18,13 +18,13 @@
 		          Background="Transparent"
 		          ScrollViewer.IsDeferredScrollingEnabled="True">
 			<ListView.ItemsPanel>
-                <ItemsPanelTemplate>
-					<funani:VirtualizingWrapPanel Orientation="Horizontal" ItemHeight="120" ItemWidth="240" />
-                </ItemsPanelTemplate>
+				<ItemsPanelTemplate>
+					<funani:VirtualizingWrapPanel ItemHeight="140" ItemWidth="140" />
+				</ItemsPanelTemplate>
 			</ListView.ItemsPanel>
 			<ListView.ItemTemplate>
 				<DataTemplate>
-					<Grid Margin="5" Width="240" Height="120">
+					<Grid Margin="2" Width="128" Height="128">
 						<Grid.ColumnDefinitions>
 							<ColumnDefinition Width="Auto"></ColumnDefinition>
 							<ColumnDefinition Width="*"></ColumnDefinition>
@@ -34,29 +34,32 @@
 								<DropShadowBitmapEffect Opacity="0.5" ShadowDepth="0" />
 							</Rectangle.BitmapEffect>
 						</Rectangle>
-						<Border Background="Gray" BorderBrush="White" BorderThickness="5" Height="{Binding ThumbnailHeight}">
-							<Image RenderOptions.BitmapScalingMode="{Binding ScalingMode}"
-							       Source="{Binding Thumbnail}"
-							       Width="{Binding ThumbnailWidth}"
-							       Height="{Binding ThumbnailHeight}"
-							       Stretch="{Binding Stretch}"
-							/>
-						</Border>
-						<StackPanel Orientation="Vertical" Grid.Column="1">
-							<TextBlock Text="{Binding Name,Mode=OneWay}" FontWeight="Bold">
-							</TextBlock>
-							<TextBlock>
-								<Run>Size: </Run>
-								<Run Text="{Binding Length,Mode=OneWay}"></Run>
-								<Run> bytes</Run>
-							</TextBlock>
-							<TextBlock>
-								<Run>Last modification: </Run>
-								<Run Text="{Binding LastWriteTime,Mode=OneWay}"></Run>
-							</TextBlock>
-							<CheckBox IsChecked="{Binding InsideFunani}">
-							</CheckBox>
-						</StackPanel>
+						<Canvas>
+							<Border Background="Gray" BorderBrush="White" BorderThickness="5" Height="{Binding ThumbnailHeight}">
+								<Image RenderOptions.BitmapScalingMode="{Binding ScalingMode}"
+								       Source="{Binding Thumbnail}"
+								       Width="{Binding ThumbnailWidth}"
+								       Height="{Binding ThumbnailHeight}"
+								       Stretch="{Binding Stretch}"
+								/>
+							</Border>
+							<CheckBox IsChecked="{Binding InsideFunani}" Canvas.Bottom="-8" Content="Funani Storage" />
+							<Canvas.ToolTip>
+								<StackPanel Orientation="Vertical" Grid.Column="1">
+									<TextBlock Text="{Binding Name,Mode=OneWay}" FontWeight="Bold">
+									</TextBlock>
+									<TextBlock>
+										<Run>Size: </Run>
+										<Run Text="{Binding Length,Mode=OneWay}"></Run>
+										<Run> bytes</Run>
+									</TextBlock>
+									<TextBlock>
+										<Run>Last modification: </Run>
+										<Run Text="{Binding LastWriteTime,Mode=OneWay}"></Run>
+									</TextBlock>
+								</StackPanel>
+							</Canvas.ToolTip>
+						</Canvas>
 					</Grid>
 				</DataTemplate>
 			</ListView.ItemTemplate>
