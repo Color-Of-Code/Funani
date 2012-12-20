@@ -30,110 +30,134 @@
 
 namespace Funani.Gui.Controls
 {
-    using System;
-    using System.IO;
-    using System.Windows.Media;
-    using System.Windows.Media.Imaging;
+	using System;
+	using System.ComponentModel;
+	using System.IO;
+	using System.Windows.Media;
+	using System.Windows.Media.Imaging;
 
-    using Funani.Api;
+	using Funani.Api;
 
-    /// <summary>
-    /// FileViewModel
-    /// </summary>
-    public class FileViewModel
-    {
-        public FileViewModel(FileInfo fileInfo)
-        {
-            FileInfo = fileInfo;
-        }
+	/// <summary>
+	/// FileViewModel
+	/// </summary>
+	public class FileViewModel : INotifyPropertyChanged
+	{
+		public FileViewModel(FileInfo fileInfo)
+		{
+			FileInfo = fileInfo;
+		}
 
-        public FileInfo FileInfo
-        {
-            get;
-            private set;
-        }
+		public FileInfo FileInfo
+		{
+			get;
+			private set;
+		}
 
-        public string Name
-        {
-            get { return FileInfo.Name; }
-        }
+		public string Name
+		{
+			get { return FileInfo.Name; }
+		}
 
-        public string FullName
-        {
-            get { return FileInfo.FullName; }
-        }
+		public string FullName
+		{
+			get { return FileInfo.FullName; }
+		}
 
-        public long Length
-        {
-            get { return FileInfo.Length; }
-        }
+		public long Length
+		{
+			get { return FileInfo.Length; }
+		}
 
-        public DateTime LastWriteTime
-        {
-            get { return FileInfo.LastWriteTime; }
-        }
+		public DateTime LastWriteTime
+		{
+			get { return FileInfo.LastWriteTime; }
+		}
 
-        public int ThumbnailWidth
-        {
-            get { return Math.Min(MaxThumbnailSize, Thumbnail.PixelWidth); }
-        }
+		public int ThumbnailWidth
+		{
+			get { return Math.Min(MaxThumbnailSize, Thumbnail.PixelWidth); }
+		}
 
-        public int ThumbnailHeight
-        {
-            get { return Math.Min(MaxThumbnailSize, Thumbnail.PixelHeight); }
-        }
+		public int ThumbnailHeight
+		{
+			get { return Math.Min(MaxThumbnailSize, Thumbnail.PixelHeight); }
+		}
 
-        public Stretch Stretch
-        {
-            get
-            {
-                return Stretch.Uniform;
-            }
-        }
+		public Stretch Stretch
+		{
+			get
+			{
+				return Stretch.Uniform;
+			}
+		}
 
-        public BitmapSource Thumbnail
-        {
-            get
-            {
-                if (_thumbnail == null)
-                    _thumbnail = converter.Convert(FullName, typeof(BitmapSource), null, null) as BitmapSource;
-                return _thumbnail;
-            }
-        }
+		public BitmapSource Thumbnail
+		{
+			get
+			{
+				if (_thumbnail == null)
+					_thumbnail = converter.Convert(FullName, typeof(BitmapSource), null, null) as BitmapSource;
+				return _thumbnail;
+			}
+		}
 
-        public BitmapScalingMode ScalingMode
-        {
-            get
-            {
-                if (ThumbnailWidth < MaxThumbnailSize && ThumbnailHeight < MaxThumbnailSize)
-                    return BitmapScalingMode.Linear;
-                return BitmapScalingMode.HighQuality;
-            }
-        }
+		public BitmapScalingMode ScalingMode
+		{
+			get
+			{
+				if (ThumbnailWidth < MaxThumbnailSize && ThumbnailHeight < MaxThumbnailSize)
+					return BitmapScalingMode.Linear;
+				return BitmapScalingMode.HighQuality;
+			}
+		}
 
-        public Boolean InsideFunani
-        {
-            get
-            {
-                return Engine.Funani.GetFileInformation(FileInfo) != null;
-            }
-            set
-            {
-                if (value)
-                {
-                    // add
-                    Engine.Funani.AddFile(FileInfo);
-                }
-                else
-                {
-                    // remove
-                    Engine.Funani.RemoveFile(FileInfo);
-                }
-            }
-        }
+		private Boolean? _insideFunani;
+		public Boolean InsideFunani
+		{
+			get
+			{
+				if (!_insideFunani.HasValue)
+				{
+					_insideFunani = Engine.Funani.GetFileInformation(FileInfo) != null;
+				}
+				return (bool)_insideFunani;
+			}
+			set
+			{
+				if (InsideFunani != value)
+				{
+					_insideFunani = null; // trigger readback from metadata
+					if (value)
+					{
+						// add
+						Engine.Funani.AddFile(FileInfo);
+					}
+					else
+					{
+						// remove
+						Engine.Funani.RemoveFile(FileInfo);
+					}
+					TriggerPropertyChanged("InsideFunani");
+				}
+			}
+		}
 
-        private BitmapSource _thumbnail;
-        private const int MaxThumbnailSize = 120;
-        private static readonly UriToThumbnailConverter converter = new UriToThumbnailConverter(MaxThumbnailSize);
-    }
+		private BitmapSource _thumbnail;
+		private const int MaxThumbnailSize = 120;
+		private static readonly UriToThumbnailConverter converter = new UriToThumbnailConverter(MaxThumbnailSize);
+		
+		#region INotifyPropertyChanged Members
+
+		public event PropertyChangedEventHandler PropertyChanged;
+
+		private void TriggerPropertyChanged(string propertyName)
+		{
+			var handler = this.PropertyChanged;
+			if (handler != null)
+				handler(this, new PropertyChangedEventArgs(propertyName));
+		}
+
+		#endregion
+	}
 }

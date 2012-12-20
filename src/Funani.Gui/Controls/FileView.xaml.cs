@@ -45,6 +45,16 @@
 			fileView.ReloadFiles();
 		}
 		
+		private void CheckBox_Checked(object sender, RoutedEventArgs e)
+		{
+			bool isChecked = (bool)((sender as CheckBox).IsChecked);
+			foreach (var item in listControl.SelectedItems)
+			{
+				var viewModel = item as FileViewModel;
+				viewModel.InsideFunani = isChecked;
+			}
+		}
+		
 		public static readonly DependencyProperty SelectedPathProperty = 
   			DependencyProperty.Register("SelectedPath", typeof(string), typeof(FileView), 
   			new PropertyMetadata(string.Empty, OnSelectedPathChanged));

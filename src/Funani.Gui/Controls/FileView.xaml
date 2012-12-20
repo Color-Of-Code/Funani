@@ -43,7 +43,10 @@
 								       Stretch="{Binding Stretch}"
 								/>
 							</Border>
-							<CheckBox IsChecked="{Binding InsideFunani}" Canvas.Bottom="-8" Content="Funani Storage" />
+							<CheckBox IsChecked="{Binding InsideFunani}" 
+							          Checked="CheckBox_Checked"
+							          Canvas.Bottom="-8"
+							          Content="Funani Storage" />
 							<Canvas.ToolTip>
 								<StackPanel Orientation="Vertical" Grid.Column="1">
 									<TextBlock Text="{Binding Name,Mode=OneWay}" FontWeight="Bold">
