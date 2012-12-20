@@ -6,66 +6,60 @@
              mc:Ignorable="d" xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              d:DesignHeight="248" d:DesignWidth="468">
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"></RowDefinition>
-            <RowDefinition></RowDefinition>
-        </Grid.RowDefinitions>
-        <TextBlock Grid.Row="0" Name="pathControl" Text="{Binding SelectedPath}">
-        </TextBlock>
-        <ListView Grid.Row="1" Name="listControl" ItemsSource="{Binding}"
-			        VirtualizingStackPanel.IsVirtualizing="True"
-                    VirtualizingStackPanel.VirtualizationMode="Recycling">
-            <ListView.ItemContainerStyle>
-                <Style TargetType="ListViewItem">
-                    <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
-                </Style>
-            </ListView.ItemContainerStyle>
-            <ListView.View>
-                <GridView>
-                    <GridViewColumn Header="Infos" Width="240">
-                        <GridViewColumn.CellTemplate>
-                            <DataTemplate>
-                                <StackPanel Orientation="Vertical">
-                                    <TextBlock Text="{Binding Name,Mode=OneWay}" FontWeight="Bold">
-                                    </TextBlock>
-                                    <TextBlock>
+	<Grid>
+		<Grid.RowDefinitions>
+			<RowDefinition Height="Auto"></RowDefinition>
+			<RowDefinition></RowDefinition>
+		</Grid.RowDefinitions>
+		<TextBlock Grid.Row="0" Name="pathControl" Text="{Binding SelectedPath}">
+		</TextBlock>
+		<ListView Grid.Row="1" Name="listControl" ItemsSource="{Binding}"
+		          ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+		          Background="Transparent"
+		          ScrollViewer.IsDeferredScrollingEnabled="True">
+			<ListView.ItemsPanel>
+                <ItemsPanelTemplate>
+					<funani:VirtualizingWrapPanel Orientation="Horizontal" ItemHeight="120" ItemWidth="240" />
+                </ItemsPanelTemplate>
+			</ListView.ItemsPanel>
+			<ListView.ItemTemplate>
+				<DataTemplate>
+					<Grid Margin="5" Width="240" Height="120">
+						<Grid.ColumnDefinitions>
+							<ColumnDefinition Width="Auto"></ColumnDefinition>
+							<ColumnDefinition Width="*"></ColumnDefinition>
+						</Grid.ColumnDefinitions>
+						<Rectangle Fill="White" >
+							<Rectangle.BitmapEffect>
+								<DropShadowBitmapEffect Opacity="0.5" ShadowDepth="0" />
+							</Rectangle.BitmapEffect>
+						</Rectangle>
+						<Border Background="Gray" BorderBrush="White" BorderThickness="5" Height="{Binding ThumbnailHeight}">
+							<Image RenderOptions.BitmapScalingMode="{Binding ScalingMode}"
+							       Source="{Binding Thumbnail}"
+							       Width="{Binding ThumbnailWidth}"
+							       Height="{Binding ThumbnailHeight}"
+							       Stretch="{Binding Stretch}"
+							/>
+						</Border>
+						<StackPanel Orientation="Vertical" Grid.Column="1">
+							<TextBlock Text="{Binding Name,Mode=OneWay}" FontWeight="Bold">
+							</TextBlock>
+							<TextBlock>
 								<Run>Size: </Run>
 								<Run Text="{Binding Length,Mode=OneWay}"></Run>
 								<Run> bytes</Run>
-                                    </TextBlock>
-                                    <TextBlock>
+							</TextBlock>
+							<TextBlock>
 								<Run>Last modification: </Run>
 								<Run Text="{Binding LastWriteTime,Mode=OneWay}"></Run>
-                                    </TextBlock>
-                                </StackPanel>
-                            </DataTemplate>
-                        </GridViewColumn.CellTemplate>
-                    </GridViewColumn>
-                    <GridViewColumn Header="Preview" Width="200">
-                        <GridViewColumn.CellTemplate>
-                            <DataTemplate>
-                                <Canvas Height="{Binding ThumbnailHeight}" Margin="4,4,4,32" Background="LightGray">
-                                    <Image RenderOptions.BitmapScalingMode="{Binding ScalingMode}"
-                                           Source="{Binding Thumbnail}"
-                                           Width="{Binding ThumbnailWidth}"
-                                           Height="{Binding ThumbnailHeight}"
-                                           Stretch="{Binding Stretch}"
-                                           Canvas.Left="2"
-                                           Canvas.Top="2"
-                                           >
-                                    </Image>
-                                    <CheckBox IsChecked="{Binding InsideFunani}"
-                                              Canvas.Bottom="-16"
-                                              Canvas.Left="0"
-                                              >
-                                    </CheckBox>
-                                </Canvas>
-                            </DataTemplate>
-                        </GridViewColumn.CellTemplate>
-                    </GridViewColumn>
-                </GridView>
-            </ListView.View>
-        </ListView>
-    </Grid>
+							</TextBlock>
+							<CheckBox IsChecked="{Binding InsideFunani}">
+							</CheckBox>
+						</StackPanel>
+					</Grid>
+				</DataTemplate>
+			</ListView.ItemTemplate>
+		</ListView>
+	</Grid>
 </UserControl>
