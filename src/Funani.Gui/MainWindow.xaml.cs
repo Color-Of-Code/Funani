@@ -66,7 +66,7 @@ namespace Funani.Gui
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             var settings = Properties.Settings.Default;
-            _funani.OpenDatabase(settings.MongodbPath, settings.LastFunaniDatabase);
+            _funani.OpenDatabase(settings.MongodbPath, settings.LastFunaniDatabase, mongoDbView.MongoDbListener);
             if (!String.IsNullOrWhiteSpace(settings.LastDirectoryExplorerSelectedPath))
                 directoryExplorer.SelectPath(settings.LastDirectoryExplorerSelectedPath);
         }

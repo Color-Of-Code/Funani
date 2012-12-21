@@ -51,7 +51,7 @@ namespace Funani.Api
         /// Opens a funani database initializing the path if it is initially empty
         /// </summary>
         /// <param name="path">Path to the directory containing the funani data</param>
-        void OpenDatabase(String pathToMongod, String path);
+        void OpenDatabase(String pathToMongod, String path, IConsoleRedirect listener);
 
         /// <summary>
         /// Closes the funani database and flushes any pending operation to disk

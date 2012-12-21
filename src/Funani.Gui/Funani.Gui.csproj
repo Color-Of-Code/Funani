@@ -58,6 +58,10 @@
     </ApplicationDefinition>
     <Page Include="Controls\DirectoryExplorer.xaml" />
     <Page Include="Controls\FileView.xaml" />
+    <Page Include="Controls\MongoDbView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -79,6 +83,10 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Controls\HeaderToImageConverter.cs" />
+    <Compile Include="Controls\MongoDbView.xaml.cs">
+      <DependentUpon>MongoDbView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\MongoDbViewModel.cs" />
     <Compile Include="Controls\PixelBasedScrollingBehaviour.cs" />
     <Compile Include="Controls\UriToThumbnailConverter.cs" />
     <Compile Include="Controls\VirtualizingWrapPanel.cs" />

@@ -28,76 +28,41 @@
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace Funani.Engine
+namespace Funani.Gui.Controls
 {
     using System;
     using System.Collections.Generic;
-    using System.IO;
     using System.Linq;
     using System.Text;
+    using System.Windows;
+    using System.Windows.Controls;
+    using System.Windows.Data;
+    using System.Windows.Documents;
+    using System.Windows.Input;
+    using System.Windows.Media;
+    using System.Windows.Media.Imaging;
+    using System.Windows.Navigation;
+    using System.Windows.Shapes;
 
     using Funani.Api;
-    using Funani.Api.Metadata;
-    using Funani.FileStorage;
-    using Funani.Metadata;
 
-    public class FunaniEngine : IEngine
+    /// <summary>
+    /// Interaction logic for MongoDbView.xaml
+    /// </summary>
+    public partial class MongoDbView : UserControl
     {
-        public FunaniEngine()
+        public MongoDbView()
         {
+            InitializeComponent();
+            DataContext = new MongoDbViewModel(Dispatcher);
         }
 
-        private IFileStorage _fileStorage;
-        private Metadata.MetadataDatabase _metadata;
-
-        public Boolean IsValidDatabase(String path)
+        public IConsoleRedirect MongoDbListener
         {
-            if (String.IsNullOrWhiteSpace(path) ||
-                !Directory.Exists(path) ||
-                !Directory.Exists(Path.Combine(path, "metadata")) ||
-                !Directory.Exists(Path.Combine(path, "data")))
-                return false;
-            return true;
-        }
-
-        public void OpenDatabase(String pathToMongod, String path, IConsoleRedirect listener)
-        {
-            // create the file database
-            _fileStorage = new FileDatabase(path);
-            _fileStorage.Start();
-
-            // create the mongodb
-            _metadata = new MetadataDatabase(pathToMongod, path);
-            _metadata.Start(listener);
-        }
-
-        public void CloseDatabase()
-        {
-            _fileStorage.Stop();
-            _metadata.Stop();
-            _fileStorage = null;
-            _metadata = null;
-        }
-
-        public FileInformation AddFile(FileInfo file)
-        {
-            var hash = _fileStorage.StoreFile(file);
-            return _metadata.Retrieve(hash, file);
-        }
-
-        public void RemoveFile(FileInfo file)
-        {
-            _metadata.RemovePath(file);
-        }
-
-        public FileInformation GetFileInformation(FileInfo file)
-        {
-            return _metadata.Retrieve(file);
-        }
-
-        public byte[] GetFileData(String hash)
-        {
-        	return _fileStorage.LoadFile(hash);
+            get
+            {
+                return DataContext as MongoDbViewModel;
+            }
         }
     }
 }

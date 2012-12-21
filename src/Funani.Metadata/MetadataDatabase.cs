@@ -42,6 +42,8 @@ namespace Funani.Metadata
 
     using MongoDB.Driver;
     using MongoDB.Driver.Builders;
+
+    using Funani.Api;
     using Funani.Api.Metadata;
 
     public class MetadataDatabase
@@ -99,7 +101,7 @@ namespace Funani.Metadata
         }
 
 
-        public void Start()
+        public void Start(IConsoleRedirect listener)
         {
             Stop();
 
@@ -108,11 +110,24 @@ namespace Funani.Metadata
             if (!Directory.Exists(JournalPath))
                 Directory.CreateDirectory(JournalPath);
 
+            _listener = listener;
             ProcessStartInfo psi = new ProcessStartInfo();
             psi.FileName = Path.Combine(_pathToMongod, "mongod");
             psi.Arguments = String.Format(" --journal --dbpath \"{0}\" --port {1}",
                                           DatabasePath, 27017);
-            _process = Process.Start(psi);
+            psi.CreateNoWindow = true;
+            psi.WindowStyle = ProcessWindowStyle.Hidden;
+            psi.RedirectStandardError = true;
+            psi.RedirectStandardOutput = true;
+            psi.UseShellExecute = false;
+            _process = new Process();
+            _process.StartInfo = psi;
+            _process.OutputDataReceived += new DataReceivedEventHandler(_process_OutputDataReceived);
+            _process.ErrorDataReceived += new DataReceivedEventHandler(_process_ErrorDataReceived);
+            _process.EnableRaisingEvents = true;
+            _process.Start();
+            _process.BeginOutputReadLine();
+            _process.BeginErrorReadLine();
 
             String connectionString = "mongodb://localhost:27017";
 
@@ -151,6 +166,7 @@ namespace Funani.Metadata
                     Console.WriteLine(ex.Message);
                 }
                 _process = null;
+                _listener = null;
             }
         }
 
@@ -173,13 +189,29 @@ namespace Funani.Metadata
 
 
         #region Private
-        private Process _process = null;
+        private Process _process;
         private String _pathToDatabase;
         private String _pathToMongod;
-        private MongoClient _mongoClient = null;
-        private MongoServer _mongoServer = null;
-        private MongoDatabase _funani = null;
+        private MongoClient _mongoClient;
+        private MongoServer _mongoServer;
+        private MongoDatabase _funani;
         #endregion
 
+        #region Console I/O to listener redirection
+        private void _process_ErrorDataReceived(object sender, DataReceivedEventArgs e)
+        {
+            var l = _listener;
+            if (l != null)
+                l.OnErrorDataReceived(e.Data);
+        }
+
+        private void _process_OutputDataReceived(object sender, DataReceivedEventArgs e)
+        {
+            var l = _listener;
+            if (l != null)
+                l.OnOutputDataReceived(e.Data);
+        }
+        private IConsoleRedirect _listener;
+        #endregion
     }
 }

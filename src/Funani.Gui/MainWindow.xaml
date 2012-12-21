@@ -43,6 +43,12 @@
 					</funani:FileView>
 				</Grid>
 	    	</TabItem>
-    	</TabControl>
+            <TabItem>
+                <TabItem.Header>MongoDB output</TabItem.Header>
+                <Grid>
+                    <funani:MongoDbView x:Name="mongoDbView"></funani:MongoDbView>
+                </Grid>
+            </TabItem>
+        </TabControl>
     </Grid>
 </Window>
