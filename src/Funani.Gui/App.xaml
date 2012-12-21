@@ -1,8 +1,17 @@
 ﻿<Application x:Class="Funani.Gui.App"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:funani="clr-namespace:Funani.Gui.Controls"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
-         
+        <funani:MathConverter x:Key="MathConverter"></funani:MathConverter>
+        <Style x:Key="checkBoxStyle" TargetType="{x:Type CheckBox}">
+            <Setter Property="Background" Value="Red" />
+            <Style.Triggers>
+                <Trigger Property="IsChecked" Value="True">
+                    <Setter Property="Background" Value="DarkGreen" />
+                </Trigger>
+            </Style.Triggers>
+        </Style>
     </Application.Resources>
 </Application>

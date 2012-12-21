@@ -6,66 +6,72 @@
              mc:Ignorable="d" xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              d:DesignHeight="248" d:DesignWidth="468">
-	<Grid>
-		<Grid.RowDefinitions>
-			<RowDefinition Height="Auto"></RowDefinition>
-			<RowDefinition></RowDefinition>
-		</Grid.RowDefinitions>
-		<TextBlock Grid.Row="0" Name="pathControl" Text="{Binding SelectedPath}">
-		</TextBlock>
-		<ListView Grid.Row="1" Name="listControl" ItemsSource="{Binding}"
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition></RowDefinition>
+        </Grid.RowDefinitions>
+        <TextBox Grid.Row="0" Name="pathControl" Text="{Binding SelectedPath, Mode=OneWay}" IsReadOnly="True" />
+        <Slider Name="sliderSize" Grid.Row="1" Minimum="60" Maximum="320" Value="160"></Slider>
+        <ListView Grid.Row="2" Name="listControl" ItemsSource="{Binding}"
 		          ScrollViewer.HorizontalScrollBarVisibility="Disabled"
 		          Background="Transparent"
 		          ScrollViewer.IsDeferredScrollingEnabled="True">
-			<ListView.ItemsPanel>
-				<ItemsPanelTemplate>
-					<funani:VirtualizingWrapPanel ItemHeight="140" ItemWidth="140" />
-				</ItemsPanelTemplate>
-			</ListView.ItemsPanel>
-			<ListView.ItemTemplate>
-				<DataTemplate>
-					<Grid Margin="2" Width="128" Height="128">
-						<Grid.ColumnDefinitions>
-							<ColumnDefinition Width="Auto"></ColumnDefinition>
-							<ColumnDefinition Width="*"></ColumnDefinition>
-						</Grid.ColumnDefinitions>
-						<Rectangle Fill="White" >
-							<Rectangle.BitmapEffect>
-								<DropShadowBitmapEffect Opacity="0.5" ShadowDepth="0" />
-							</Rectangle.BitmapEffect>
-						</Rectangle>
-						<Canvas>
-							<Border Background="Gray" BorderBrush="White" BorderThickness="5" Height="{Binding ThumbnailHeight}">
-								<Image RenderOptions.BitmapScalingMode="{Binding ScalingMode}"
-								       Source="{Binding Thumbnail}"
-								       Width="{Binding ThumbnailWidth}"
-								       Height="{Binding ThumbnailHeight}"
-								       Stretch="{Binding Stretch}"
-								/>
-							</Border>
-							<CheckBox IsChecked="{Binding InsideFunani}" 
-							          Checked="CheckBox_Checked"
-							          Canvas.Bottom="-8"
-							          Content="Funani Storage" />
-							<Canvas.ToolTip>
-								<StackPanel Orientation="Vertical" Grid.Column="1">
-									<TextBlock Text="{Binding Name,Mode=OneWay}" FontWeight="Bold">
-									</TextBlock>
-									<TextBlock>
-										<Run>Size: </Run>
-										<Run Text="{Binding Length,Mode=OneWay}"></Run>
-										<Run> bytes</Run>
-									</TextBlock>
-									<TextBlock>
-										<Run>Last modification: </Run>
-										<Run Text="{Binding LastWriteTime,Mode=OneWay}"></Run>
-									</TextBlock>
-								</StackPanel>
-							</Canvas.ToolTip>
-						</Canvas>
-					</Grid>
-				</DataTemplate>
-			</ListView.ItemTemplate>
-		</ListView>
-	</Grid>
+            <ListView.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <funani:VirtualizingWrapPanel
+                        ItemHeight="{Binding ElementName=sliderSize,Path=Value}"
+                        ItemWidth="{Binding ElementName=sliderSize,Path=Value}" />
+                </ItemsPanelTemplate>
+            </ListView.ItemsPanel>
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <Canvas Background="Transparent"
+                            Width="{Binding ElementName=sliderSize,Path=Value}"
+                            Height="{Binding ElementName=sliderSize,Path=Value}"
+                            >
+                        <Border Background="Gray" BorderBrush="White" BorderThickness="4"
+                                Width="{Binding ElementName=sliderSize,Path=Value,
+                                    Converter={StaticResource MathConverter},ConverterParameter=(@VALUE-4)}"
+                                Height="{Binding ElementName=sliderSize,Path=Value,
+                                    Converter={StaticResource MathConverter},ConverterParameter=(@VALUE-4)}"
+                                Canvas.Left="2"
+                                Canvas.Top="2"
+                                >
+                            <Image RenderOptions.BitmapScalingMode="{Binding ScalingMode}"
+								    Source="{Binding Thumbnail}"
+								    Width="{Binding ThumbnailWidth}"
+								    Height="{Binding ThumbnailHeight}"
+								    Stretch="{Binding Stretch}"
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center"
+							/>
+                        </Border>
+                        <CheckBox IsChecked="{Binding InsideFunani}" 
+							        Checked="CheckBox_Checked"
+							        Canvas.Bottom="4"
+							        Canvas.Right="4"
+                                    Style="{StaticResource checkBoxStyle}"
+                                    />
+                        <Canvas.ToolTip>
+                            <StackPanel Orientation="Vertical" Grid.Column="1">
+                                <TextBlock Text="{Binding Name,Mode=OneWay}" FontWeight="Bold">
+                                </TextBlock>
+                                <TextBlock>
+									<Run>Size: </Run>
+									<Run Text="{Binding Length,Mode=OneWay}"></Run>
+									<Run> bytes</Run>
+                                </TextBlock>
+                                <TextBlock>
+									<Run>Last modification: </Run>
+									<Run Text="{Binding LastWriteTime,Mode=OneWay}"></Run>
+                                </TextBlock>
+                            </StackPanel>
+                        </Canvas.ToolTip>
+                    </Canvas>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+    </Grid>
 </UserControl>

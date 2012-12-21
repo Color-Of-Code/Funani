@@ -74,14 +74,26 @@ namespace Funani.Gui.Controls
 			get { return FileInfo.LastWriteTime; }
 		}
 
-		public int ThumbnailWidth
+		public double ThumbnailWidth
 		{
-			get { return Math.Min(MaxThumbnailSize, Thumbnail.PixelWidth); }
+			get 
+            {
+                if (MaxThumbnailSize < Thumbnail.PixelWidth)
+                    return double.NaN;
+                else
+                    return Thumbnail.PixelWidth;
+            }
 		}
 
-		public int ThumbnailHeight
+		public double ThumbnailHeight
 		{
-			get { return Math.Min(MaxThumbnailSize, Thumbnail.PixelHeight); }
+			get 
+            {
+                if (MaxThumbnailSize < Thumbnail.PixelHeight)
+                    return double.NaN;
+                else
+                    return Thumbnail.PixelHeight;
+            }
 		}
 
 		public Stretch Stretch

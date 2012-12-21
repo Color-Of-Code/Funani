@@ -77,11 +77,10 @@ namespace Funani.Gui.Controls
             {
                 var uri = new Uri(value.ToString());
                 Orientation orientation = Orientation.Normal;
-
                 BitmapFrame frame = BitmapFrame.Create(
                     uri, BitmapCreateOptions.DelayCreation, BitmapCacheOption.None);
                 BitmapSource ret = null;
-                BitmapMetadata meta = null;
+                BitmapMetadata meta = frame.Metadata as BitmapMetadata;
                 if (frame.PixelHeight < ThumbnailSize && frame.PixelWidth < ThumbnailSize)
                 {
                     BitmapImage image = new BitmapImage();
@@ -101,7 +100,10 @@ namespace Funani.Gui.Controls
                     if (frame.Thumbnail == null)
                     {
                         BitmapImage image = new BitmapImage();
-                        image.DecodePixelHeight = ThumbnailSize;
+                        if (frame.PixelHeight >= frame.PixelWidth)
+                            image.DecodePixelHeight = ThumbnailSize;
+                        else
+                            image.DecodePixelWidth = ThumbnailSize;
                         image.BeginInit();
                         image.UriSource = uri;
                         image.CacheOption = BitmapCacheOption.None;
@@ -115,7 +117,6 @@ namespace Funani.Gui.Controls
                     }
                     else
                     {
-                        meta = frame.Metadata as BitmapMetadata;
                         ret = frame.Thumbnail;
                     }
                 }
