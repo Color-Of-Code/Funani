@@ -18,7 +18,36 @@
 		          ScrollViewer.HorizontalScrollBarVisibility="Disabled"
 		          Background="Transparent"
 		          ScrollViewer.IsDeferredScrollingEnabled="True">
-            <ListView.ItemsPanel>
+		    <ListView.Resources>
+		        <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}" Color="Salmon" />                
+		        <SolidColorBrush x:Key="{x:Static SystemColors.ControlBrushKey}" Color="Salmon" />
+		        <!-- ControlTemplate x:Key="SelectedTemplate" TargetType="ListViewItem">
+		            <Border SnapsToDevicePixels="true" 
+		                    BorderBrush="{TemplateBinding BorderBrush}" 
+		                    BorderThickness="{TemplateBinding BorderThickness}" 
+		                    Background="{TemplateBinding Background}"
+		                    CornerRadius="5" x:Name="border">
+		                <ContentControl 
+		                    SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" 
+		                    Margin="2,2,2,2" 
+		                    VerticalAlignment="Stretch"
+		                    Content="{TemplateBinding Content}" />
+		            </Border>
+		        </ControlTemplate>
+		        <Style TargetType="ListViewItem">
+		            <Style.Triggers>
+		                <MultiTrigger>
+		                    <MultiTrigger.Conditions>
+		                        <Condition Property="IsSelected" Value="true" />
+		                        <Condition Property="Selector.IsSelectionActive" Value="true" />
+		                    </MultiTrigger.Conditions>
+		                    <Setter Property="Background" Value="Salmon" />
+		                    <Setter Property="Template" Value="{StaticResource SelectedTemplate}" />
+		                </MultiTrigger>
+		            </Style.Triggers>
+		        </Style -->
+		    </ListView.Resources>
+        	<ListView.ItemsPanel>
                 <ItemsPanelTemplate>
                     <funani:VirtualizingWrapPanel
                         ItemHeight="{Binding ElementName=sliderSize,Path=Value}"
@@ -33,9 +62,9 @@
                             >
                         <Border Background="Gray" BorderBrush="White" BorderThickness="4"
                                 Width="{Binding ElementName=sliderSize,Path=Value,
-                                    Converter={StaticResource MathConverter},ConverterParameter=(@VALUE-4)}"
+                                    Converter={StaticResource MathConverter},ConverterParameter=(@VALUE-8)}"
                                 Height="{Binding ElementName=sliderSize,Path=Value,
-                                    Converter={StaticResource MathConverter},ConverterParameter=(@VALUE-4)}"
+                                    Converter={StaticResource MathConverter},ConverterParameter=(@VALUE-8)}"
                                 Canvas.Left="2"
                                 Canvas.Top="2"
                                 >
@@ -48,12 +77,12 @@
                                     VerticalAlignment="Center"
 							/>
                         </Border>
-                        <CheckBox IsChecked="{Binding InsideFunani}" 
-							        Checked="CheckBox_Checked"
-							        Canvas.Bottom="4"
-							        Canvas.Right="4"
-                                    Style="{StaticResource checkBoxStyle}"
-                                    />
+                        <CheckBox IsChecked="{Binding InsideFunani,Mode=OneWay}" 
+                                  Click="CheckBox_Clicked"
+							      Canvas.Bottom="4"
+							      Canvas.Right="4"
+                                  Style="{StaticResource checkBoxStyle}"
+                                  />
                         <Canvas.ToolTip>
                             <StackPanel Orientation="Vertical" Grid.Column="1">
                                 <TextBlock Text="{Binding Name,Mode=OneWay}" FontWeight="Bold">

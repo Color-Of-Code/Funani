@@ -45,13 +45,22 @@
 			fileView.ReloadFiles();
 		}
 		
-		private void CheckBox_Checked(object sender, RoutedEventArgs e)
+		private void CheckBox_Clicked(object sender, RoutedEventArgs e)
 		{
-			bool isChecked = (bool)((sender as CheckBox).IsChecked);
-			foreach (var item in listControl.SelectedItems)
+			var checkBox = sender as CheckBox;
+			bool isChecked = (bool)(checkBox.IsChecked);
+			if (listControl.SelectedItem == null)
 			{
-				var viewModel = item as FileViewModel;
+				var viewModel = checkBox.DataContext as FileViewModel;
 				viewModel.InsideFunani = isChecked;
+			}
+			else
+			{
+				foreach (var item in listControl.SelectedItems)
+				{
+					var viewModel = item as FileViewModel;
+					viewModel.InsideFunani = isChecked;
+				}
 			}
 		}
 		
