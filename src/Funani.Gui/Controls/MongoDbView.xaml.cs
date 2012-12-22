@@ -54,8 +54,14 @@ namespace Funani.Gui.Controls
         public MongoDbView()
         {
             InitializeComponent();
-            DataContext = new MongoDbViewModel(Dispatcher);
+            _viewModel = new MongoDbViewModel(Dispatcher);
+            DataContext = _viewModel;
         }
+        
+		private void Run_Click(object sender, RoutedEventArgs e)
+		{
+			_viewModel.RunQuery();
+		}
 
         public IConsoleRedirect MongoDbListener
         {
@@ -64,5 +70,7 @@ namespace Funani.Gui.Controls
                 return DataContext as MongoDbViewModel;
             }
         }
+        
+        private MongoDbViewModel _viewModel;
     }
 }

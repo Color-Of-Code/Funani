@@ -30,46 +30,71 @@
 
 namespace Funani.Gui.Controls
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Collections.ObjectModel;
-    using System.Linq;
-    using System.Text;
-    using System.Windows.Threading;
+	using System;
+	using System.Collections.Generic;
+	using System.Collections.ObjectModel;
+	using System.ComponentModel;
+	using System.Linq;
+	using System.Text;
+	using System.Windows.Threading;
 
-    using Funani.Api;
+	using Funani.Api;
 
-    public class MongoDbViewModel : IConsoleRedirect
-    {
-        public MongoDbViewModel(Dispatcher dispatcher)
-        {
-            _dispatcher = dispatcher;
-            Lines = new ObservableCollection<string>();
-        }
+	public class MongoDbViewModel : IConsoleRedirect, INotifyPropertyChanged
+	{
+		public MongoDbViewModel(Dispatcher dispatcher)
+		{
+			_dispatcher = dispatcher;
+			Lines = new ObservableCollection<string>();
+		}
 
-        public ObservableCollection<String> Lines
-        { get; private set; }
+		public ObservableCollection<String> Lines
+		{ get; private set; }
 
-        public void OnOutputDataReceived(string data)
-        {
-            if (data != null)
-            {
-                _dispatcher.BeginInvoke((Action)(() =>
-                    Lines.Add(data.TrimEnd()))
-                );
-            }
-        }
+		public String Query
+		{ get; set; }
 
-        public void OnErrorDataReceived(string data)
-        {
-            if (data != null)
-            {
-                _dispatcher.BeginInvoke((Action)(() =>
-                    Lines.Add(data.TrimEnd()))
-                );
-            }
-        }
+		public IList<String> QueryResults
+		{ get; set; }
+		
+		public void RunQuery()
+		{
+			TriggerPropertyChanged("QueryResults");
+		}
+		
+		public void OnOutputDataReceived(string data)
+		{
+			if (data != null)
+			{
+				_dispatcher.BeginInvoke((Action)(() =>
+				                                 Lines.Add(data.TrimEnd()))
+				                       );
+			}
+		}
 
-        private Dispatcher _dispatcher;
-    }
+		public void OnErrorDataReceived(string data)
+		{
+			if (data != null)
+			{
+				_dispatcher.BeginInvoke((Action)(() =>
+				                                 Lines.Add(data.TrimEnd()))
+				                       );
+			}
+		}
+
+		private Dispatcher _dispatcher;
+		
+		#region INotifyPropertyChanged Members
+
+		public event PropertyChangedEventHandler PropertyChanged;
+
+		private void TriggerPropertyChanged(string propertyName)
+		{
+			var handler = this.PropertyChanged;
+			if (handler != null)
+				handler(this, new PropertyChangedEventArgs(propertyName));
+		}
+
+		#endregion
+	}
 }

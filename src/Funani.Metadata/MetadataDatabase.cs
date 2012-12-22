@@ -73,6 +73,16 @@ namespace Funani.Metadata
             }
             return info;
         }
+        
+        public IEnumerable<String> GetCollectionNames()
+        {
+        	return Funani.GetCollectionNames();
+        }
+
+        public DatabaseStatsResult GetStats()
+        {
+        	return Funani.GetStats();
+        }
 
         public FileInformation Retrieve(FileInfo file)
         {
