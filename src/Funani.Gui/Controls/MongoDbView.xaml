@@ -28,50 +28,55 @@
 				</Grid>
     		</TabItem>
     		<TabItem Header="Statistics" DataContext="{Binding Statistics}">
-    			<Grid>
-    				<Grid.ColumnDefinitions>
-    					<ColumnDefinition Width="1*"></ColumnDefinition>
-    					<ColumnDefinition Width="1*"></ColumnDefinition>
-    				</Grid.ColumnDefinitions>
-    				<Grid.RowDefinitions>
-    					<RowDefinition Height="Auto"></RowDefinition>
-    					<RowDefinition Height="Auto"></RowDefinition>
-    					<RowDefinition Height="Auto"></RowDefinition>
-    					<RowDefinition Height="Auto"></RowDefinition>
-    					<RowDefinition Height="Auto"></RowDefinition>
-    					<RowDefinition Height="Auto"></RowDefinition>
-    					<RowDefinition Height="Auto"></RowDefinition>
-    					<RowDefinition></RowDefinition>
-    				</Grid.RowDefinitions>
-    				
-	    			<TextBlock Grid.Column="0" Grid.Row="0">avgObjSize</TextBlock>
-	    			<TextBlock Grid.Column="1" Grid.Row="0" Text="{Binding AverageObjectSize}"></TextBlock>
-
-	    			<TextBlock Grid.Column="0" Grid.Row="0">collections</TextBlock>
-	    			<TextBlock Grid.Column="1" Grid.Row="0" Text="{Binding CollectionCount}"></TextBlock>
-
-	    			<TextBlock Grid.Column="0" Grid.Row="0">dataSize</TextBlock>
-	    			<TextBlock Grid.Column="1" Grid.Row="0" Text="{Binding DataSize}"></TextBlock>
-
-	    			<TextBlock Grid.Column="0" Grid.Row="0">numExtents</TextBlock>
-	    			<TextBlock Grid.Column="1" Grid.Row="0" Text="{Binding ExtentCount}"></TextBlock>
-
-	    			<TextBlock Grid.Column="0" Grid.Row="0">fileSize</TextBlock>
-	    			<TextBlock Grid.Column="1" Grid.Row="0" Text="{Binding FileSize}"></TextBlock>
-
-	    			<TextBlock Grid.Column="0" Grid.Row="0">indexes</TextBlock>
-	    			<TextBlock Grid.Column="1" Grid.Row="0" Text="{Binding IndexCount}"></TextBlock>
-
-	    			<TextBlock Grid.Column="0" Grid.Row="0">indexSize</TextBlock>
-	    			<TextBlock Grid.Column="1" Grid.Row="0" Text="{Binding IndexSize}"></TextBlock>
-
-	    			<TextBlock Grid.Column="0" Grid.Row="0">objects</TextBlock>
-	    			<TextBlock Grid.Column="1" Grid.Row="0" Text="{Binding ObjectCount}"></TextBlock>
-
-	    			<TextBlock Grid.Column="0" Grid.Row="0">storageSize</TextBlock>
-	    			<TextBlock Grid.Column="1" Grid.Row="0" Text="{Binding StorageSize}"></TextBlock>
-
-				</Grid>
+    			<GroupBox FontFamily="Courier New">
+    				<GroupBox.Header>
+	    				<Button Content="Refresh" Click="Button_Click"></Button>
+    				</GroupBox.Header>
+	    			<Grid>
+	    				<Grid.ColumnDefinitions>
+	    					<ColumnDefinition Width="1*"></ColumnDefinition>
+	    					<ColumnDefinition Width="1*"></ColumnDefinition>
+	    				</Grid.ColumnDefinitions>
+	    				<Grid.RowDefinitions>
+	    					<RowDefinition Height="Auto"></RowDefinition>
+	    					<RowDefinition Height="Auto"></RowDefinition>
+	    					<RowDefinition Height="Auto"></RowDefinition>
+	    					<RowDefinition Height="Auto"></RowDefinition>
+	    					<RowDefinition Height="Auto"></RowDefinition>
+	    					<RowDefinition Height="Auto"></RowDefinition>
+	    					<RowDefinition Height="Auto"></RowDefinition>
+	    					<RowDefinition Height="Auto"></RowDefinition>
+	    					<RowDefinition Height="Auto"></RowDefinition>
+	    				</Grid.RowDefinitions>
+	    				
+		    			<TextBlock Grid.Column="0" Grid.Row="0">Average Object Size</TextBlock>
+		    			<TextBlock Grid.Column="1" Grid.Row="0" Text="{Binding AverageObjectSize}" HorizontalAlignment="Right"></TextBlock>
+	
+		    			<TextBlock Grid.Column="0" Grid.Row="1">Number of Collections</TextBlock>
+		    			<TextBlock Grid.Column="1" Grid.Row="1" Text="{Binding CollectionCount}" HorizontalAlignment="Right"></TextBlock>
+	
+		    			<TextBlock Grid.Column="0" Grid.Row="2">Data Size</TextBlock>
+		    			<TextBlock Grid.Column="1" Grid.Row="2" Text="{Binding DataSize}" HorizontalAlignment="Right"></TextBlock>
+	
+		    			<TextBlock Grid.Column="0" Grid.Row="3">Number of Extents</TextBlock>
+		    			<TextBlock Grid.Column="1" Grid.Row="3" Text="{Binding ExtentCount}" HorizontalAlignment="Right"></TextBlock>
+	
+		    			<TextBlock Grid.Column="0" Grid.Row="4">File Size</TextBlock>
+		    			<TextBlock Grid.Column="1" Grid.Row="4" Text="{Binding FileSize}" HorizontalAlignment="Right"></TextBlock>
+	
+		    			<TextBlock Grid.Column="0" Grid.Row="5">Number of Indexes</TextBlock>
+		    			<TextBlock Grid.Column="1" Grid.Row="5" Text="{Binding IndexCount}" HorizontalAlignment="Right"></TextBlock>
+	
+		    			<TextBlock Grid.Column="0" Grid.Row="6">Index Size</TextBlock>
+		    			<TextBlock Grid.Column="1" Grid.Row="6" Text="{Binding IndexSize}" HorizontalAlignment="Right"></TextBlock>
+	
+		    			<TextBlock Grid.Column="0" Grid.Row="7">Number of Objects</TextBlock>
+		    			<TextBlock Grid.Column="1" Grid.Row="7" Text="{Binding ObjectCount}" HorizontalAlignment="Right"></TextBlock>
+	
+		    			<TextBlock Grid.Column="0" Grid.Row="8">Storage Size</TextBlock>
+		    			<TextBlock Grid.Column="1" Grid.Row="8" Text="{Binding StorageSize}" HorizontalAlignment="Right"></TextBlock>
+					</Grid>
+       			</GroupBox>
     		</TabItem>
     	</TabControl>
     </Grid>

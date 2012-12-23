@@ -63,6 +63,11 @@ namespace Funani.Gui.Controls
 			_viewModel.RunQuery();
 		}
 		
+		private void Button_Click(object sender, RoutedEventArgs e)
+		{
+			_viewModel.RefreshStatistics();
+		}
+		
         public IConsoleRedirect MongoDbListener
         {
             get

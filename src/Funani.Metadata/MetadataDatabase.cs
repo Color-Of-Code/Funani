@@ -57,6 +57,9 @@ namespace Funani.Metadata
         public MongoDatabase Funani
         { get { return _funani; } }
 
+        public object Database
+        { get { return _funani; } }
+
         public FileInformation Retrieve(String hash, FileInfo file)
         {
             var files = Funani.GetCollection("fileinfo");

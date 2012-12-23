@@ -99,5 +99,13 @@ namespace Funani.Engine
         {
         	return _fileStorage.LoadFile(hash);
         }
+        
+        public object MetadataDatabase
+        {
+        	get
+        	{
+        		return _metadata.Database;
+        	}
+        }
     }
 }

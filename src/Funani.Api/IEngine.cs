@@ -90,5 +90,9 @@ namespace Funani.Api
         /// <returns>The file contents as a byte array</returns>
         byte[] GetFileData(String hash);
 
+        /// <summary>
+        /// Return the metadata database for direct manipulation
+        /// </summary>
+        object MetadataDatabase { get; }
     }
 }

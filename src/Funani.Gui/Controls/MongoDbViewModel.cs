@@ -40,8 +40,8 @@ namespace Funani.Gui.Controls
 
 	using Funani.Api;
 
-//    using MongoDB.Driver;
-//    using MongoDB.Driver.Builders;
+    using MongoDB.Driver;
+    using MongoDB.Driver.Builders;
 
 	public class MongoDbViewModel : IConsoleRedirect, INotifyPropertyChanged
 	{
@@ -65,13 +65,26 @@ namespace Funani.Gui.Controls
 			TriggerPropertyChanged("QueryResults");
 		}
 		
-//		public DatabaseStatsResult Statistics
-//		{
-//			get 
-//			{
-//				return Funani.Gui.Engine.Funani.GetDat
-//			}
-//		}
+		public DatabaseStatsResult Statistics
+		{
+			get 
+			{
+				return Funani.GetStats();
+			}
+		}
+		
+		public void RefreshStatistics()
+		{
+			TriggerPropertyChanged("Statistics");
+		}
+		
+		private MongoDatabase Funani
+		{
+			get 
+			{
+				return global::Funani.Gui.Engine.Funani.MetadataDatabase as MongoDatabase;
+			}
+		}
 		
 		public void OnOutputDataReceived(string data)
 		{
