@@ -27,6 +27,52 @@
 			        </ListView>
 				</Grid>
     		</TabItem>
+    		<TabItem Header="Statistics" DataContext="{Binding Statistics}">
+    			<Grid>
+    				<Grid.ColumnDefinitions>
+    					<ColumnDefinition Width="1*"></ColumnDefinition>
+    					<ColumnDefinition Width="1*"></ColumnDefinition>
+    				</Grid.ColumnDefinitions>
+    				<Grid.RowDefinitions>
+    					<RowDefinition Height="Auto"></RowDefinition>
+    					<RowDefinition Height="Auto"></RowDefinition>
+    					<RowDefinition Height="Auto"></RowDefinition>
+    					<RowDefinition Height="Auto"></RowDefinition>
+    					<RowDefinition Height="Auto"></RowDefinition>
+    					<RowDefinition Height="Auto"></RowDefinition>
+    					<RowDefinition Height="Auto"></RowDefinition>
+    					<RowDefinition></RowDefinition>
+    				</Grid.RowDefinitions>
+    				
+	    			<TextBlock Grid.Column="0" Grid.Row="0">avgObjSize</TextBlock>
+	    			<TextBlock Grid.Column="1" Grid.Row="0" Text="{Binding AverageObjectSize}"></TextBlock>
+
+	    			<TextBlock Grid.Column="0" Grid.Row="0">collections</TextBlock>
+	    			<TextBlock Grid.Column="1" Grid.Row="0" Text="{Binding CollectionCount}"></TextBlock>
+
+	    			<TextBlock Grid.Column="0" Grid.Row="0">dataSize</TextBlock>
+	    			<TextBlock Grid.Column="1" Grid.Row="0" Text="{Binding DataSize}"></TextBlock>
+
+	    			<TextBlock Grid.Column="0" Grid.Row="0">numExtents</TextBlock>
+	    			<TextBlock Grid.Column="1" Grid.Row="0" Text="{Binding ExtentCount}"></TextBlock>
+
+	    			<TextBlock Grid.Column="0" Grid.Row="0">fileSize</TextBlock>
+	    			<TextBlock Grid.Column="1" Grid.Row="0" Text="{Binding FileSize}"></TextBlock>
+
+	    			<TextBlock Grid.Column="0" Grid.Row="0">indexes</TextBlock>
+	    			<TextBlock Grid.Column="1" Grid.Row="0" Text="{Binding IndexCount}"></TextBlock>
+
+	    			<TextBlock Grid.Column="0" Grid.Row="0">indexSize</TextBlock>
+	    			<TextBlock Grid.Column="1" Grid.Row="0" Text="{Binding IndexSize}"></TextBlock>
+
+	    			<TextBlock Grid.Column="0" Grid.Row="0">objects</TextBlock>
+	    			<TextBlock Grid.Column="1" Grid.Row="0" Text="{Binding ObjectCount}"></TextBlock>
+
+	    			<TextBlock Grid.Column="0" Grid.Row="0">storageSize</TextBlock>
+	    			<TextBlock Grid.Column="1" Grid.Row="0" Text="{Binding StorageSize}"></TextBlock>
+
+				</Grid>
+    		</TabItem>
     	</TabControl>
     </Grid>
 </UserControl>

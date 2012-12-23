@@ -62,7 +62,7 @@ namespace Funani.Gui.Controls
 		{
 			_viewModel.RunQuery();
 		}
-
+		
         public IConsoleRedirect MongoDbListener
         {
             get

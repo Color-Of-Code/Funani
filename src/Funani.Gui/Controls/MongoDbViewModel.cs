@@ -40,6 +40,9 @@ namespace Funani.Gui.Controls
 
 	using Funani.Api;
 
+//    using MongoDB.Driver;
+//    using MongoDB.Driver.Builders;
+
 	public class MongoDbViewModel : IConsoleRedirect, INotifyPropertyChanged
 	{
 		public MongoDbViewModel(Dispatcher dispatcher)
@@ -61,6 +64,14 @@ namespace Funani.Gui.Controls
 		{
 			TriggerPropertyChanged("QueryResults");
 		}
+		
+//		public DatabaseStatsResult Statistics
+//		{
+//			get 
+//			{
+//				return Funani.Gui.Engine.Funani.GetDat
+//			}
+//		}
 		
 		public void OnOutputDataReceived(string data)
 		{
