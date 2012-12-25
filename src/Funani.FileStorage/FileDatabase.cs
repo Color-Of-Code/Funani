@@ -134,7 +134,7 @@ namespace Funani.FileStorage
 
         private void Create()
 		{
-            if (IsDirectoryEmpty(BaseDirectory))
+        	if (IsDirectoryEmpty(BaseDirectory) || !Directory.Exists(DataPath))
     			CreateDataPaths();
 		}
 
@@ -151,7 +151,9 @@ namespace Funani.FileStorage
 
 		private String GetDataPath(String hash)
 		{
-			return Path.Combine(DataPath, hash.Substring(0, 2), hash.Substring(2, 2), hash.Substring(4));
+			// distribute the data into 2^16 directories in 2 levels and store the files
+			// under their hash as filename
+			return Path.Combine(DataPath, hash.Substring(0, 2), hash.Substring(2, 2), hash);
 		}
 
 		private void CreateDataPaths()

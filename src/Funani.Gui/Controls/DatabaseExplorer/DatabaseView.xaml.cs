@@ -29,49 +29,35 @@
  */
 namespace Funani.Gui.Controls
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Collections.ObjectModel;
-    using System.IO;
-    using System.Text;
-    using System.Windows;
-    using System.Windows.Controls;
-    using System.Windows.Data;
-    using System.Windows.Documents;
-    using System.Windows.Input;
-    using System.Windows.Media;
+	using System;
+	using System.Collections.Generic;
+	using System.Text;
+	using System.Windows;
+	using System.Windows.Controls;
+	using System.Windows.Data;
+	using System.Windows.Documents;
+	using System.Windows.Input;
+	using System.Windows.Media;
 
     using Funani.Gui.Model;
 
     /// <summary>
-	/// Interaction logic for FileView.xaml
+	/// Interaction logic for DatabaseView.xaml
 	/// </summary>
-	public partial class FileView : UserControl
+	public partial class DatabaseView : UserControl
 	{
-		public FileView()
+		public DatabaseView()
 		{
 			InitializeComponent();
 			
 			DataContext = this;
 		}
 
-		public string SelectedPath 
-		{
-			get { return (string)GetValue(SelectedPathProperty); }
-			set { SetValue(SelectedPathProperty, value); }
-		}
-		
 		public void ReloadFiles()
 		{
-            var provider = new FileViewModelProvider(SelectedPath);
-            var items = new AsyncVirtualizingCollection<FileViewModel>(provider, 20, 10 * 1000);
-            listControl.DataContext = items;
-		}
-		
-		private static void OnSelectedPathChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-		{
-			var fileView = d as FileView;
-			fileView.ReloadFiles();
+			var provider = new DatabaseViewModelProvider();
+			var items = new AsyncVirtualizingCollection<FileInformationViewModel>(provider, 20, 10 * 1000);
+			listControl.DataContext = items;
 		}
 		
 		private void CheckBox_Clicked(object sender, RoutedEventArgs e)
@@ -93,8 +79,10 @@ namespace Funani.Gui.Controls
 			}
 		}
 		
-		public static readonly DependencyProperty SelectedPathProperty = 
-  			DependencyProperty.Register("SelectedPath", typeof(string), typeof(FileView), 
-  			new PropertyMetadata(string.Empty, OnSelectedPathChanged));
+		private void UserControl_GotFocus(object sender, RoutedEventArgs e)
+		{
+			ReloadFiles();
+		}
+		
 	}
 }

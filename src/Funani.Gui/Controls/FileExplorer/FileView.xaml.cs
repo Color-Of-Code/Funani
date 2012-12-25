@@ -27,52 +27,83 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
-
 namespace Funani.Gui.Controls
 {
 	using System;
 	using System.Collections.Generic;
-	using System.Diagnostics;
+	using System.Collections.ObjectModel;
 	using System.IO;
-	using System.Linq;
-	using System.Threading;
+	using System.Text;
+	using System.Windows;
+	using System.Windows.Controls;
+	using System.Windows.Data;
+	using System.Windows.Documents;
+	using System.Windows.Input;
+	using System.Windows.Media;
 
 	using Funani.Gui.Model;
 
 	/// <summary>
-	/// Implementation of IItemsProvider returning <see cref="FileViewModel"/> items
+	/// Interaction logic for FileView.xaml
 	/// </summary>
-	public class DatabaseViewModelProvider : IItemsProvider<FileViewModel>
+	public partial class FileView : UserControl
 	{
-		/// <summary>
-		/// Initializes a new instance of the <see cref="FileViewModelProvider"/> class.
-		/// </summary>
-		public DatabaseViewModelProvider()
+		public FileView()
 		{
+			InitializeComponent();
+			
+			DataContext = this;
 		}
 
-		/// <summary>
-		/// Fetches the total number of items available.
-		/// </summary>
-		/// <returns></returns>
-		public int FetchCount()
+		public string SelectedPath
 		{
-			return (int)Engine.Funani.GetFileCount();
+			get { return (string)GetValue(SelectedPathProperty); }
+			set { SetValue(SelectedPathProperty, value); }
+		}
+		
+		public void ReloadFiles()
+		{
+			var provider = new FileViewModelProvider(SelectedPath);
+			var items = new AsyncVirtualizingCollection<FileViewModel>(provider, 20, 10 * 1000);
+			listControl.DataContext = items;
+		}
+		
+		private static void OnSelectedPathChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+		{
+			var fileView = d as FileView;
+			fileView.ReloadFiles();
+		}
+		
+		private void CheckBox_Clicked(object sender, RoutedEventArgs e)
+		{
+			var checkBox = sender as CheckBox;
+			bool isChecked = (bool)(checkBox.IsChecked);
+			if (listControl.SelectedItem == null)
+			{
+				TrySetInsideFunani(isChecked, checkBox.DataContext);
+			}
+			else
+			{
+				foreach (var item in listControl.SelectedItems)
+				{
+					TrySetInsideFunani(isChecked, item);
+				}
+			}
 		}
 
-		/// <summary>
-		/// Fetches a range of items.
-		/// </summary>
-		/// <param name="startIndex">The start index.</param>
-		/// <param name="count">The number of items to fetch.</param>
-		/// <returns></returns>
-		public IList<FileViewModel> FetchRange(int startIndex, int count)
+		// ignore result shall be visible on the checkbox state
+
+		void TrySetInsideFunani(bool isChecked, object item)
 		{
-			List<FileViewModel> list = new List<FileViewModel>();
-			list.AddRange(
-				Engine.Funani.FileInformation.Skip(startIndex).Take(count).Select(x => new FileViewModel(x.Id))
-			);
-			return list;
+			try {
+				var viewModel = item as FileViewModel;
+				viewModel.InsideFunani = isChecked;
+			} catch {
+			}
 		}
+		
+		public static readonly DependencyProperty SelectedPathProperty =
+			DependencyProperty.Register("SelectedPath", typeof(string), typeof(FileView),
+			                            new PropertyMetadata(string.Empty, OnSelectedPathChanged));
 	}
 }

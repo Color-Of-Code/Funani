@@ -56,9 +56,9 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Page Include="Controls\DatabaseView.xaml" />
-    <Page Include="Controls\DirectoryExplorer.xaml" />
-    <Page Include="Controls\FileView.xaml" />
+    <Page Include="Controls\DatabaseExplorer\DatabaseView.xaml" />
+    <Page Include="Controls\FileExplorer\DirectoryExplorer.xaml" />
+    <Page Include="Controls\FileExplorer\FileView.xaml" />
     <Page Include="Controls\MongoDbView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -71,23 +71,24 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Controls\DatabaseView.xaml.cs">
+    <Compile Include="Controls\DatabaseExplorer\DatabaseView.xaml.cs">
       <DependentUpon>DatabaseView.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Controls\DatabaseViewModelProvider.cs" />
-    <Compile Include="Controls\DirectoryTreeViewModel.cs" />
-    <Compile Include="Controls\DirectoryViewModel.cs" />
-    <Compile Include="Controls\FileViewModel.cs" />
-    <Compile Include="Controls\FileViewModelProvider.cs" />
-    <Compile Include="Controls\DirectoryExplorer.xaml.cs">
+    <Compile Include="Controls\DatabaseExplorer\DatabaseViewModelProvider.cs" />
+    <Compile Include="Controls\DatabaseExplorer\FileInformationViewModel.cs" />
+    <Compile Include="Controls\FileExplorer\DirectoryExplorer.xaml.cs">
       <DependentUpon>DirectoryExplorer.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Controls\FileView.xaml.cs">
+    <Compile Include="Controls\FileExplorer\DirectoryTreeViewModel.cs" />
+    <Compile Include="Controls\FileExplorer\DirectoryViewModel.cs" />
+    <Compile Include="Controls\FileExplorer\FileView.xaml.cs">
       <DependentUpon>FileView.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Controls\FileExplorer\FileViewModel.cs" />
+    <Compile Include="Controls\FileExplorer\FileViewModelProvider.cs" />
     <Compile Include="Controls\HeaderToImageConverter.cs" />
     <Compile Include="Controls\MathConverter.cs" />
     <Compile Include="Controls\MongoDbView.xaml.cs">
@@ -160,7 +161,10 @@
       <Name>MongoDB.Driver</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Controls\FileExplorer" />
+    <Folder Include="Controls\DatabaseExplorer" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

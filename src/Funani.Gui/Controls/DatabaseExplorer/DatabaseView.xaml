@@ -54,17 +54,27 @@
                         </Border>
                         <Canvas.ToolTip>
                             <StackPanel Orientation="Vertical" Grid.Column="1">
-                                <TextBlock Text="{Binding Name,Mode=OneWay}" FontWeight="Bold">
+                                <TextBlock Text="{Binding Title,Mode=OneWay}" FontWeight="Bold">
                                 </TextBlock>
                                 <TextBlock>
 									<Run>Size: </Run>
-									<Run Text="{Binding Length,Mode=OneWay}"></Run>
+									<Run Text="{Binding FileSize,Mode=OneWay}"></Run>
 									<Run> bytes</Run>
                                 </TextBlock>
                                 <TextBlock>
-									<Run>Last modification: </Run>
-									<Run Text="{Binding LastWriteTime,Mode=OneWay}"></Run>
+									<Run>MIME: </Run>
+									<Run Text="{Binding MimeType,Mode=OneWay}"></Run>
                                 </TextBlock>
+                                <ItemsControl ItemsSource="{Binding Paths,Mode=OneWay}">
+                            		<ItemsControl.ItemTemplate>
+                            			<DataTemplate>
+			                                <TextBlock>
+												<Run>Path: </Run>
+												<Run Text="{Binding .,Mode=OneWay}"></Run>
+			                                </TextBlock>
+										</DataTemplate>
+                                	</ItemsControl.ItemTemplate>
+                                </ItemsControl>
                             </StackPanel>
                         </Canvas.ToolTip>
                     </Canvas>

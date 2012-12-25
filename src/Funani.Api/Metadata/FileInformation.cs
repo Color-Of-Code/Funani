@@ -49,6 +49,7 @@ namespace Funani.Api.Metadata
             Id = Utils.ComputeHash.SHA1(file);
             FileSize = file.Length;
             Title = file.Name;
+            DetectMimeType(file);
             AddPath(file);
         }
 
@@ -56,6 +57,29 @@ namespace Funani.Api.Metadata
         {
             if (!Paths.Contains(file.FullName))
                 Paths.Add(file.FullName);
+        }
+        
+        private void DetectMimeType(FileInfo file)
+        {
+        	String mime;
+        	String extension = file.Extension.ToLowerInvariant();
+        	switch (extension)
+        	{
+        		case ".gif":
+        			mime = "image/gif";
+        			break;
+        		case ".jpe":
+        		case ".jpeg":
+        		case ".jpg":
+        			mime = "image/jpeg";
+        			break;
+        		case ".png":
+        			mime = "image/png";
+        			break;
+        		default:
+        			throw new NotSupportedException("MIME type not recognized for file " + file.Name);
+        	}
+        	MimeType = mime;
         }
 
         public String Id { get; private set; }

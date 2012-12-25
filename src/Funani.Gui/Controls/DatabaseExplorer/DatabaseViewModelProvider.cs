@@ -27,62 +27,52 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
+
 namespace Funani.Gui.Controls
 {
 	using System;
 	using System.Collections.Generic;
-	using System.Text;
-	using System.Windows;
-	using System.Windows.Controls;
-	using System.Windows.Data;
-	using System.Windows.Documents;
-	using System.Windows.Input;
-	using System.Windows.Media;
+	using System.Diagnostics;
+	using System.IO;
+	using System.Linq;
+	using System.Threading;
 
-    using Funani.Gui.Model;
+	using Funani.Gui.Model;
 
-    /// <summary>
-	/// Interaction logic for DatabaseView.xaml
+	/// <summary>
+	/// Implementation of IItemsProvider returning <see cref="FileViewModel"/> items
 	/// </summary>
-	public partial class DatabaseView : UserControl
+	public class DatabaseViewModelProvider : IItemsProvider<FileInformationViewModel>
 	{
-		public DatabaseView()
+		/// <summary>
+		/// Initializes a new instance of the <see cref="FileViewModelProvider"/> class.
+		/// </summary>
+		public DatabaseViewModelProvider()
 		{
-			InitializeComponent();
-			
-			DataContext = this;
 		}
 
-		public void ReloadFiles()
+		/// <summary>
+		/// Fetches the total number of items available.
+		/// </summary>
+		/// <returns></returns>
+		public int FetchCount()
 		{
-			var provider = new DatabaseViewModelProvider();
-			var items = new AsyncVirtualizingCollection<FileViewModel>(provider, 20, 10 * 1000);
-			listControl.DataContext = items;
+			return (int)Engine.Funani.GetFileCount();
 		}
-		
-		private void CheckBox_Clicked(object sender, RoutedEventArgs e)
+
+		/// <summary>
+		/// Fetches a range of items.
+		/// </summary>
+		/// <param name="startIndex">The start index.</param>
+		/// <param name="count">The number of items to fetch.</param>
+		/// <returns></returns>
+		public IList<FileInformationViewModel> FetchRange(int startIndex, int count)
 		{
-			var checkBox = sender as CheckBox;
-			bool isChecked = (bool)(checkBox.IsChecked);
-			if (listControl.SelectedItem == null)
-			{
-				var viewModel = checkBox.DataContext as FileViewModel;
-				viewModel.InsideFunani = isChecked;
-			}
-			else
-			{
-				foreach (var item in listControl.SelectedItems)
-				{
-					var viewModel = item as FileViewModel;
-					viewModel.InsideFunani = isChecked;
-				}
-			}
+			List<FileInformationViewModel> list = new List<FileInformationViewModel>();
+			list.AddRange(
+				Engine.Funani.FileInformation.Skip(startIndex).Take(count).Select(x => new FileInformationViewModel(x))
+			);
+			return list;
 		}
-		
-		private void UserControl_GotFocus(object sender, RoutedEventArgs e)
-		{
-			ReloadFiles();
-		}
-		
 	}
 }
