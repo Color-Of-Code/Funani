@@ -56,6 +56,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Page Include="Controls\DatabaseView.xaml" />
     <Page Include="Controls\DirectoryExplorer.xaml" />
     <Page Include="Controls\FileView.xaml" />
     <Page Include="Controls\MongoDbView.xaml">
@@ -70,6 +71,11 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Controls\DatabaseView.xaml.cs">
+      <DependentUpon>DatabaseView.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Controls\DatabaseViewModelProvider.cs" />
     <Compile Include="Controls\DirectoryTreeViewModel.cs" />
     <Compile Include="Controls\DirectoryViewModel.cs" />
     <Compile Include="Controls\FileViewModel.cs" />

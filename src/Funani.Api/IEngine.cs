@@ -74,6 +74,17 @@ namespace Funani.Api
         void RemoveFile(FileInfo file);
 
         /// <summary>
+        /// Determine the number of files in the database
+        /// </summary>
+        /// <returns></returns>
+        long GetFileCount();
+        
+        /// <summary>
+        /// Return the file information as a queryable
+        /// </summary>
+        IQueryable<FileInformation> FileInformation {get;}
+
+        /// <summary>
         /// Get the info associated in mongodb for the path of the specified file.
         /// If no info could be found, null is returned. This method is intended for
         /// frequent use and does not make any other check than the path/size/timestamp
@@ -82,6 +93,13 @@ namespace Funani.Api
         /// <param name="file"></param>
         /// <returns></returns>
         FileInformation GetFileInformation(FileInfo file);
+
+        /// <summary>
+        /// The reverse function to retrieve the FileInfo from the hash
+        /// </summary>
+        /// <param name="hash"></param>
+        /// <returns></returns>
+        FileInfo GetFileInfo(String hash);
 
         /// <summary>
         /// Returns the file data of the file with the given hash

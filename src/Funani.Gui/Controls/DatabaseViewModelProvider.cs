@@ -28,34 +28,51 @@
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace Funani.Api
+namespace Funani.Gui.Controls
 {
-    using System;
-    using System.IO;
+	using System;
+	using System.Collections.Generic;
+	using System.Diagnostics;
+	using System.IO;
+	using System.Linq;
+	using System.Threading;
 
-    /// <summary>
-    /// Description of IFileStorage.
-    /// </summary>
-    public interface IFileStorage
-    {
-        /// <summary>
-        /// Initialize and start the file storage service
-        /// </summary>
-        void Start();
+	using Funani.Gui.Model;
 
-        /// <summary>
-        /// Stop the file storage service
-        /// </summary>
-        void Stop();
+	/// <summary>
+	/// Implementation of IItemsProvider returning <see cref="FileViewModel"/> items
+	/// </summary>
+	public class DatabaseViewModelProvider : IItemsProvider<FileViewModel>
+	{
+		/// <summary>
+		/// Initializes a new instance of the <see cref="FileViewModelProvider"/> class.
+		/// </summary>
+		public DatabaseViewModelProvider()
+		{
+		}
 
-        Boolean FileExists(string hash);
+		/// <summary>
+		/// Fetches the total number of items available.
+		/// </summary>
+		/// <returns></returns>
+		public int FetchCount()
+		{
+			return (int)Engine.Funani.GetFileCount();
+		}
 
-        void DeleteFile(string hash);
-
-        String StoreFile(FileInfo file);
-
-        byte[] LoadFile(string hash);
-        
-        FileInfo GetFileInfo(String hash);
-    }
+		/// <summary>
+		/// Fetches a range of items.
+		/// </summary>
+		/// <param name="startIndex">The start index.</param>
+		/// <param name="count">The number of items to fetch.</param>
+		/// <returns></returns>
+		public IList<FileViewModel> FetchRange(int startIndex, int count)
+		{
+			List<FileViewModel> list = new List<FileViewModel>();
+			list.AddRange(
+				Engine.Funani.FileInformation.Skip(startIndex).Take(count).Select(x => new FileViewModel(x.Id))
+			);
+			return list;
+		}
+	}
 }

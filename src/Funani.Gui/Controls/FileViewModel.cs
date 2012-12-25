@@ -43,12 +43,33 @@ namespace Funani.Gui.Controls
 	/// </summary>
 	public class FileViewModel : INotifyPropertyChanged
 	{
-		public FileViewModel(FileInfo fileInfo)
+		public FileViewModel(String hash)
 		{
-			FileInfo = fileInfo;
+			Hash = hash;
 		}
 
+		public FileViewModel(FileInfo fileInfo)
+		{
+			_fileInfo = fileInfo;
+		}
+
+		private FileInfo _fileInfo;
 		public FileInfo FileInfo
+		{
+			get 
+			{
+				if (Hash != null)
+				{
+					if (_fileInfo == null)
+					{
+						_fileInfo = Engine.Funani.GetFileInfo(Hash);
+					}
+				}
+				return _fileInfo;
+			}
+		}
+
+		public String Hash
 		{
 			get;
 			private set;
@@ -131,7 +152,10 @@ namespace Funani.Gui.Controls
 			{
 				if (!_insideFunani.HasValue)
 				{
-					_insideFunani = Engine.Funani.GetFileInformation(FileInfo) != null;
+					if (Hash != null)
+						_insideFunani = true;
+					else
+						_insideFunani = Engine.Funani.GetFileInformation(FileInfo) != null;
 				}
 				return (bool)_insideFunani;
 			}

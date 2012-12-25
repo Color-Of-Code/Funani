@@ -94,6 +94,12 @@ namespace Funani.FileStorage
 			return File.Exists(source);
 		}
 
+		public FileInfo GetFileInfo(string hash)
+		{
+			string source = GetDataPath(hash);
+			return new FileInfo(source);
+		}
+		
 		public byte[] LoadFile(string hash)
 		{
 			string source = GetDataPath(hash);

@@ -1,0 +1,75 @@
+﻿<UserControl x:Class="Funani.Gui.Controls.DatabaseView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:funani="clr-namespace:Funani.Gui.Controls"
+             
+             mc:Ignorable="d" xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             d:DesignHeight="248" d:DesignWidth="468"
+			Loaded="UserControl_GotFocus"
+			>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition></RowDefinition>
+        </Grid.RowDefinitions>
+        <Slider Name="sliderSize" Grid.Row="0" Minimum="60" Maximum="320" Value="160"></Slider>
+        <ListView Grid.Row="1" Name="listControl" ItemsSource="{Binding}"
+		          ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+		          Background="Transparent"
+		          ScrollViewer.IsDeferredScrollingEnabled="True">
+		    <ListView.Resources>
+		        <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}" Color="Salmon" />                
+		        <SolidColorBrush x:Key="{x:Static SystemColors.ControlBrushKey}" Color="Salmon" />
+		    </ListView.Resources>
+        	<ListView.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <funani:VirtualizingWrapPanel
+                        ItemHeight="{Binding ElementName=sliderSize,Path=Value}"
+                        ItemWidth="{Binding ElementName=sliderSize,Path=Value}" />
+                </ItemsPanelTemplate>
+            </ListView.ItemsPanel>
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <Canvas Background="Transparent"
+                            Width="{Binding ElementName=sliderSize,Path=Value}"
+                            Height="{Binding ElementName=sliderSize,Path=Value}"
+                            >
+                        <Border Background="Gray" BorderBrush="White" BorderThickness="4"
+                                Width="{Binding ElementName=sliderSize,Path=Value,
+                                    Converter={StaticResource MathConverter},ConverterParameter=(@VALUE-8)}"
+                                Height="{Binding ElementName=sliderSize,Path=Value,
+                                    Converter={StaticResource MathConverter},ConverterParameter=(@VALUE-8)}"
+                                Canvas.Left="2"
+                                Canvas.Top="2"
+                                >
+                            <Image RenderOptions.BitmapScalingMode="{Binding ScalingMode}"
+								    Source="{Binding Thumbnail}"
+								    Width="{Binding ThumbnailWidth}"
+								    Height="{Binding ThumbnailHeight}"
+								    Stretch="{Binding Stretch}"
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center"
+							/>
+                        </Border>
+                        <Canvas.ToolTip>
+                            <StackPanel Orientation="Vertical" Grid.Column="1">
+                                <TextBlock Text="{Binding Name,Mode=OneWay}" FontWeight="Bold">
+                                </TextBlock>
+                                <TextBlock>
+									<Run>Size: </Run>
+									<Run Text="{Binding Length,Mode=OneWay}"></Run>
+									<Run> bytes</Run>
+                                </TextBlock>
+                                <TextBlock>
+									<Run>Last modification: </Run>
+									<Run Text="{Binding LastWriteTime,Mode=OneWay}"></Run>
+                                </TextBlock>
+                            </StackPanel>
+                        </Canvas.ToolTip>
+                    </Canvas>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+    </Grid>
+</UserControl>

@@ -90,7 +90,20 @@ namespace Funani.Engine
             _metadata.RemovePath(file);
         }
 
-        public FileInformation GetFileInformation(FileInfo file)
+        public long GetFileCount()
+        {
+        	return _metadata.GetFileCount();
+        }
+        
+		public IQueryable<FileInformation> FileInformation
+		{
+			get
+			{
+				return _metadata.FileInformation;
+			}
+		}
+
+		public FileInformation GetFileInformation(FileInfo file)
         {
             return _metadata.Retrieve(file);
         }
@@ -100,6 +113,11 @@ namespace Funani.Engine
         	return _fileStorage.LoadFile(hash);
         }
         
+        public FileInfo GetFileInfo(String hash)
+        {
+        	return _fileStorage.GetFileInfo(hash);
+        }
+
         public object MetadataDatabase
         {
         	get

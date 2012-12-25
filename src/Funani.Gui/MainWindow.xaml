@@ -21,7 +21,10 @@
                                 <EventTrigger RoutedEvent="Rectangle.Loaded">
                                     <BeginStoryboard>
                                         <Storyboard>
-                                            <DoubleAnimation Storyboard.TargetName="rectangle" Storyboard.TargetProperty="(TextBlock.RenderTransform).(RotateTransform.Angle)" From="0" To="360" Duration="0:0:5" RepeatBehavior="Forever" />
+                                            <DoubleAnimation Storyboard.TargetName="rectangle"
+                                                             Storyboard.TargetProperty="(TextBlock.RenderTransform).(RotateTransform.Angle)"
+                                                             From="0" To="360" Duration="0:0:5"
+                                                             RepeatBehavior="Forever" />
                                         </Storyboard>
                                     </BeginStoryboard>
                                 </EventTrigger>
@@ -43,7 +46,18 @@
 					</funani:FileView>
 				</Grid>
 	    	</TabItem>
-            <TabItem>
+			<TabItem>
+                <TabItem.Header>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock  VerticalAlignment="Center">Database explorer</TextBlock>
+                    </StackPanel>
+                </TabItem.Header>
+				<Grid>
+	    			<funani:DatabaseView Grid.Column="0" x:Name="databaseExplorer">
+					</funani:DatabaseView>
+				</Grid>
+	    	</TabItem>
+    		<TabItem>
                 <TabItem.Header>MongoDB output</TabItem.Header>
                 <Grid>
                     <funani:MongoDbView x:Name="mongoDbView"></funani:MongoDbView>
