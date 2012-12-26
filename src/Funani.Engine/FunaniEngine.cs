@@ -30,71 +30,82 @@
 
 namespace Funani.Engine
 {
-    using System;
-    using System.Collections.Generic;
-    using System.IO;
-    using System.Linq;
-    using System.Text;
+	using System;
+	using System.Collections.Generic;
+	using System.ComponentModel;
+	using System.IO;
+	using System.Linq;
+	using System.Text;
 
-    using Funani.Api;
-    using Funani.Api.Metadata;
-    using Funani.FileStorage;
-    using Funani.Metadata;
+	using Funani.Api;
+	using Funani.Api.Metadata;
+	using Funani.FileStorage;
+	using Funani.Metadata;
 
-    public class FunaniEngine : IEngine
-    {
-        public FunaniEngine()
-        {
-        }
+	public class FunaniEngine : IEngine
+	{
+		public FunaniEngine()
+		{
+		}
 
-        private IFileStorage _fileStorage;
-        private Metadata.MetadataDatabase _metadata;
+		private IFileStorage _fileStorage;
+		private Metadata.MetadataDatabase _metadata;
+		private String _rootPath;
 
-        public Boolean IsValidDatabase(String path)
-        {
-            if (String.IsNullOrWhiteSpace(path) ||
-                !Directory.Exists(path) ||
-                !Directory.Exists(Path.Combine(path, "metadata")) ||
-                !Directory.Exists(Path.Combine(path, "data")))
-                return false;
-            return true;
-        }
+		public Boolean IsValidDatabase(String path)
+		{
+			if (String.IsNullOrWhiteSpace(path) ||
+			    !Directory.Exists(path) ||
+			    !Directory.Exists(Path.Combine(path, "metadata")) ||
+			    !Directory.Exists(Path.Combine(path, "data")))
+				return false;
+			return true;
+		}
 
-        public void OpenDatabase(String pathToMongod, String path, IConsoleRedirect listener)
-        {
-            // create the file database
-            _fileStorage = new FileDatabase(path);
-            _fileStorage.Start();
+		public void OpenDatabase(String pathToMongod, String path, IConsoleRedirect listener)
+		{
+			// create the file database
+			_fileStorage = new FileDatabase(path);
+			_fileStorage.Start();
 
-            // create the mongodb
-            _metadata = new MetadataDatabase(pathToMongod, path);
-            _metadata.Start(listener);
-        }
+			// create the mongodb
+			_metadata = new MetadataDatabase(pathToMongod, path);
+			_metadata.Start(listener);
+			
+			_rootPath = path;
+			TriggerPropertyChanged("DatabasePath");
+			TriggerPropertyChanged("FileCount");
+		}
 
-        public void CloseDatabase()
-        {
-            _fileStorage.Stop();
-            _metadata.Stop();
-            _fileStorage = null;
-            _metadata = null;
-        }
+		public void CloseDatabase()
+		{
+			_fileStorage.Stop();
+			_metadata.Stop();
+			_fileStorage = null;
+			_metadata = null;
+			_rootPath = null;
+			TriggerPropertyChanged("DatabasePath");
+			TriggerPropertyChanged("FileCount");
+		}
 
-        public FileInformation AddFile(FileInfo file)
-        {
-            var hash = _fileStorage.StoreFile(file);
-            return _metadata.Retrieve(hash, file);
-        }
+		public FileInformation AddFile(FileInfo file)
+		{
+			var hash = _fileStorage.StoreFile(file);
+			var fileInformation = _metadata.Retrieve(hash, file);
+			TriggerPropertyChanged("FileCount");
+			return fileInformation;
+		}
 
-        public void RemoveFile(FileInfo file)
-        {
-            _metadata.RemovePath(file);
-        }
+		public void RemoveFile(FileInfo file)
+		{
+			_metadata.RemovePath(file);
+		}
 
-        public long GetFileCount()
-        {
-        	return _metadata.GetFileCount();
-        }
-        
+		public long GetFileCount()
+		{
+			return _metadata.GetFileCount();
+		}
+		
 		public IQueryable<FileInformation> FileInformation
 		{
 			get
@@ -104,26 +115,51 @@ namespace Funani.Engine
 		}
 
 		public FileInformation GetFileInformation(FileInfo file)
-        {
-            return _metadata.Retrieve(file);
-        }
+		{
+			return _metadata.Retrieve(file);
+		}
 
-        public byte[] GetFileData(String hash)
-        {
-        	return _fileStorage.LoadFile(hash);
-        }
-        
-        public FileInfo GetFileInfo(String hash)
-        {
-        	return _fileStorage.GetFileInfo(hash);
-        }
+		public byte[] GetFileData(String hash)
+		{
+			return _fileStorage.LoadFile(hash);
+		}
+		
+		public FileInfo GetFileInfo(String hash)
+		{
+			return _fileStorage.GetFileInfo(hash);
+		}
 
-        public object MetadataDatabase
-        {
-        	get
-        	{
-        		return _metadata.Database;
-        	}
-        }
-    }
+		public object MetadataDatabase
+		{
+			get
+			{
+				return _metadata.Database;
+			}
+		}
+		
+		public string DatabasePath {
+			get {
+				return _rootPath;
+			}
+		}
+		
+		public long FileCount {
+			get {
+				return _metadata.GetFileCount();
+			}
+		}
+
+		#region INotifyPropertyChanged Members
+
+		public event PropertyChangedEventHandler PropertyChanged;
+
+		private void TriggerPropertyChanged(string propertyName)
+		{
+			var handler = this.PropertyChanged;
+			if (handler != null)
+				handler(this, new PropertyChangedEventArgs(propertyName));
+		}
+
+		#endregion
+	}
 }

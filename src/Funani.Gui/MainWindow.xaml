@@ -12,10 +12,21 @@
 			<TabItem>
                 <TabItem.Header>
                     <StackPanel Orientation="Horizontal">
+                        <TextBlock  VerticalAlignment="Center">Funani database</TextBlock>
+                    </StackPanel>
+                </TabItem.Header>
+				<Grid>
+	    			<funani:FunaniDatabase Grid.Column="0" x:Name="funaniDatabase">
+					</funani:FunaniDatabase>
+				</Grid>
+            </TabItem>
+			<TabItem>
+                <TabItem.Header>
+                    <StackPanel Orientation="Horizontal">
                         <TextBlock  VerticalAlignment="Center">File explorer</TextBlock>
-                        <Rectangle Name="rectangle" Width="20" Height="20" Fill="Blue" Margin="5" VerticalAlignment="Center">
+                        <Rectangle Name="rectangle" Width="16" Height="16" Fill="Blue" Margin="8,0" VerticalAlignment="Center">
                             <Rectangle.RenderTransform>
-                                <RotateTransform Angle="0" CenterX="10" CenterY="10"/>
+                                <RotateTransform Angle="0" CenterX="8" CenterY="8"/>
                             </Rectangle.RenderTransform>
                             <Rectangle.Triggers>
                                 <EventTrigger RoutedEvent="Rectangle.Loaded">
@@ -30,7 +41,6 @@
                                 </EventTrigger>
                             </Rectangle.Triggers>
                         </Rectangle>
-
                     </StackPanel>
                 </TabItem.Header>
 				<Grid>

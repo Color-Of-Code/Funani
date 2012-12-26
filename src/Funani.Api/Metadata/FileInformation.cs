@@ -30,63 +30,91 @@
 
 namespace Funani.Api.Metadata
 {
-    using System;
-    using System.Collections.Generic;
-    using System.IO;
-    using System.Linq;
-    using System.Text;
+	using System;
+	using System.Collections.Generic;
+	using System.IO;
+	using System.Linq;
+	using System.Text;
+	using System.Windows.Media.Imaging;
 
-    public class FileInformation
-    {
-        public FileInformation()
-        {
-            Paths = new List<String>();
-        }
+	public class FileInformation
+	{
+		public FileInformation()
+		{
+			Paths = new List<String>();
+		}
 
-        public FileInformation(FileInfo file)
-            : this()
-        {
-            Id = Utils.ComputeHash.SHA1(file);
-            FileSize = file.Length;
-            Title = file.Name;
-            DetectMimeType(file);
-            AddPath(file);
-        }
+		public FileInformation(FileInfo file)
+			: this()
+		{
+			Id = Utils.ComputeHash.SHA1(file);
+			FileSize = file.Length;
+			Title = file.Name;
+			DetectMimeType(file);
+			ExtractMetadata(file);
+			AddPath(file);
+		}
 
-        public void AddPath(FileInfo file)
-        {
-            if (!Paths.Contains(file.FullName))
-                Paths.Add(file.FullName);
-        }
-        
-        private void DetectMimeType(FileInfo file)
-        {
-        	String mime;
-        	String extension = file.Extension.ToLowerInvariant();
-        	switch (extension)
-        	{
-        		case ".gif":
-        			mime = "image/gif";
-        			break;
-        		case ".jpe":
-        		case ".jpeg":
-        		case ".jpg":
-        			mime = "image/jpeg";
-        			break;
-        		case ".png":
-        			mime = "image/png";
-        			break;
-        		default:
-        			throw new NotSupportedException("MIME type not recognized for file " + file.Name);
-        	}
-        	MimeType = mime;
-        }
+		public void AddPath(FileInfo file)
+		{
+			if (!Paths.Contains(file.FullName))
+				Paths.Add(file.FullName);
+		}
+		
+		private void DetectMimeType(FileInfo file)
+		{
+			String mime;
+			String extension = file.Extension.ToLowerInvariant();
+			switch (extension)
+			{
+				case ".gif":
+					mime = "image/gif";
+					break;
+				case ".jpe":
+				case ".jpeg":
+				case ".jpg":
+					mime = "image/jpeg";
+					break;
+				case ".png":
+					mime = "image/png";
+					break;
+				case ".tiff":
+					mime = "image/tiff";
+					break;
+				default:
+					throw new NotSupportedException("MIME type not recognized for file " + file.Name);
+			}
+			MimeType = mime;
+		}
 
-        public String Id { get; private set; }
-        public Int64  FileSize { get; private set; }
-        public String MimeType { get; private set; }
+		private void ExtractMetadata(FileInfo file)
+		{
+			try
+			{
+				var uri = new Uri(file.FullName);
+				BitmapFrame frame = BitmapFrame.Create(uri, BitmapCreateOptions.None, BitmapCacheOption.None);
+				BitmapMetadata meta = frame.Metadata as BitmapMetadata;
+				if (meta != null)
+				{
+					DateTaken = DateTime.ParseExact(meta.DateTaken, "dd.MM.yyyy HH:mm:ss", null);
+					ApplicationName = meta.ApplicationName;
+				}
+			}
+			catch
+			{
+				// ignore silently
+			}
+		}
+		
+		public String Id { get; private set; }
+		public Int64  FileSize { get; private set; }
+		public String MimeType { get; private set; }
+		
+		public String Title { get; set; }
+		public IList<String> Paths { get; private set; }
 
-        public String Title { get; set; }
-        public IList<String> Paths { get; private set; }
-    }
+		public DateTime? DateTaken { get; private set; }
+		public String ApplicationName { get; private set; }
+
+	}
 }

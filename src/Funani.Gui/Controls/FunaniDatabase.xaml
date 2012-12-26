@@ -1,0 +1,19 @@
+﻿<UserControl x:Class="Funani.Gui.Controls.FunaniDatabase"
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+	<Grid>
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition></ColumnDefinition>
+			<ColumnDefinition></ColumnDefinition>
+		</Grid.ColumnDefinitions>
+		<Grid.RowDefinitions>
+			<RowDefinition Height="Auto"></RowDefinition>
+			<RowDefinition Height="Auto"></RowDefinition>
+		</Grid.RowDefinitions>
+		<TextBlock Grid.Row="0" Grid.Column="0">Root path: </TextBlock>
+		<TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding DatabasePath,Mode=OneWay}"></TextBlock>
+
+		<TextBlock Grid.Row="1" Grid.Column="0">File count: </TextBlock>
+		<TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding FileCount,Mode=OneWay}"></TextBlock>
+	</Grid>
+</UserControl>

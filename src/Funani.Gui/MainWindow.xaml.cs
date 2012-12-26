@@ -59,13 +59,14 @@ namespace Funani.Gui
             InitializeComponent();
 
             Properties.Settings.Default.Upgrade();
-            EnsureMongodbPathIsValid();
-            EnsureFunanidbPathIsValid();
+            funaniDatabase.DataContext = _funani;
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             var settings = Properties.Settings.Default;
+            EnsureMongodbPathIsValid();
+            EnsureFunanidbPathIsValid();
             _funani.OpenDatabase(settings.MongodbPath, settings.LastFunaniDatabase, mongoDbView.MongoDbListener);
             if (!String.IsNullOrWhiteSpace(settings.LastDirectoryExplorerSelectedPath))
                 directoryExplorer.SelectPath(settings.LastDirectoryExplorerSelectedPath);

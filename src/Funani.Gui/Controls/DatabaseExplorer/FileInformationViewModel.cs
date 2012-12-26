@@ -84,6 +84,16 @@ namespace Funani.Gui.Controls
 			get { return FileInformation.FileSize; }
 		}
 
+		public string DateTaken
+		{
+			get { return FileInformation.DateTaken.HasValue ? FileInformation.DateTaken.Value.ToString("yyyy-MM-dd HH:mm:ss") : null; }
+		}
+
+		public string ApplicationName
+		{
+			get { return FileInformation.ApplicationName; }
+		}
+
 		public String MimeType
 		{
 			get { return FileInformation.MimeType; }

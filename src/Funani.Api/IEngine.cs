@@ -31,6 +31,7 @@
 namespace Funani.Api
 {
     using System;
+	using System.ComponentModel;
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
@@ -38,7 +39,7 @@ namespace Funani.Api
 
     using Funani.Api.Metadata;
 
-    public interface IEngine
+    public interface IEngine : INotifyPropertyChanged
     {
         /// <summary>
         /// Allows to check if the provided path points to a valid funani db structure
@@ -58,6 +59,16 @@ namespace Funani.Api
         /// </summary>
         void CloseDatabase();
 
+        /// <summary>
+        /// Path to the currently open database
+        /// </summary>
+        String DatabasePath { get; }
+        
+        /// <summary>
+        /// Number of files in the database
+        /// </summary>
+        long FileCount { get; }
+        
         /// <summary>
         /// Add a file to the database (if not already present) and get its info back
         /// </summary>

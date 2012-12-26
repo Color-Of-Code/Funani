@@ -59,6 +59,7 @@
     <Page Include="Controls\DatabaseExplorer\DatabaseView.xaml" />
     <Page Include="Controls\FileExplorer\DirectoryExplorer.xaml" />
     <Page Include="Controls\FileExplorer\FileView.xaml" />
+    <Page Include="Controls\FunaniDatabase.xaml" />
     <Page Include="Controls\MongoDbView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -89,6 +90,10 @@
     </Compile>
     <Compile Include="Controls\FileExplorer\FileViewModel.cs" />
     <Compile Include="Controls\FileExplorer\FileViewModelProvider.cs" />
+    <Compile Include="Controls\FunaniDatabase.xaml.cs">
+      <DependentUpon>FunaniDatabase.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Controls\HeaderToImageConverter.cs" />
     <Compile Include="Controls\MathConverter.cs" />
     <Compile Include="Controls\MongoDbView.xaml.cs">
