@@ -64,16 +64,15 @@ namespace Funani.Gui.Controls
 		{
 			var checkBox = sender as CheckBox;
 			bool isChecked = (bool)(checkBox.IsChecked);
-			if (listControl.SelectedItem == null)
+			var viewModel = checkBox.DataContext as FileViewModel;
+			if (listControl.SelectedItem == null || !listControl.SelectedItems.Contains(viewModel))
 			{
-				var viewModel = checkBox.DataContext as FileViewModel;
 				viewModel.InsideFunani = isChecked;
 			}
 			else
 			{
-				foreach (var item in listControl.SelectedItems)
+				foreach (FileViewModel item in listControl.SelectedItems)
 				{
-					var viewModel = item as FileViewModel;
 					viewModel.InsideFunani = isChecked;
 				}
 			}

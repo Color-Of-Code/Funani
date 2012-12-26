@@ -43,33 +43,12 @@ namespace Funani.Gui.Controls
 	/// </summary>
 	public class FileViewModel : INotifyPropertyChanged
 	{
-		public FileViewModel(String hash)
-		{
-			Hash = hash;
-		}
-
 		public FileViewModel(FileInfo fileInfo)
 		{
-			_fileInfo = fileInfo;
+			FileInfo = fileInfo;
 		}
 
-		private FileInfo _fileInfo;
 		public FileInfo FileInfo
-		{
-			get 
-			{
-				if (Hash != null)
-				{
-					if (_fileInfo == null)
-					{
-						_fileInfo = Engine.Funani.GetFileInfo(Hash);
-					}
-				}
-				return _fileInfo;
-			}
-		}
-
-		public String Hash
 		{
 			get;
 			private set;
@@ -152,10 +131,7 @@ namespace Funani.Gui.Controls
 			{
 				if (!_insideFunani.HasValue)
 				{
-					if (Hash != null)
-						_insideFunani = true;
-					else
-						_insideFunani = Engine.Funani.GetFileInformation(FileInfo) != null;
+					_insideFunani = Engine.Funani.GetFileInformation(FileInfo) != null;
 				}
 				return (bool)_insideFunani;
 			}
@@ -164,17 +140,23 @@ namespace Funani.Gui.Controls
 				if (InsideFunani != value)
 				{
 					_insideFunani = null; // trigger readback from metadata
-					if (value)
+					try
 					{
-						// add
-						Engine.Funani.AddFile(FileInfo);
+						if (value)
+						{
+							// add
+							Engine.Funani.AddFile(FileInfo);
+						}
+						else
+						{
+							// remove
+							Engine.Funani.RemoveFile(FileInfo);
+						}
 					}
-					else
+					finally
 					{
-						// remove
-						Engine.Funani.RemoveFile(FileInfo);
+						TriggerPropertyChanged("InsideFunani");
 					}
-					TriggerPropertyChanged("InsideFunani");
 				}
 			}
 		}

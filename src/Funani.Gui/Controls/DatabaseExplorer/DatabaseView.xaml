@@ -57,6 +57,10 @@
                                 <TextBlock Text="{Binding Title,Mode=OneWay}" FontWeight="Bold">
                                 </TextBlock>
                                 <TextBlock>
+									<Run>Hash: </Run>
+									<Run Text="{Binding Hash,Mode=OneWay}"></Run>
+                                </TextBlock>
+                                <TextBlock>
 									<Run>Size: </Run>
 									<Run Text="{Binding FileSize,Mode=OneWay}"></Run>
 									<Run> bytes</Run>

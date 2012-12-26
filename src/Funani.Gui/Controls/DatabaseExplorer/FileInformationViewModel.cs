@@ -69,6 +69,11 @@ namespace Funani.Gui.Controls
 			private set;
 		}
 
+		public string Hash
+		{
+			get { return FileInformation.Id; }
+		}
+
 		public string Title
 		{
 			get { return FileInformation.Title; }

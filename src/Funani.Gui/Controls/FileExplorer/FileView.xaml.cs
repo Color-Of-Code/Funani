@@ -78,13 +78,14 @@ namespace Funani.Gui.Controls
 		{
 			var checkBox = sender as CheckBox;
 			bool isChecked = (bool)(checkBox.IsChecked);
-			if (listControl.SelectedItem == null)
+			var viewModel = checkBox.DataContext as FileViewModel;
+			if (listControl.SelectedItem == null || !listControl.SelectedItems.Contains(viewModel))
 			{
-				TrySetInsideFunani(isChecked, checkBox.DataContext);
+				TrySetInsideFunani(isChecked, viewModel);
 			}
 			else
 			{
-				foreach (var item in listControl.SelectedItems)
+				foreach (FileViewModel item in listControl.SelectedItems)
 				{
 					TrySetInsideFunani(isChecked, item);
 				}
@@ -92,14 +93,9 @@ namespace Funani.Gui.Controls
 		}
 
 		// ignore result shall be visible on the checkbox state
-
-		void TrySetInsideFunani(bool isChecked, object item)
+		private void TrySetInsideFunani(bool isChecked, FileViewModel viewModel)
 		{
-			try {
-				var viewModel = item as FileViewModel;
-				viewModel.InsideFunani = isChecked;
-			} catch {
-			}
+			viewModel.InsideFunani = isChecked;
 		}
 		
 		public static readonly DependencyProperty SelectedPathProperty =
