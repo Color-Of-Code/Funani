@@ -44,7 +44,6 @@ namespace Funani.Gui.Controls
         public UriToThumbnailConverter(int thumbnailSize)
         {
             ThumbnailSize = thumbnailSize;
-
         }
 
         static UriToThumbnailConverter()
@@ -75,80 +74,9 @@ namespace Funani.Gui.Controls
         {
             try
             {
-                var uri = new Uri(value.ToString());
-                Orientation orientation = Orientation.Normal;
-                BitmapFrame frame = BitmapFrame.Create(
-                    uri, BitmapCreateOptions.DelayCreation, BitmapCacheOption.None);
-                BitmapSource ret = null;
-                BitmapMetadata meta = frame.Metadata as BitmapMetadata;
-                if (frame.PixelHeight < ThumbnailSize && frame.PixelWidth < ThumbnailSize)
-                {
-                    BitmapImage image = new BitmapImage();
-                    image.BeginInit();
-                    image.UriSource = uri;
-                    image.CacheOption = BitmapCacheOption.None;
-                    image.CreateOptions = BitmapCreateOptions.DelayCreation;
-                    image.EndInit();
-
-                    if (image.CanFreeze)
-                        image.Freeze();
-
-                    ret = image;
-                }
-                else
-                {
-                    if (frame.Thumbnail == null)
-                    {
-                        BitmapImage image = new BitmapImage();
-                        if (frame.PixelHeight >= frame.PixelWidth)
-                            image.DecodePixelHeight = ThumbnailSize;
-                        else
-                            image.DecodePixelWidth = ThumbnailSize;
-                        image.BeginInit();
-                        image.UriSource = uri;
-                        image.CacheOption = BitmapCacheOption.None;
-                        image.CreateOptions = BitmapCreateOptions.DelayCreation;
-                        image.EndInit();
-
-                        if (image.CanFreeze)
-                            image.Freeze();
-
-                        ret = image;
-                    }
-                    else
-                    {
-                        ret = frame.Thumbnail;
-                    }
-                }
-
-                if ((meta != null) && (ret != null))
-                {
-                    double angle = 0;
-                    if (meta.GetQuery("/app1/ifd/{ushort=274}") != null)
-                    {
-                        orientation = (Orientation)Enum.Parse(typeof(Orientation), meta.GetQuery("/app1/ifd/{ushort=274}").ToString());
-                    }
-
-                    switch (orientation)
-                    {
-                        case Orientation.Rotate90:
-                            angle = -90;
-                            break;
-                        case Orientation.Rotate180:
-                            angle = 180;
-                            break;
-                        case Orientation.Rotate270:
-                            angle = 90;
-                            break;
-                    }
-
-                    if (angle != 0)
-                    {
-                        ret = new TransformedBitmap(ret.Clone(), new RotateTransform(angle));
-                        ret.Freeze();
-                    }
-                }
-
+                BitmapSource ret = Funani.Thumbnailer.Thumbnail.Extract(new Uri(value.ToString()),
+                    "image/", ThumbnailSize
+                    );
                 return ret;
             }
             catch

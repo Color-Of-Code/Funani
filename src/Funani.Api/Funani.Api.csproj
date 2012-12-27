@@ -30,35 +30,33 @@
     <DefineConstants>TRACE</DefineConstants>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="PresentationCore">
-      <RequiredTargetFramework>3.0</RequiredTargetFramework>
-    </Reference>
-    <Reference Include="PresentationFramework">
-      <RequiredTargetFramework>3.0</RequiredTargetFramework>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
-    </Reference>
-    <Reference Include="System.Xaml">
-      <RequiredTargetFramework>4.0</RequiredTargetFramework>
     </Reference>
     <Reference Include="System.Xml" />
     <Reference Include="System.Xml.Linq">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
-    <Reference Include="WindowsBase">
-      <RequiredTargetFramework>3.0</RequiredTargetFramework>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DatabaseInfo.cs" />
     <Compile Include="IConsoleRedirect.cs" />
-    <Compile Include="Metadata\Orientation.cs" />
     <Compile Include="Utils\ComputeHash.cs" />
     <Compile Include="IEngine.cs" />
     <Compile Include="IFileStorage.cs" />
     <Compile Include="Metadata\FileInformation.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Funani.MetadataExtractor\Funani.MetadataExtractor.csproj">
+      <Project>{0D47F911-0867-434B-9CDB-F3B8FE0062CA}</Project>
+      <Name>Funani.MetadataExtractor</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Funani.MimeExtractor\Funani.MimeExtractor.csproj">
+      <Project>{C81E3F0E-F9C0-4E13-A1A7-513FDD1BDC38}</Project>
+      <Name>Funani.MimeExtractor</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.Targets" />
 </Project>

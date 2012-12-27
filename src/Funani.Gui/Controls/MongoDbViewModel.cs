@@ -69,6 +69,8 @@ namespace Funani.Gui.Controls
 		{
 			get 
 			{
+                if (Funani == null)
+                    return null;
 				return Funani.GetStats();
 			}
 		}

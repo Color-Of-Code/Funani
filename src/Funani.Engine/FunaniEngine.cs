@@ -30,136 +30,209 @@
 
 namespace Funani.Engine
 {
-	using System;
-	using System.Collections.Generic;
-	using System.ComponentModel;
-	using System.IO;
-	using System.Linq;
-	using System.Text;
+    using System;
+    using System.Collections.Generic;
+    using System.ComponentModel;
+    using System.IO;
+    using System.Linq;
+    using System.Text;
+    using System.Xml;
+    using System.Xml.Serialization;
 
-	using Funani.Api;
-	using Funani.Api.Metadata;
-	using Funani.FileStorage;
-	using Funani.Metadata;
+    using Funani.Api;
+    using Funani.Api.Metadata;
+    using Funani.FileStorage;
+    using Funani.Metadata;
 
-	public class FunaniEngine : IEngine
-	{
-		public FunaniEngine()
-		{
-		}
+    public class FunaniEngine : IEngine
+    {
+        public FunaniEngine()
+        {
+        }
 
-		private IFileStorage _fileStorage;
-		private Metadata.MetadataDatabase _metadata;
-		private String _rootPath;
+        private IFileStorage _fileStorage;
+        private Metadata.MetadataDatabase _metadata;
+        private DatabaseInfo _info;
+        private String _rootPath;
 
-		public Boolean IsValidDatabase(String path)
+        public Boolean IsValidDatabase(String path)
 		{
 			if (String.IsNullOrWhiteSpace(path) ||
-			    !Directory.Exists(path) ||
-			    !Directory.Exists(Path.Combine(path, "metadata")) ||
-			    !Directory.Exists(Path.Combine(path, "data")))
-				return false;
-			return true;
+			    !Directory.Exists(path))
+                return false;
+            if (!File.Exists(Path.Combine(path, "funani.info")))
+                return false;
+            if (!Directory.Exists(Path.Combine(path, "metadata")) ||
+                !Directory.Exists(Path.Combine(path, "data")))
+                return false;
+            return true;
 		}
 
-		public void OpenDatabase(String pathToMongod, String path, IConsoleRedirect listener)
-		{
-			// create the file database
-			_fileStorage = new FileDatabase(path);
-			_fileStorage.Start();
+        public DatabaseInfo DatabaseInfo
+        {
+            get
+            {
+                return _info;
+            }
+        }
 
-			// create the mongodb
-			_metadata = new MetadataDatabase(pathToMongod, path);
-			_metadata.Start(listener);
-			
-			_rootPath = path;
-			TriggerPropertyChanged("DatabasePath");
-			TriggerPropertyChanged("FileCount");
-		}
+        private String DatabaseInfoPath
+        {
+            get
+            {
+                return Path.Combine(_rootPath, "funani.info");
+            }
+        }
 
-		public void CloseDatabase()
-		{
-			_fileStorage.Stop();
-			_metadata.Stop();
-			_fileStorage = null;
-			_metadata = null;
-			_rootPath = null;
-			TriggerPropertyChanged("DatabasePath");
-			TriggerPropertyChanged("FileCount");
-		}
+        private void CreateDatabase(String path)
+        {
+            _rootPath = path;
+            _info = new Api.DatabaseInfo();
+            _info.Title = "<Give a title here>";
+            _info.Description = "<Write a description here>";
+            SaveDatabaseInfo();
+        }
 
-		public FileInformation AddFile(FileInfo file)
-		{
-			var hash = _fileStorage.StoreFile(file);
-			var fileInformation = _metadata.Retrieve(hash, file);
-			TriggerPropertyChanged("FileCount");
-			return fileInformation;
-		}
+        public void OpenDatabase(String pathToMongod, String path, IConsoleRedirect listener)
+        {
+            if (Directory.EnumerateFileSystemEntries(path).Any())
+            {
+                if (!IsValidDatabase(path))
+                    throw new Exception("Invalid Funani Database");
+                _rootPath = path;
+                CommonCreationOpening(pathToMongod, path, listener);
+            }
+            else
+            {
+                CreateDatabase(path);
+                CommonCreationOpening(pathToMongod, path, listener);
+            }
+            if (!IsValidDatabase(path))
+                throw new Exception("Invalid Funani Database");
+        }
 
-		public void RemoveFile(FileInfo file)
-		{
-			_metadata.RemovePath(file);
-		}
+        private void CommonCreationOpening(String pathToMongod, String path, IConsoleRedirect listener)
+        {
+            XmlSerializer s = new XmlSerializer(typeof(DatabaseInfo));
+            using (var reader = XmlReader.Create(DatabaseInfoPath))
+            {
+                _info = s.Deserialize(reader) as DatabaseInfo;
+            }
 
-		public long GetFileCount()
-		{
-			return _metadata.GetFileCount();
-		}
-		
-		public IQueryable<FileInformation> FileInformation
-		{
-			get
-			{
-				return _metadata.FileInformation;
-			}
-		}
+            // create the file database
+            _fileStorage = new FileDatabase(path);
+            _fileStorage.Start();
 
-		public FileInformation GetFileInformation(FileInfo file)
-		{
-			return _metadata.Retrieve(file);
-		}
+            // create the mongodb
+            _metadata = new MetadataDatabase(pathToMongod, path);
+            _metadata.Start(listener);
 
-		public byte[] GetFileData(String hash)
-		{
-			return _fileStorage.LoadFile(hash);
-		}
-		
-		public FileInfo GetFileInfo(String hash)
-		{
-			return _fileStorage.GetFileInfo(hash);
-		}
+            TriggerPropertyChanged(null);
+        }
 
-		public object MetadataDatabase
-		{
-			get
-			{
-				return _metadata.Database;
-			}
-		}
-		
-		public string DatabasePath {
-			get {
-				return _rootPath;
-			}
-		}
-		
-		public long FileCount {
-			get {
-				return _metadata.GetFileCount();
-			}
-		}
+        public void CloseDatabase()
+        {
+            SaveDatabaseInfo();
 
-		#region INotifyPropertyChanged Members
+            _fileStorage.Stop();
+            _metadata.Stop();
+            _fileStorage = null;
+            _metadata = null;
+            _rootPath = null;
+            _info = null;
 
-		public event PropertyChangedEventHandler PropertyChanged;
+            TriggerPropertyChanged(null);
+        }
 
-		private void TriggerPropertyChanged(string propertyName)
-		{
-			var handler = this.PropertyChanged;
-			if (handler != null)
-				handler(this, new PropertyChangedEventArgs(propertyName));
-		}
+        private void SaveDatabaseInfo()
+        {
+            XmlSerializer s = new XmlSerializer(typeof(DatabaseInfo));
+            using (var writer = XmlWriter.Create(DatabaseInfoPath))
+            {
+                s.Serialize(writer, _info);
+            }
+        }
 
-		#endregion
-	}
+        public FileInformation AddFile(FileInfo file)
+        {
+            var hash = _fileStorage.StoreFile(file);
+            var fileInformation = _metadata.Retrieve(hash, file);
+            TriggerPropertyChanged("FileCount");
+            return fileInformation;
+        }
+
+        public void RemoveFile(FileInfo file)
+        {
+            _metadata.RemovePath(file);
+        }
+
+        public long GetFileCount()
+        {
+            return _metadata.GetFileCount();
+        }
+
+        public IQueryable<FileInformation> FileInformation
+        {
+            get
+            {
+                return _metadata.FileInformation;
+            }
+        }
+
+        public FileInformation GetFileInformation(FileInfo file)
+        {
+            return _metadata.Retrieve(file);
+        }
+
+        public byte[] GetFileData(String hash)
+        {
+            return _fileStorage.LoadFile(hash);
+        }
+
+        public FileInfo GetFileInfo(String hash)
+        {
+            return _fileStorage.GetFileInfo(hash);
+        }
+
+        public object MetadataDatabase
+        {
+            get
+            {
+                if (_metadata == null)
+                    return null;
+                return _metadata.Database;
+            }
+        }
+
+        public string DatabasePath
+        {
+            get
+            {
+                return _rootPath;
+            }
+        }
+
+        public long FileCount
+        {
+            get
+            {
+                if (_metadata == null)
+                    return 0;
+                return _metadata.GetFileCount();
+            }
+        }
+
+        #region INotifyPropertyChanged Members
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        private void TriggerPropertyChanged(string propertyName)
+        {
+            var handler = this.PropertyChanged;
+            if (handler != null)
+                handler(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        #endregion
+    }
 }

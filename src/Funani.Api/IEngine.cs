@@ -39,6 +39,12 @@ namespace Funani.Api
 
     using Funani.Api.Metadata;
 
+    /// <summary>
+    /// Unification of the metadata and file databases inside this interface.
+    /// Hides the complexity of handling the file storage and querying the
+    /// metadata database.
+    /// TODO: maybe split into a connection information and the engine
+    /// </summary>
     public interface IEngine : INotifyPropertyChanged
     {
         /// <summary>
@@ -47,6 +53,11 @@ namespace Funani.Api
         /// <param name="path"></param>
         /// <returns></returns>
         Boolean IsValidDatabase(String path);
+
+        /// <summary>
+        /// Get the database info for the currently open database
+        /// </summary>
+        DatabaseInfo DatabaseInfo { get; }
 
         /// <summary>
         /// Opens a funani database initializing the path if it is initially empty

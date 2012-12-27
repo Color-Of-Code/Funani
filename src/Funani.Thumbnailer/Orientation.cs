@@ -28,11 +28,11 @@
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace Funani.Api.Metadata
+namespace Funani.Thumbnailer
 {
 	using System;
 
-	public enum Orientation
+	internal enum Orientation
 	{
 		None = 0,
 		Normal = 1,

@@ -157,6 +157,10 @@
       <Project>{5E00AF3C-5557-4619-80F0-83BCF42F1AD2}</Project>
       <Name>Funani.Engine</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Funani.Thumbnailer\Funani.Thumbnailer.csproj">
+      <Project>{324A24A9-72C9-4B47-A7B2-B4420717EE53}</Project>
+      <Name>Funani.Thumbnailer</Name>
+    </ProjectReference>
     <ProjectReference Include="..\mongo-csharp-driver\MongoDB.Bson\MongoDB.Bson.csproj">
       <Project>{0E9A3A2A-49CD-4F6C-847C-DC79B4B65CE6}</Project>
       <Name>MongoDB.Bson</Name>
@@ -166,10 +170,7 @@
       <Name>MongoDB.Driver</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Controls\FileExplorer" />
-    <Folder Include="Controls\DatabaseExplorer" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
