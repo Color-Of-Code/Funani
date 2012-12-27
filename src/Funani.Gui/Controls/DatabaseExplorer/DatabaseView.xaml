@@ -61,8 +61,18 @@
 									<Run Text="{Binding Hash,Mode=OneWay}"></Run>
                                 </TextBlock>
                                 <TextBlock>
+									<Run>Dimensions: </Run>
+									<Run Text="{Binding Width,Mode=OneWay}"></Run>
+									<Run> x </Run>
+									<Run Text="{Binding Height,Mode=OneWay}"></Run>
+                                </TextBlock>
+                                <TextBlock>
 									<Run>Application name: </Run>
 									<Run Text="{Binding ApplicationName,Mode=OneWay}"></Run>
+                                </TextBlock>
+                                <TextBlock>
+									<Run>Device: </Run>
+									<Run Text="{Binding Device,Mode=OneWay}"></Run>
                                 </TextBlock>
                                 <TextBlock>
 									<Run>Size: </Run>

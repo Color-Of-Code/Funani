@@ -62,19 +62,21 @@ namespace Funani.Api.Metadata
 		
 		private void ExtractMetadata(FileInfo file)
 		{
-			try
+			var uri = new Uri(file.FullName);
+            var metadata = MetadataExtractor.Metadata.Extract(uri, MimeType);
+			if (metadata != null)
 			{
-				var uri = new Uri(file.FullName);
-                var metadata = MetadataExtractor.Metadata.Extract(uri, "image/");
-				if (metadata != null)
-				{
+				if (metadata.ContainsKey("Width"))
+				    Width = Convert.ToInt64(metadata["Width"]);
+				if (metadata.ContainsKey("Height"))
+				    Height = Convert.ToInt64(metadata["Height"]);
+				
+				if (metadata.ContainsKey("Device"))
+                    Device = metadata["Device"];
+				if (metadata.ContainsKey("DateTaken"))
 					DateTaken = DateTime.ParseExact(metadata["DateTaken"], "dd.MM.yyyy HH:mm:ss", null);
+				if (metadata.ContainsKey("ApplicationName"))
                     ApplicationName = metadata["ApplicationName"];
-				}
-			}
-			catch
-			{
-				// ignore silently
 			}
 		}
 		
