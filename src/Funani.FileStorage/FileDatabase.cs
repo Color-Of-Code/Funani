@@ -64,45 +64,48 @@ namespace Funani.FileStorage
 			if (FileExists(hash))
 				return hash;
 
-			string destination = GetDataPath(hash);
-			File.Copy(file.FullName, destination);
+			FileInfo destination = GetFileInfo(hash);
+			Directory.CreateDirectory(destination.DirectoryName);
+			File.Copy(file.FullName, destination.FullName);
 			
 			// verify the hash, paranoid, but would detect hardware issues
-			string hashNew = ComputeHash.SHA1(new FileInfo(destination));
+			string hashNew = ComputeHash.SHA1(destination);
 			if (hash != hashNew)
 			{
-				File.Delete(destination);
+				destination.Delete();
 				throw new Exception("Copy not equal to original image");
 			}
-			File.SetAttributes(destination, FileAttributes.ReadOnly);
+			destination.Attributes = destination.Attributes | FileAttributes.ReadOnly;
 			return hashNew;
 		}
 
 		public void DeleteFile(string hash)
 		{
-			string source = GetDataPath(hash);
-			if (File.Exists(source))
+			FileInfo source = GetFileInfo(hash);
+			if (source.Exists)
 			{
-				File.SetAttributes(source, FileAttributes.Normal);
-				File.Delete(source);
+				source.Attributes = FileAttributes.Normal;
+				source.Delete();
 			}
 		}
 		
 		public Boolean FileExists(string hash)
 		{
-			string source = GetDataPath(hash);
-			return File.Exists(source);
+			FileInfo source = GetFileInfo(hash);
+			return source.Exists;
 		}
 
 		public FileInfo GetFileInfo(string hash)
 		{
-			string source = GetDataPath(hash);
-			return new FileInfo(source);
+			// distribute the data into 2^16 directories in 2 levels and store the files
+			// under their hash as filename
+			String path = Path.Combine(DataPath, hash.Substring(0, 2), hash.Substring(2, 2), hash);
+			return new FileInfo(path);
 		}
 		
 		public byte[] LoadFile(string hash)
 		{
-			string source = GetDataPath(hash);
+			FileInfo source = GetFileInfo(hash);
 			return LoadFileNoException(source);
 		}
 
@@ -115,11 +118,11 @@ namespace Funani.FileStorage
 
 		#region Private
 
-		private static byte[] LoadFileNoException(string source)
+		private static byte[] LoadFileNoException(FileInfo source)
 		{
 			try
 			{
-				return File.ReadAllBytes(source);
+				return File.ReadAllBytes(source.FullName);
 			}
 			catch
 			{
@@ -149,34 +152,12 @@ namespace Funani.FileStorage
 			}
 		}
 
-		private String GetDataPath(String hash)
-		{
-			// distribute the data into 2^16 directories in 2 levels and store the files
-			// under their hash as filename
-			return Path.Combine(DataPath, hash.Substring(0, 2), hash.Substring(2, 2), hash);
-		}
-
 		private void CreateDataPaths()
 		{
-			string baseDir = DataPath;
-			CreateDirectory(baseDir);
-			for (int i = 0; i < 256; i++)
-			{
-				String dirName = Path.Combine(baseDir, i.ToString("X02"));
-				CreateDirectory(dirName);
-				for (int j = 0; j < 256; j++)
-				{
-					String dirName2 = Path.Combine(dirName, j.ToString("X02"));
-					CreateDirectory(dirName2);
-				}
-			}
-		}
-
-		private void CreateDirectory(String dirName)
-		{
-			DirectoryInfo dir = new DirectoryInfo(dirName);
-			dir.Create();
-			dir.Attributes = FileAttributes.Directory | FileAttributes.Hidden;
+			DirectoryInfo baseDir = new DirectoryInfo(DataPath);
+			baseDir.Create();
+			baseDir.Attributes = FileAttributes.Directory | FileAttributes.Hidden;
+			// the other subdirectories are created once needed
 		}
 
 		#endregion
