@@ -14,7 +14,7 @@
             dictionary.Add("Width", Convert.ToString(frame.PixelWidth));
             dictionary.Add("Height", Convert.ToString(frame.PixelHeight));
             BitmapMetadata meta = frame.Metadata as BitmapMetadata;
-            if (meta != null)
+            if (meta != null && meta.Format != "png")
             {
 	            dictionary.Add("DateTaken", meta.DateTaken);
 	            dictionary.Add("ApplicationName", meta.ApplicationName);
