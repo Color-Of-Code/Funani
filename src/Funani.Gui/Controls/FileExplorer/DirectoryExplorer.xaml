@@ -9,6 +9,11 @@
 		<TreeView x:Name="directories" SelectedItemChanged="directories_SelectedItemChanged"
 		          ItemsSource="{Binding FirstGeneration}"
 		          Background="#FFFFFFFF" BorderBrush="#FFFFFFFF" Foreground="#FFFFFFFF">
+			<TreeView.ContextMenu>
+				<ContextMenu>
+					<MenuItem Header="Upload all jpeg files recursively" Click="UploadAllJpegFiles_Click"></MenuItem>
+				</ContextMenu>
+			</TreeView.ContextMenu>
 			<TreeView.ItemContainerStyle>
 				<Style TargetType="{x:Type TreeViewItem}">
 					<Setter Property="IsExpanded" Value="{Binding IsExpanded, Mode=TwoWay}" />

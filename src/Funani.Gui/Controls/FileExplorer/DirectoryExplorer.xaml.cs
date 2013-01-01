@@ -77,7 +77,21 @@ namespace Funani.Gui.Controls
             DirectoryViewModel item = (DirectoryViewModel)tree.SelectedItem;
 			var di = item.DirectoryInfo;
 			if (di != null)
+			{
 				SelectedPath = di.FullName;
+			}
+		}
+		
+		private void UploadAllJpegFiles_Click(object sender, RoutedEventArgs e)
+		{
+			TreeView tree = (TreeView)sender;
+            DirectoryViewModel item = (DirectoryViewModel)tree.SelectedItem;
+			var di = item.DirectoryInfo;
+			if (di != null)
+			{
+				// enumerate all jpeg files recursively and add them inside a background
+				// dispatcher thread -> add a progress information
+			}
 		}
 	}
 }

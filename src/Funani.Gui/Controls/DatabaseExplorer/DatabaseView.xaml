@@ -35,6 +35,11 @@
                             Width="{Binding ElementName=sliderSize,Path=Value}"
                             Height="{Binding ElementName=sliderSize,Path=Value}"
                             >
+						<Canvas.ContextMenu>
+							<ContextMenu>
+								<MenuItem Header="Update metadata" Click="RefreshMetadata_Click" DataContext="{Binding}"></MenuItem>
+							</ContextMenu>
+						</Canvas.ContextMenu>
                         <Border Background="Gray" BorderBrush="White" BorderThickness="4"
                                 Width="{Binding ElementName=sliderSize,Path=Value,
                                     Converter={StaticResource MathConverter},ConverterParameter=(@VALUE-8)}"

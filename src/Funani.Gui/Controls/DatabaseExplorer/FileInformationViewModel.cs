@@ -175,6 +175,13 @@ namespace Funani.Gui.Controls
 			}
 		}
 
+		public void RefreshMetadata()
+		{
+			//TODO:
+			_fileInfo = null;
+			TriggerPropertyChanged(null);
+		}
+		
 		private BitmapSource _thumbnail;
 		private const int MaxThumbnailSize = 120;
 		private static readonly UriToThumbnailConverter converter = new UriToThumbnailConverter(MaxThumbnailSize);

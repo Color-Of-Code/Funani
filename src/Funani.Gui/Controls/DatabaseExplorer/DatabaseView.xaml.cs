@@ -60,27 +60,26 @@ namespace Funani.Gui.Controls
 			listControl.DataContext = items;
 		}
 		
-		private void CheckBox_Clicked(object sender, RoutedEventArgs e)
-		{
-			var checkBox = sender as CheckBox;
-			bool isChecked = (bool)(checkBox.IsChecked);
-			var viewModel = checkBox.DataContext as FileViewModel;
-			if (listControl.SelectedItem == null || !listControl.SelectedItems.Contains(viewModel))
-			{
-				viewModel.InsideFunani = isChecked;
-			}
-			else
-			{
-				foreach (FileViewModel item in listControl.SelectedItems)
-				{
-					viewModel.InsideFunani = isChecked;
-				}
-			}
-		}
-		
 		private void UserControl_GotFocus(object sender, RoutedEventArgs e)
 		{
 			ReloadFiles();
+		}
+		
+		private void RefreshMetadata_Click(object sender, RoutedEventArgs e)
+		{
+			var canvas = sender as Control;
+			var viewModel = canvas.DataContext as FileInformationViewModel;
+			if (listControl.SelectedItem == null || !listControl.SelectedItems.Contains(viewModel))
+			{
+				viewModel.RefreshMetadata();
+			}
+			else
+			{
+				foreach (FileInformationViewModel item in listControl.SelectedItems)
+				{
+					viewModel.RefreshMetadata();
+				}
+			}
 		}
 		
 	}
