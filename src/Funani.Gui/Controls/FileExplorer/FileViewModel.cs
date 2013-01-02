@@ -33,7 +33,7 @@ namespace Funani.Gui.Controls
 	using System;
 	using System.ComponentModel;
 	using System.IO;
-	using System.Windows.Media;
+    using System.Windows.Media;
 	using System.Windows.Media.Imaging;
 
 	using Funani.Api;
@@ -46,7 +46,8 @@ namespace Funani.Gui.Controls
 		public FileViewModel(FileInfo fileInfo)
 		{
 			FileInfo = fileInfo;
-		}
+            UpdateInsideFunani();
+        }
 
 		public FileInfo FileInfo
 		{
@@ -125,41 +126,55 @@ namespace Funani.Gui.Controls
 		}
 
 		private Boolean? _insideFunani;
-		public Boolean InsideFunani
+		public Boolean? InsideFunani
 		{
 			get
 			{
-				if (!_insideFunani.HasValue)
-				{
-					_insideFunani = Engine.Funani.GetFileInformation(FileInfo) != null;
-				}
-				return (bool)_insideFunani;
+				return _insideFunani;
 			}
 			set
 			{
-				if (InsideFunani != value)
-				{
-					_insideFunani = null; // trigger readback from metadata
-					try
-					{
-						if (value)
-						{
-							// add
-							Engine.Funani.AddFile(FileInfo);
-						}
-						else
-						{
-							// remove
-							Engine.Funani.RemoveFile(FileInfo);
-						}
-					}
-					finally
-					{
-						TriggerPropertyChanged("InsideFunani");
-					}
-				}
-			}
+                if (value.HasValue)
+                {
+                    if (InsideFunani != value)
+                    {
+                        AddOrRemoveFile((bool)value);
+                    }
+                }
+                else
+                {
+                    _insideFunani = null;
+                    TriggerPropertyChanged("InsideFunani");
+                }
+            }
 		}
+
+        private void AddOrRemoveFile(bool value)
+        {
+            try
+            {
+                if (value)
+                {
+                    // add
+                    Engine.Funani.AddFile(FileInfo);
+                }
+                else
+                {
+                    // remove
+                    Engine.Funani.RemoveFile(FileInfo);
+                }
+            }
+            finally
+            {
+                UpdateInsideFunani();
+            }
+        }
+
+        private void UpdateInsideFunani()
+        {
+            _insideFunani = Engine.Funani.GetFileInformation(FileInfo) != null;
+            TriggerPropertyChanged("InsideFunani");
+        }
 		
 		private BitmapSource _thumbnail;
 		private const int MaxThumbnailSize = 120;

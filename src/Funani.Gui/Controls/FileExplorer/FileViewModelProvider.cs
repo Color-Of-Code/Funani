@@ -47,13 +47,16 @@ namespace Funani.Gui.Controls
 		private readonly int _fetchDelay;
 		private readonly DirectoryInfo _di;
 		private IEnumerable<FileInfo> _files;
+        private IEnumerable<FileViewModel> _filteredFiles;
+        private bool _filterAlreadyStored;
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="FileViewModelProvider"/> class.
 		/// </summary>
-		public FileViewModelProvider(String path)
+        public FileViewModelProvider(String path, bool filterAlreadyStored)
 		{
 			_di = new DirectoryInfo(path);
+            _filterAlreadyStored = filterAlreadyStored;
 			try
 			{
 				_files = _di.EnumerateFiles();
@@ -71,7 +74,15 @@ namespace Funani.Gui.Controls
 		/// <returns></returns>
 		public int FetchCount()
 		{
-			return _files.Count();
+            if (_filterAlreadyStored)
+            {
+                _filteredFiles = _files.Select(x => new FileViewModel(x)).Where(x => x.InsideFunani == false);
+                return _filteredFiles.Count();
+            }
+            else
+            {
+                return _files.Count();
+            }
 		}
 
 		/// <summary>
@@ -83,7 +94,14 @@ namespace Funani.Gui.Controls
 		public IList<FileViewModel> FetchRange(int startIndex, int count)
 		{
 			List<FileViewModel> list = new List<FileViewModel>();
-			list.AddRange(_files.Skip(startIndex).Take(count).Select(x => new FileViewModel(x)));
+            if (_filterAlreadyStored)
+            {
+                list.AddRange(_filteredFiles.Skip(startIndex).Take(count));
+            }
+            else
+            {
+                list.AddRange(_files.Skip(startIndex).Take(count).Select(x => new FileViewModel(x)));
+            }
 			return list;
 		}
 	}

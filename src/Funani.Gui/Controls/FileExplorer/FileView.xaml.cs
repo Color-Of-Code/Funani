@@ -33,7 +33,9 @@ namespace Funani.Gui.Controls
 	using System.Collections.Generic;
 	using System.Collections.ObjectModel;
 	using System.IO;
-	using System.Text;
+    using System.Linq;
+    using System.Text;
+    using System.Threading;
 	using System.Windows;
 	using System.Windows.Controls;
 	using System.Windows.Data;
@@ -60,10 +62,12 @@ namespace Funani.Gui.Controls
 			get { return (string)GetValue(SelectedPathProperty); }
 			set { SetValue(SelectedPathProperty, value); }
 		}
-		
+
+        private bool _filterAlreadyStored = true;
+
 		public void ReloadFiles()
 		{
-			var provider = new FileViewModelProvider(SelectedPath);
+            var provider = new FileViewModelProvider(SelectedPath, _filterAlreadyStored);
 			var items = new AsyncVirtualizingCollection<FileViewModel>(provider, 20, 10 * 1000);
 			listControl.DataContext = items;
 		}
@@ -77,27 +81,51 @@ namespace Funani.Gui.Controls
 		private void CheckBox_Clicked(object sender, RoutedEventArgs e)
 		{
 			var checkBox = sender as CheckBox;
-			bool isChecked = (bool)(checkBox.IsChecked);
-			var viewModel = checkBox.DataContext as FileViewModel;
-			if (listControl.SelectedItem == null || !listControl.SelectedItems.Contains(viewModel))
+            bool isChecked = false;
+            if (checkBox.IsChecked.HasValue)
+            {
+                isChecked = (bool)(checkBox.IsChecked);
+            }
+
+            var viewModel = checkBox.DataContext as FileViewModel;
+            var viewModels = new List<FileViewModel>();
+
+            if (listControl.SelectedItem == null || !listControl.SelectedItems.Contains(viewModel))
 			{
-				TrySetInsideFunani(isChecked, viewModel);
+                viewModels.Add(viewModel);
 			}
 			else
 			{
-				foreach (FileViewModel item in listControl.SelectedItems)
-				{
-					TrySetInsideFunani(isChecked, item);
-				}
+                viewModels.AddRange(listControl.SelectedItems.Cast<FileViewModel>());
 			}
-		}
 
-		// ignore result shall be visible on the checkbox state
-		private void TrySetInsideFunani(bool isChecked, FileViewModel viewModel)
-		{
-			viewModel.InsideFunani = isChecked;
-		}
-		
+            Thread backgroundThread;
+            if (isChecked)
+                backgroundThread = new Thread(SetInsideFunani);
+            else
+                backgroundThread = new Thread(ResetInsideFunani);
+            backgroundThread.IsBackground = true;
+            backgroundThread.Start(viewModels);
+        }
+
+        private static void ResetInsideFunani(object parameter)
+        {
+            var viewModels = parameter as IList<FileViewModel>;
+            foreach (FileViewModel item in viewModels)
+                item.InsideFunani = null;
+            foreach (FileViewModel item in viewModels)
+                item.InsideFunani = false;
+        }
+
+        private static void SetInsideFunani(object parameter)
+        {
+            var viewModels = parameter as IList<FileViewModel>;
+            foreach (FileViewModel item in viewModels)
+                item.InsideFunani = null;
+            foreach (FileViewModel item in viewModels)
+                item.InsideFunani = true;
+        }
+
 		public static readonly DependencyProperty SelectedPathProperty =
 			DependencyProperty.Register("SelectedPath", typeof(string), typeof(FileView),
 			                            new PropertyMetadata(string.Empty, OnSelectedPathChanged));

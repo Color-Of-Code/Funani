@@ -6,10 +6,12 @@
     <Application.Resources>
         <funani:MathConverter x:Key="MathConverter"></funani:MathConverter>
         <Style x:Key="checkBoxStyle" TargetType="{x:Type CheckBox}">
-            <Setter Property="Background" Value="Red" />
             <Style.Triggers>
                 <Trigger Property="IsChecked" Value="True">
                     <Setter Property="Background" Value="DarkGreen" />
+                </Trigger>
+                <Trigger Property="IsChecked" Value="False">
+                    <Setter Property="Background" Value="Red" />
                 </Trigger>
             </Style.Triggers>
         </Style>

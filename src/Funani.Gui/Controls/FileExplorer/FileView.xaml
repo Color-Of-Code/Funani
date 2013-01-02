@@ -77,7 +77,8 @@
                                     VerticalAlignment="Center"
 							/>
                         </Border>
-                        <CheckBox IsChecked="{Binding InsideFunani,Mode=OneWay}" 
+                        <CheckBox IsChecked="{Binding InsideFunani, Mode=OneWay}" 
+                                  IsThreeState="True"
                                   Click="CheckBox_Clicked"
 							      Canvas.Bottom="4"
 							      Canvas.Right="4"
