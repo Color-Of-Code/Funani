@@ -168,6 +168,8 @@ namespace Funani.Engine
 
         public long GetFileCount()
         {
+        	if (_metadata == null)
+        		return 0;
             return _metadata.GetFileCount();
         }
 

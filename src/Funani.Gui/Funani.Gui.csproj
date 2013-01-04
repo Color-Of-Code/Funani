@@ -64,6 +64,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Controls\Progress\CommandProgressControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -72,6 +76,7 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Controls\ActionCommand.cs" />
     <Compile Include="Controls\DatabaseExplorer\DatabaseView.xaml.cs">
       <DependentUpon>DatabaseView.xaml</DependentUpon>
       <SubType>Code</SubType>
@@ -101,6 +106,11 @@
     </Compile>
     <Compile Include="Controls\MongoDbViewModel.cs" />
     <Compile Include="Controls\PixelBasedScrollingBehaviour.cs" />
+    <Compile Include="Controls\Progress\CommandProgressControl.xaml.cs">
+      <DependentUpon>CommandProgressControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Progress\CommandProgressModel.cs" />
+    <Compile Include="Controls\Progress\CommandProgressViewModel.cs" />
     <Compile Include="Controls\UriToThumbnailConverter.cs" />
     <Compile Include="Controls\VirtualizingWrapPanel.cs" />
     <Compile Include="Engine\Funani.cs" />
@@ -170,7 +180,6 @@
       <Name>MongoDB.Driver</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

@@ -58,6 +58,9 @@ namespace Funani.Gui
         {
             InitializeComponent();
 
+            _commandQueue = new Controls.CommandProgressViewModel();
+            progress.DataContext = _commandQueue;
+            
             Properties.Settings.Default.Upgrade();
             funaniDatabase.DataContext = _funani;
         }
@@ -136,6 +139,6 @@ namespace Funani.Gui
         }
 
         private IEngine _funani = Engine.Funani;
-
+		private Controls.CommandProgressViewModel _commandQueue; 
     }
 }
