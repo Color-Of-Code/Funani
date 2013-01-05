@@ -48,6 +48,7 @@ namespace Funani.Engine
     {
         public FunaniEngine()
         {
+        	CommandQueue = new FunaniCommandQueue();
         }
 
         private IFileStorage _fileStorage;
@@ -67,6 +68,11 @@ namespace Funani.Engine
                 return false;
             return true;
 		}
+        
+        public ICommandQueue CommandQueue
+        {
+        	get; private set;
+        }
 
         public DatabaseInfo DatabaseInfo
         {

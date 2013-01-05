@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright (c) 2008-2013, Jaap de Haan <jaap.dehaan@color-of-code.de>
+ * Copyright (c) 2012-2013, Jaap de Haan <jaap.dehaan@color-of-code.de>
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -27,65 +27,24 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
-namespace Funani.Gui.Controls
+
+namespace Funani.Engine.Commands
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using System.Windows.Input;
-
-    public class ActionCommand : ICommand
-    {
-        public ActionCommand(Action action)
-        {
-            _action = action;
-        }
-
-        public ActionCommand(Action action, String description)
-        	: this(action)
-        {
-        	_description = description;
-        }
-        
-        public bool IsEnabled
-        {
-            get { return _isEnabled; }
-            set
-            {
-                if (_isEnabled != value)
-                {
-                    _isEnabled = value;
-                    TriggerCanExecuteChanged();
-                }
-            }
-        }
-
-        public bool CanExecute(object parameter)
-        {
-            return _isEnabled;
-        }
-
-        public void Execute(object parameter)
-        {
-            _action();
-        }
-        
-        public override string ToString()
+	using System;
+	using System.IO;
+	using System.Windows.Input;
+	
+	using Funani.Api;
+	
+	/// <summary>
+	/// Description of AddFileCommand.
+	/// </summary>
+	public class AddFileCommand : ActionCommand
+	{
+		public AddFileCommand(IEngine engine, FileInfo file)
+			: base( () => engine.AddFile(file) )
 		{
-			return string.Format("{0}", _description);
+			Description = String.Format("Adding file '{0}'", file.FullName);
 		}
-
-        private void TriggerCanExecuteChanged()
-        {
-            var handler = CanExecuteChanged;
-            if (handler != null)
-                handler(this, EventArgs.Empty);
-        }
-        
-        private Action _action;
-        private String _description;
-        private bool _isEnabled = false;
-        public event EventHandler CanExecuteChanged;
-    }
+	}
 }

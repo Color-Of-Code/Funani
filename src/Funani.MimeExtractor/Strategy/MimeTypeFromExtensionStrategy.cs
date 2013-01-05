@@ -36,23 +36,74 @@ namespace Funani.MimeExtractor.Strategy
     {
         public string ExtractMimeType(FileInfo file)
         {
+        	if (file.Name.ToLowerInvariant() == "thumbs.db")
+        		return "application/x-msthumbnails";
+        	
             String mime;
             String extension = file.Extension.ToLowerInvariant();
             switch (extension)
             {
+                case ".avd":
+                    mime = "application/x-magixmoviedata";
+                    break;
+                case ".hdp":
+                    mime = "application/x-magixaudiodata";
+                    break;
+                case ".mxc2":
+                    mime = "application/x-magixmediapreview";
+                    break;
+                    
+                case ".avi":
+                    mime = "video/x-msvideo";
+                    break;
+                case ".bmp":
+                    mime = "image/bmp";
+                    break;
+                case ".doc":
+                    mime = "application/msword";
+                    break;
                 case ".gif":
                     mime = "image/gif";
+                    break;
+                case ".hps-metadata":
+                    mime = "application/xml";
+                    break;
+                case ".ini":
+                case ".txt":
+                    mime = "text/plain";
                     break;
                 case ".jpe":
                 case ".jpeg":
                 case ".jpg":
                     mime = "image/jpeg";
                     break;
+                case ".mov":
+                case ".qt":
+                    mime = "video/quicktime";
+                    break;
+                case ".mpe":
+                case ".mpeg":
+                case ".mpg":
+                    mime = "video/mpeg";
+                    break;
+                case ".pdf":
+                    mime = "application/pdf";
+                    break;
                 case ".png":
                     mime = "image/png";
                     break;
+                case ".tif":
                 case ".tiff":
                     mime = "image/tiff";
+                    break;
+                case ".xcf":
+                    mime = "application/gimp";
+                    break;
+                case ".xls":
+                    mime = "application/msexcel";
+                    break;
+                case ".zip":
+                    mime = "application/zip";
                     break;
                 default:
                     throw new NotSupportedException("MIME type not recognized for file " + file.Name);

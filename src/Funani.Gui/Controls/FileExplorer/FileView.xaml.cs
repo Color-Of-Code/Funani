@@ -63,7 +63,7 @@ namespace Funani.Gui.Controls
 			set { SetValue(SelectedPathProperty, value); }
 		}
 
-        private bool _filterAlreadyStored = true;
+        private bool _filterAlreadyStored = false;
 
 		public void ReloadFiles()
 		{

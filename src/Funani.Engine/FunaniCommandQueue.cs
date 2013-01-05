@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright (c) 2008-2013, Jaap de Haan <jaap.dehaan@color-of-code.de>
+ * Copyright (c) 2012-2013, Jaap de Haan <jaap.dehaan@color-of-code.de>
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -27,7 +27,7 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
-namespace Funani.Gui.Controls
+namespace Funani.Engine
 {
     using System;
     using System.Collections.Generic;
@@ -36,19 +36,11 @@ namespace Funani.Gui.Controls
     using System.Threading;
     using System.Windows.Input;
 
-    public class CommandProgressEventArgs : EventArgs
+    using Funani.Api;
+    
+    public class FunaniCommandQueue : ICommandQueue
     {
-        public CommandProgressEventArgs(ICommand command)
-        {
-            Command = command;
-        }
-
-        public ICommand Command { get; private set; }
-    }
-
-    public class CommandProgressModel
-    {
-        public CommandProgressModel()
+        public FunaniCommandQueue()
         {
             _thread = null;
             _actions = new Queue<ICommand>();
@@ -56,11 +48,14 @@ namespace Funani.Gui.Controls
 
         public void AddCommand(ICommand action)
         {
-            _actions.Enqueue(action);
-            if (_thread == null)
+            lock (_actions)
             {
-                _thread = new Thread(Worker);
-                _thread.Start();
+	            _actions.Enqueue(action);
+	            if (_thread == null)
+	            {
+	                _thread = new Thread(Worker);
+	                _thread.Start();
+	            }
             }
         }
 
@@ -68,7 +63,10 @@ namespace Funani.Gui.Controls
         {
             get
             {
-                return _actions.Count;
+                lock (_actions)
+                {
+                	return _actions.Count + _processed;
+                }
             }
         }
 
@@ -92,10 +90,15 @@ namespace Funani.Gui.Controls
 
                     command.Execute(null);
 
+                    lock (_actions)
+                    {
+	                    _processed++;
+                    	_actions.Dequeue();
+                    }
+
                     handler = CommandEnded;
                     if (handler != null)
                         handler(this, new CommandProgressEventArgs(command));
-                    _actions.Dequeue();
                 }
             }
             finally
@@ -114,11 +117,13 @@ namespace Funani.Gui.Controls
 
         private void Setup()
         {
+        	_processed = 0;
             var handler = ThreadStarted;
             if (handler != null)
                 handler(this, null);
         }
 
+        private Int32 _processed;
         private Thread _thread;
         private Queue<ICommand> _actions;
     }

@@ -47,6 +47,12 @@ namespace Funani.Api
     /// </summary>
     public interface IEngine : INotifyPropertyChanged
     {
+    	/// <summary>
+    	/// Return the command queue associated with this engine for operations
+    	/// performed on a separate worker thread.
+    	/// </summary>
+    	ICommandQueue CommandQueue { get; }
+    	
         /// <summary>
         /// Allows to check if the provided path points to a valid funani db structure
         /// </summary>

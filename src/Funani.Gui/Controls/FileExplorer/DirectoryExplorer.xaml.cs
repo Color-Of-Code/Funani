@@ -34,6 +34,7 @@ namespace Funani.Gui.Controls
 	using System.Collections.Generic;
 	using System.IO;
 	using System.Text;
+	using System.Threading;
 	using System.Windows;
 	using System.Windows.Controls;
 	using System.Windows.Data;
@@ -41,6 +42,8 @@ namespace Funani.Gui.Controls
 	using System.Windows.Input;
 	using System.Windows.Media;
 
+	using Funani.Engine.Commands;
+	
 	/// <summary>
 	/// Interaction logic for FileExplorer.xaml
 	/// </summary>
@@ -50,56 +53,87 @@ namespace Funani.Gui.Controls
 		{
 			InitializeComponent();
 
-            _viewModel = new DirectoryTreeViewModel();
-            directories.DataContext = _viewModel;
+			_viewModel = new DirectoryTreeViewModel();
+			directories.DataContext = _viewModel;
 		}
 
 		public void SelectPath(string path)
 		{
-            SelectedPath = path;
-            _viewModel.ExpandAndSelect(new DirectoryInfo(path));
+			SelectedPath = path;
+			_viewModel.ExpandAndSelect(new DirectoryInfo(path));
 		}
 
-		public string SelectedPath 
+		public string SelectedPath
 		{
 			get { return (string)GetValue(SelectedPathProperty); }
 			set { SetValue(SelectedPathProperty, value); }
 		}
 		
-		public static readonly DependencyProperty SelectedPathProperty = 
-  			DependencyProperty.Register("SelectedPath", typeof(string), typeof(DirectoryExplorer), 
-  			new PropertyMetadata(string.Empty));
-  
+		public static readonly DependencyProperty SelectedPathProperty =
+			DependencyProperty.Register("SelectedPath", typeof(string), typeof(DirectoryExplorer),
+			                            new PropertyMetadata(string.Empty));
+		
 
 		private void directories_SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
 		{
-            DirectoryViewModel item = SelectedDirectoryViewModel();
+			DirectoryViewModel item = SelectedDirectoryViewModel();
 			if (item != null)
 			{
-                var di = item.DirectoryInfo;
-                if (di != null)
-                {
-                    SelectedPath = di.FullName;
-                }
+				var di = item.DirectoryInfo;
+				if (di != null)
+				{
+					SelectedPath = di.FullName;
+				}
 			}
 		}
 		
-		private void UploadAllJpegFiles_Click(object sender, RoutedEventArgs e)
+		private void UploadAllFiles_Click(object sender, RoutedEventArgs e)
 		{
-            DirectoryViewModel item = SelectedDirectoryViewModel();
+			DirectoryViewModel item = SelectedDirectoryViewModel();
 			if (item != null)
 			{
-				// enumerate all jpeg files recursively and add them inside a background
-				// dispatcher thread -> add a progress information
+				var di = item.DirectoryInfo;
+				Thread t = new Thread((arg) => 
+					AddFilesInDirectory(di, false)
+				);
+				t.Start();
 			}
 		}
 
-        private DirectoryViewModel SelectedDirectoryViewModel()
-        {
-            DirectoryViewModel item = (DirectoryViewModel)directories.SelectedItem;
-            return item;
-        }
+		private void UploadAllFilesRecursively_Click(object sender, RoutedEventArgs e)
+		{
+			DirectoryViewModel item = SelectedDirectoryViewModel();
+			if (item != null)
+			{
+				var di = item.DirectoryInfo;
+				Thread t = new Thread((arg) => 
+					AddFilesInDirectory(di, true)
+				);
+				t.Start();
+			}
+		}
 
-        private DirectoryTreeViewModel _viewModel;
+		private void AddFilesInDirectory(DirectoryInfo di, bool recurse)
+		{
+			foreach (FileInfo fi in di.EnumerateFiles())
+			{
+				Engine.Funani.CommandQueue.AddCommand(new AddFileCommand(Engine.Funani, fi));
+			}
+			if (recurse)
+			{
+				foreach (DirectoryInfo sdi in di.EnumerateDirectories())
+				{
+					AddFilesInDirectory(sdi, true);
+				}
+			}
+		}
+
+		private DirectoryViewModel SelectedDirectoryViewModel()
+		{
+			DirectoryViewModel item = (DirectoryViewModel)directories.SelectedItem;
+			return item;
+		}
+
+		private DirectoryTreeViewModel _viewModel;
 	}
 }

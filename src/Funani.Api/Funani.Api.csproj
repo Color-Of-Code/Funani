@@ -30,6 +30,9 @@
     <DefineConstants>TRACE</DefineConstants>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="PresentationCore">
+      <RequiredTargetFramework>3.0</RequiredTargetFramework>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
@@ -41,6 +44,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DatabaseInfo.cs" />
+    <Compile Include="ICommandQueue.cs" />
     <Compile Include="IConsoleRedirect.cs" />
     <Compile Include="Utils\ComputeHash.cs" />
     <Compile Include="IEngine.cs" />

@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright (c) 2008-2013, Jaap de Haan <jaap.dehaan@color-of-code.de>
+ * Copyright (c) 2012-2013, Jaap de Haan <jaap.dehaan@color-of-code.de>
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -35,24 +35,16 @@ namespace Funani.Gui.Controls
 	using System.Linq;
 	using System.Text;
 	using System.Windows.Input;
+	
+	using Funani.Api;
+	using Funani.Engine;
 
 	public class CommandProgressViewModel : INotifyPropertyChanged
 	{
-		public CommandProgressViewModel()
-		{
-			_model = new CommandProgressModel();
-			BindEvents();
-		}
-
-		public CommandProgressViewModel(CommandProgressModel model)
+		public CommandProgressViewModel(ICommandQueue model)
 		{
 			_model = model;
 			BindEvents();
-		}
-
-		public void AddCommand(ICommand command)
-		{
-			_model.AddCommand(command);
 		}
 
 		private Int32 _total;
@@ -83,7 +75,7 @@ namespace Funani.Gui.Controls
 			set { _eta = value; OnPropertyChanged("Eta"); }
 		}
 
-		private CommandProgressModel _model;
+		private ICommandQueue _model;
 
 		#region INotifyPropertyChanged Members
 
@@ -106,6 +98,7 @@ namespace Funani.Gui.Controls
 		private void model_CommandEnded(object sender, CommandProgressEventArgs e)
 		{
 			Performed++;
+			Total = _model.Count;
 			//TODO: refresh Eta
 		}
 
