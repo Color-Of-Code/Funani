@@ -72,10 +72,16 @@ namespace Funani.MimeExtractor.Strategy
                 case ".txt":
                     mime = "text/plain";
                     break;
+                case ".iso":
+                    mime = "application/iso-image";
+                    break;
                 case ".jpe":
                 case ".jpeg":
                 case ".jpg":
                     mime = "image/jpeg";
+                    break;
+                case ".lnk":
+                    mime = "application/x-ms-shortcut";
                     break;
                 case ".mov":
                 case ".qt":
@@ -89,12 +95,18 @@ namespace Funani.MimeExtractor.Strategy
                 case ".pdf":
                     mime = "application/pdf";
                     break;
+                case ".php":
+                    mime = "text/x-php";
+                    break;
                 case ".png":
                     mime = "image/png";
                     break;
                 case ".tif":
                 case ".tiff":
                     mime = "image/tiff";
+                    break;
+                case ".wps":
+                    mime = "application/vnd.ms-works";
                     break;
                 case ".xcf":
                     mime = "application/gimp";

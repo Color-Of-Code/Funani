@@ -13,6 +13,11 @@
             <ColumnDefinition Width="1*" />
         </Grid.ColumnDefinitions>
         <ProgressBar Grid.Column="0" Maximum="{Binding Total}" Value="{Binding Performed}"></ProgressBar>
+    	<TextBlock Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center">
+    		<Run Text="{Binding Performed}"></Run>
+    		<Run Text="/"></Run>
+    		<Run Text="{Binding Total}"></Run>
+    	</TextBlock>
         <TextBlock Grid.Column="1" Text="{Binding Info}" Grid.ColumnSpan="2"></TextBlock>
         <TextBlock Grid.Column="2" Text="{Binding Eta}" Grid.ColumnSpan="2"></TextBlock>
     </Grid>
