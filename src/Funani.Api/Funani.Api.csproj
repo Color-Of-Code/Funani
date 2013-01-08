@@ -46,6 +46,8 @@
     <Compile Include="DatabaseInfo.cs" />
     <Compile Include="ICommandQueue.cs" />
     <Compile Include="IConsoleRedirect.cs" />
+    <Compile Include="Metadata\Tag.cs" />
+    <Compile Include="Metadata\TagType.cs" />
     <Compile Include="Utils\ComputeHash.cs" />
     <Compile Include="IEngine.cs" />
     <Compile Include="IFileStorage.cs" />

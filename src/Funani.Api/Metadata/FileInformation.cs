@@ -97,17 +97,20 @@ namespace Funani.Api.Metadata
 		public DateTime? DateTaken { get; set; }    // start date for video
         public Int64 Duration { get; set; }         // for videos, sound
 
+        public DateTime? LastModification { get; set; }
+
         public String Device { get; set; }          // digitalizing device
         public String ApplicationName { get; set; } // application used to process the data
         
         // 0 -> 5
-        public int Rating { get; set; }
+        public int? Rating { get; set; }
 
-        // tagging
-        public IList<String> EventTags { get; private set; }
-        public IList<String> PeopleTags { get; private set; }
-        public IList<String> LocationTags { get; private set; }
-        public IList<String> ObjectTags { get; private set; }
-        public IList<String> OtherTags { get; private set; }
+        public void AddTag(Tag tag)
+        {
+            if (!Tags.Contains(tag))
+                Tags.Add(tag);
+        }
+		
+        public IList<Tag> Tags { get; private set; }
     }
 }

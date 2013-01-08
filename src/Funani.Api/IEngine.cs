@@ -100,12 +100,6 @@ namespace Funani.Api
         /// <param name="file"></param>
         /// <returns></returns>
         void RemoveFile(FileInfo file);
-
-        /// <summary>
-        /// Determine the number of files in the database
-        /// </summary>
-        /// <returns></returns>
-        long GetFileCount();
         
         /// <summary>
         /// Return the file information as a queryable

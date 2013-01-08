@@ -172,11 +172,14 @@ namespace Funani.Engine
             _metadata.RemovePath(file);
         }
 
-        public long GetFileCount()
+        public long FileCount
         {
-        	if (_metadata == null)
-        		return 0;
-            return _metadata.GetFileCount();
+            get
+            {
+                if (_metadata == null)
+                    return 0;
+                return _metadata.FileInformation.Count();
+            }
         }
 
         public IQueryable<FileInformation> FileInformation
@@ -217,16 +220,6 @@ namespace Funani.Engine
             get
             {
                 return _rootPath;
-            }
-        }
-
-        public long FileCount
-        {
-            get
-            {
-                if (_metadata == null)
-                    return 0;
-                return _metadata.GetFileCount();
             }
         }
 

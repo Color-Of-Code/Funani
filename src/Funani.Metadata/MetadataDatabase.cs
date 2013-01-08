@@ -96,7 +96,11 @@ namespace Funani.Metadata
 			var queryBuilder = new QueryBuilder<FileInformation>();
 			var query = queryBuilder.In(x => x.Paths, list);
 			var info = files.FindOneAs<FileInformation>(query);
-			return info;
+            // check if the provided file is of the same length
+            // than the one stored
+            if (info!= null && info.FileSize != file.Length)
+                info = null;
+            return info;
 		}
 
 		public void RemovePath(FileInfo file)
@@ -114,12 +118,6 @@ namespace Funani.Metadata
 			}
 		}
 
-		public long GetFileCount()
-		{
-			var files = Funani.GetCollection("fileinfo");
-			return files.Count();
-		}
-
 		public IQueryable<FileInformation> FileInformation
 		{
 			get
@@ -128,8 +126,17 @@ namespace Funani.Metadata
 				return files.AsQueryable<FileInformation>();
 			}
 		}
-		
-		public void Start(IConsoleRedirect listener)
+
+        public IQueryable<Tag> Tag
+        {
+            get
+            {
+                var tags = Funani.GetCollection("tag");
+                return tags.AsQueryable<Tag>();
+            }
+        }
+
+        public void Start(IConsoleRedirect listener)
 		{
 			Stop();
 
@@ -198,7 +205,6 @@ namespace Funani.Metadata
 			}
 		}
 
-
 		private string DatabasePath
 		{
 			get
@@ -214,7 +220,6 @@ namespace Funani.Metadata
 				return Path.Combine(DatabasePath, "journal");
 			}
 		}
-
 
 		#region Private
 		private Process _process;

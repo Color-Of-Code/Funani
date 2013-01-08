@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright (c) 2008-2013, Jaap de Haan <jaap.dehaan@color-of-code.de>
+ * Copyright (c) 2012-2013, Jaap de Haan <jaap.dehaan@color-of-code.de>
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -28,51 +28,20 @@
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace Funani.Gui.Controls
+namespace Funani.Api.Metadata
 {
-	using System;
-	using System.Collections.Generic;
-	using System.Diagnostics;
-	using System.IO;
-	using System.Linq;
-	using System.Threading;
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Text;
 
-	using Funani.Gui.Model;
-
-	/// <summary>
-	/// Implementation of IItemsProvider returning <see cref="FileViewModel"/> items
-	/// </summary>
-	public class DatabaseViewModelProvider : IItemsProvider<FileInformationViewModel>
-	{
-		/// <summary>
-		/// Initializes a new instance of the <see cref="FileViewModelProvider"/> class.
-		/// </summary>
-		public DatabaseViewModelProvider()
-		{
-		}
-
-		/// <summary>
-		/// Fetches the total number of items available.
-		/// </summary>
-		/// <returns></returns>
-		public int FetchCount()
-		{
-			return (int)Engine.Funani.FileCount;
-		}
-
-		/// <summary>
-		/// Fetches a range of items.
-		/// </summary>
-		/// <param name="startIndex">The start index.</param>
-		/// <param name="count">The number of items to fetch.</param>
-		/// <returns></returns>
-		public IList<FileInformationViewModel> FetchRange(int startIndex, int count)
-		{
-			List<FileInformationViewModel> list = new List<FileInformationViewModel>();
-			list.AddRange(
-				Engine.Funani.FileInformation.Skip(startIndex).Take(count).Select(x => new FileInformationViewModel(x))
-			);
-			return list;
-		}
-	}
+    public enum TagType
+    {
+        Event,
+        Person,
+        Location,
+        Animal,
+        Object,
+        Other
+    }
 }
