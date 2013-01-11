@@ -163,7 +163,7 @@ namespace Funani.Engine
         {
             var hash = _fileStorage.StoreFile(file);
             var fileInformation = _metadata.Retrieve(hash, file);
-            TriggerPropertyChanged("FileCount");
+            TriggerPropertyChanged("TotalFileCount");
             return fileInformation;
         }
 
@@ -172,7 +172,7 @@ namespace Funani.Engine
             _metadata.RemovePath(file);
         }
 
-        public long FileCount
+        public long TotalFileCount
         {
             get
             {
@@ -186,6 +186,8 @@ namespace Funani.Engine
         {
             get
             {
+                if (_metadata == null)
+                	return null;
                 return _metadata.FileInformation;
             }
         }

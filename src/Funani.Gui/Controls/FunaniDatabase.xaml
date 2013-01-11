@@ -41,7 +41,7 @@
                 <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding DatabasePath,Mode=OneWay}"></TextBlock>
 
                 <TextBlock Grid.Row="1" Grid.Column="0">File count:</TextBlock>
-                <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding FileCount,Mode=OneWay}"></TextBlock>
+                <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding TotalFileCount,Mode=OneWay}"></TextBlock>
 
                 <TextBlock Grid.Row="2" Grid.Column="0">GUID:</TextBlock>
                 <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding DatabaseInfo.Guid,Mode=OneWay}"></TextBlock>

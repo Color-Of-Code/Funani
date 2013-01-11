@@ -47,8 +47,37 @@ namespace Funani.Gui.Controls
 		/// <summary>
 		/// Initializes a new instance of the <see cref="FileViewModelProvider"/> class.
 		/// </summary>
-		public DatabaseViewModelProvider()
+		public DatabaseViewModelProvider(String whereClause, String orderByClause)
 		{
+			_whereClause = whereClause;
+			_orderByClause = orderByClause;
+		}
+
+		public static IEnumerable<String> SupportedOrderingClauses
+		{
+			get
+			{
+				return new String[] {
+					"Default",
+					"DateTaken descending",
+					"DateTaken ascending",
+					"Size descending",
+					"Size ascending"
+				};
+			}
+		}
+		
+		public static IEnumerable<String> SupportedWhereClauses
+		{
+			get
+			{
+				return new String[] {
+					"All",
+					"images",
+					"videos",
+					"others"
+				};
+			}
 		}
 
 		/// <summary>
@@ -57,7 +86,7 @@ namespace Funani.Gui.Controls
 		/// <returns></returns>
 		public int FetchCount()
 		{
-			return (int)Engine.Funani.FileCount;
+			return BuildQuery().Count();
 		}
 
 		/// <summary>
@@ -68,11 +97,38 @@ namespace Funani.Gui.Controls
 		/// <returns></returns>
 		public IList<FileInformationViewModel> FetchRange(int startIndex, int count)
 		{
+			var query = BuildQuery();
 			List<FileInformationViewModel> list = new List<FileInformationViewModel>();
 			list.AddRange(
-				Engine.Funani.FileInformation.Skip(startIndex).Take(count).Select(x => new FileInformationViewModel(x))
+				query.Skip(startIndex).Take(count).Select(x => new FileInformationViewModel(x))
 			);
 			return list;
 		}
+
+		IQueryable<Funani.Api.Metadata.FileInformation> BuildQuery()
+		{
+			var query = Engine.Funani.FileInformation;
+
+			if (_whereClause == "images")
+				query = query.Where(x => x.MimeType.StartsWith("image/"));
+			else if (_whereClause == "videos")
+				query = query.Where(x => x.MimeType.StartsWith("video/"));
+			else if (_whereClause == "others")
+				query = query.Where(x => !x.MimeType.StartsWith("image/") && !x.MimeType.StartsWith("video/"));
+			
+			if (_orderByClause == "DateTaken descending")
+				query = query.OrderByDescending(x => x.DateTaken);
+			else if (_orderByClause == "DateTaken ascending")
+				query = query.OrderBy(x => x.DateTaken);
+			else if (_orderByClause == "Size descending")
+				query = query.OrderByDescending(x => x.FileSize);
+			else if (_orderByClause == "Size ascending")
+				query = query.OrderBy(x => x.FileSize);
+
+			return query;
+		}
+		
+		private String _whereClause;
+		private String _orderByClause;
 	}
 }

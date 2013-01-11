@@ -77,6 +77,7 @@ namespace Funani.Gui.Controls
                 BitmapSource ret = Funani.Thumbnailer.Thumbnail.Extract(new Uri(value.ToString()),
                     "image/", ThumbnailSize
                     );
+            	System.Diagnostics.Trace.TraceInformation("Generating thumbnail for '{0}'", value);
                 return ret;
             }
             catch

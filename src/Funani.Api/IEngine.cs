@@ -84,7 +84,7 @@ namespace Funani.Api
         /// <summary>
         /// Number of files in the database
         /// </summary>
-        long FileCount { get; }
+        long TotalFileCount { get; }
         
         /// <summary>
         /// Add a file to the database (if not already present) and get its info back
