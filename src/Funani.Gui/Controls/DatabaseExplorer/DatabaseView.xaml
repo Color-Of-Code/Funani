@@ -14,7 +14,7 @@
             <RowDefinition Height="Auto"></RowDefinition>
             <RowDefinition></RowDefinition>
         </Grid.RowDefinitions>
-        <Slider Name="sliderSize" Grid.Row="0" Minimum="60" Maximum="320" Value="160"></Slider>
+        <Slider Name="sliderSize" Grid.Row="0" Minimum="32" Maximum="256" Value="128"></Slider>
         <Grid Grid.Row="1">
     		<Grid.ColumnDefinitions>
         		<ColumnDefinition></ColumnDefinition>

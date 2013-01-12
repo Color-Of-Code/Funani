@@ -44,18 +44,15 @@ namespace Funani.Thumbnailer
         	{
         		if (bitmap.CheckAccess())
         		{
-        			System.Diagnostics.Trace.TraceInformation("Creatinging thumbnail '{0}'", destination.Name);
-	        		//bitmap.DownloadCompleted += delegate { 
-			        	var encoder = new PngBitmapEncoder();
-			        	String photolocation = destination.FullName;
-			        	var frame = BitmapFrame.Create(bitmap);
-			        	encoder.Frames.Add(frame);
+        			System.Diagnostics.Trace.TraceInformation("Creating thumbnail '{0}'", destination.Name);
+			        var encoder = new PngBitmapEncoder();
+			        String photolocation = destination.FullName;
+			        var frame = BitmapFrame.Create(bitmap);
+			        encoder.Frames.Add(frame);
 			        	
-			        	Directory.CreateDirectory(destination.DirectoryName);
-			        	using (var filestream = new FileStream(photolocation, FileMode.Create))
-			        		encoder.Save(filestream);
-	        		//};
-        			System.Diagnostics.Trace.TraceInformation("'{0}' created", destination.Name);
+			        Directory.CreateDirectory(destination.DirectoryName);
+			        using (var filestream = new FileStream(photolocation, FileMode.Create))
+			        	encoder.Save(filestream);
         		}
         	}
         }

@@ -113,7 +113,7 @@ namespace Funani.Gui.Controls
 		{
 			get 
             {
-                if (MaxThumbnailSize < Thumbnail.PixelWidth)
+                if (MaxThumbnailSize > Thumbnail.PixelWidth)
                     return double.NaN;
                 else
                     return Thumbnail.PixelWidth;
@@ -124,7 +124,7 @@ namespace Funani.Gui.Controls
 		{
 			get 
             {
-                if (MaxThumbnailSize < Thumbnail.PixelHeight)
+                if (MaxThumbnailSize > Thumbnail.PixelHeight)
                     return double.NaN;
                 else
                     return Thumbnail.PixelHeight;
@@ -170,7 +170,7 @@ namespace Funani.Gui.Controls
 		}
 		
 		private BitmapSource _thumbnail;
-		private const int MaxThumbnailSize = 120;
+		private const int MaxThumbnailSize = 256;
 		private static readonly UriToThumbnailConverter converter = new UriToThumbnailConverter(MaxThumbnailSize);
 		
 		#region INotifyPropertyChanged Members
