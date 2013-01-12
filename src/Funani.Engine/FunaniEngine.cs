@@ -196,15 +196,15 @@ namespace Funani.Engine
         {
             return _metadata.Retrieve(file);
         }
+        
+        public FileInfo GetThumbnail(String hash, String mime)
+        {
+        	return _fileStorage.LoadThumbnail(hash, mime);
+        }
 
         public byte[] GetFileData(String hash)
         {
             return _fileStorage.LoadFile(hash);
-        }
-
-        public FileInfo GetFileInfo(String hash)
-        {
-            return _fileStorage.GetFileInfo(hash);
         }
 
         public object MetadataDatabase

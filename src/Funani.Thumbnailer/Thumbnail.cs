@@ -31,11 +31,35 @@
 namespace Funani.Thumbnailer
 {
     using System;
+    using System.IO;
     using System.Windows.Media;
     using System.Windows.Media.Imaging;
 
     public static class Thumbnail
     {
+        public static void Create(Uri uri, String mime, int thumbnailSize, FileInfo destination)
+        {
+        	BitmapSource bitmap = Extract(uri, mime, thumbnailSize, BitmapCreateOptions.None);
+        	if (bitmap != null)
+        	{
+        		if (bitmap.CheckAccess())
+        		{
+        			System.Diagnostics.Trace.TraceInformation("Creatinging thumbnail '{0}'", destination.Name);
+	        		//bitmap.DownloadCompleted += delegate { 
+			        	var encoder = new PngBitmapEncoder();
+			        	String photolocation = destination.FullName;
+			        	var frame = BitmapFrame.Create(bitmap);
+			        	encoder.Frames.Add(frame);
+			        	
+			        	Directory.CreateDirectory(destination.DirectoryName);
+			        	using (var filestream = new FileStream(photolocation, FileMode.Create))
+			        		encoder.Save(filestream);
+	        		//};
+        			System.Diagnostics.Trace.TraceInformation("'{0}' created", destination.Name);
+        		}
+        	}
+        }
+        
         /// <summary>
         /// Create a thumbnail of the given max size for the resource specified by the uri
         /// assuming the mime type is correctly specified too.
@@ -46,11 +70,19 @@ namespace Funani.Thumbnailer
         /// <returns></returns>
         public static BitmapSource Extract(Uri uri, String mime, int thumbnailSize)
         {
+        	return Extract(uri, mime, thumbnailSize, BitmapCreateOptions.DelayCreation);
+        }
+        
+        public static BitmapSource Extract(Uri uri, String mime, int thumbnailSize, BitmapCreateOptions bitmapCreateOptions)
+        {
+        	if (!mime.StartsWith("image/"))
+        		return null;
+        	
             //TODO: write thumbnailers depending on the mime type
             // this works for WPF supported image formats only
             Orientation orientation = Orientation.Normal;
             BitmapFrame frame = BitmapFrame.Create(
-                uri, BitmapCreateOptions.DelayCreation, BitmapCacheOption.None);
+                uri, bitmapCreateOptions, BitmapCacheOption.None);
             BitmapSource ret = null;
             BitmapMetadata meta = frame.Metadata as BitmapMetadata;
             if (frame.PixelHeight < thumbnailSize && frame.PixelWidth < thumbnailSize)
@@ -59,7 +91,7 @@ namespace Funani.Thumbnailer
                 image.BeginInit();
                 image.UriSource = uri;
                 image.CacheOption = BitmapCacheOption.None;
-                image.CreateOptions = BitmapCreateOptions.DelayCreation;
+                image.CreateOptions = bitmapCreateOptions;
                 image.EndInit();
 
                 if (image.CanFreeze)
@@ -72,14 +104,14 @@ namespace Funani.Thumbnailer
                 if (frame.Thumbnail == null)
                 {
                     BitmapImage image = new BitmapImage();
+                    image.BeginInit();
+                    image.UriSource = uri;
                     if (frame.PixelHeight >= frame.PixelWidth)
                         image.DecodePixelHeight = thumbnailSize;
                     else
                         image.DecodePixelWidth = thumbnailSize;
-                    image.BeginInit();
-                    image.UriSource = uri;
                     image.CacheOption = BitmapCacheOption.None;
-                    image.CreateOptions = BitmapCreateOptions.DelayCreation;
+                    image.CreateOptions = bitmapCreateOptions;
                     image.EndInit();
 
                     if (image.CanFreeze)

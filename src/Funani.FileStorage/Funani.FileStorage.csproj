@@ -58,6 +58,10 @@
       <Project>{1FA8961F-CA82-41D2-856A-2F3732BF2E64}</Project>
       <Name>Funani.Api</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Funani.Thumbnailer\Funani.Thumbnailer.csproj">
+      <Project>{324A24A9-72C9-4B47-A7B2-B4420717EE53}</Project>
+      <Name>Funani.Thumbnailer</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

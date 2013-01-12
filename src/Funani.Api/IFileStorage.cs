@@ -48,13 +48,15 @@ namespace Funani.Api
         /// </summary>
         void Stop();
 
-        Boolean FileExists(string hash);
+        Boolean FileExists(String hash);
 
-        void DeleteFile(string hash);
+        void DeleteFile(String hash);
 
         String StoreFile(FileInfo file);
 
-        byte[] LoadFile(string hash);
+        byte[] LoadFile(String hash);
+        
+        FileInfo LoadThumbnail(String hash, String mime);
         
         FileInfo GetFileInfo(String hash);
     }

@@ -50,19 +50,6 @@ namespace Funani.Gui.Controls
 			FileInformation = fileInformation;
 		}
 
-		private FileInfo _fileInfo;
-		public FileInfo FileInfo
-		{
-			get 
-			{
-				if (_fileInfo == null)
-				{
-					_fileInfo = Engine.Funani.GetFileInfo(FileInformation.Id);
-				}
-				return _fileInfo;
-			}
-		}
-
 		public FileInformation FileInformation
 		{
 			get;
@@ -158,8 +145,10 @@ namespace Funani.Gui.Controls
 			{
 				if (_thumbnail == null)
 				{
-					String fullName = FileInfo.FullName;
-					_thumbnail = converter.Convert(fullName, typeof(BitmapSource), null, null) as BitmapSource;
+					FileInfo thumbPath = Funani.Gui.Engine.Funani.GetThumbnail(
+						FileInformation.Id, FileInformation.MimeType) as FileInfo;
+					object value = thumbPath==null ? null : thumbPath.FullName;
+					_thumbnail = converter.Convert(value, typeof(BitmapSource), null, null) as BitmapSource;
 				}
 				return _thumbnail;
 			}
@@ -177,8 +166,6 @@ namespace Funani.Gui.Controls
 
 		public void RefreshMetadata()
 		{
-			//TODO:
-			_fileInfo = null;
 			TriggerPropertyChanged(null);
 		}
 		

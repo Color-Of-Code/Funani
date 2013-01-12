@@ -72,6 +72,8 @@ namespace Funani.Gui.Controls
 
         public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
         {
+        	if (value == null)
+        		return _defaultThumbnail;
             try
             {
                 BitmapSource ret = Funani.Thumbnailer.Thumbnail.Extract(new Uri(value.ToString()),

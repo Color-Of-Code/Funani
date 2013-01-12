@@ -79,7 +79,7 @@ namespace Funani.FileStorage
 			return hashNew;
 		}
 
-		public void DeleteFile(string hash)
+		public void DeleteFile(String hash)
 		{
 			FileInfo source = GetFileInfo(hash);
 			if (source.Exists)
@@ -89,13 +89,13 @@ namespace Funani.FileStorage
 			}
 		}
 		
-		public Boolean FileExists(string hash)
+		public Boolean FileExists(String hash)
 		{
 			FileInfo source = GetFileInfo(hash);
 			return source.Exists;
 		}
 
-		public FileInfo GetFileInfo(string hash)
+		public FileInfo GetFileInfo(String hash)
 		{
 			// distribute the data into 2^16 directories in 2 levels and store the files
 			// under their hash as filename
@@ -103,7 +103,32 @@ namespace Funani.FileStorage
 			return new FileInfo(path);
 		}
 		
-		public byte[] LoadFile(string hash)
+		private FileInfo GetThumbnailFileInfo(String hash)
+		{
+			String path = Path.Combine(ThumbnailPath, hash.Substring(0, 2), hash.Substring(2, 2), hash + ".png");
+			return new FileInfo(path);
+		}
+
+		public FileInfo LoadThumbnail(String hash, String mime)
+		{
+			FileInfo source = GetThumbnailFileInfo(hash);
+			if (!source.Exists)
+			{
+				if (mime.StartsWith("image/"))
+				{
+					FileInfo originalImage = GetFileInfo(hash);
+					Funani.Thumbnailer.Thumbnail.Create(new Uri(originalImage.FullName), mime, 256, source);
+					// if the thumbnail was not created for some reason...
+					if (!source.Exists)
+						source = null;
+				}
+				else
+					source = null;
+			}
+			return source;
+		}
+		
+		public byte[] LoadFile(String hash)
 		{
 			FileInfo source = GetFileInfo(hash);
 			return LoadFileNoException(source);
@@ -149,6 +174,14 @@ namespace Funani.FileStorage
 			get
 			{
 				return Path.Combine(BaseDirectory, "data");
+			}
+		}
+
+		private string ThumbnailPath
+		{
+			get
+			{
+				return Path.Combine(BaseDirectory, "thumbs");
 			}
 		}
 

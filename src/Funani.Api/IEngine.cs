@@ -117,12 +117,12 @@ namespace Funani.Api
         FileInformation GetFileInformation(FileInfo file);
 
         /// <summary>
-        /// The reverse function to retrieve the FileInfo from the hash
+        /// Return a bitmap source for the thumbnail of this file
         /// </summary>
         /// <param name="hash"></param>
         /// <returns></returns>
-        FileInfo GetFileInfo(String hash);
-
+        FileInfo GetThumbnail(String hash, String mime);
+        
         /// <summary>
         /// Returns the file data of the file with the given hash
         /// </summary>
