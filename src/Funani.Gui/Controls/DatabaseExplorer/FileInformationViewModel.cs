@@ -108,26 +108,22 @@ namespace Funani.Gui.Controls
 				return FileInformation.Paths;
 			}
 		}
-		
-		public double ThumbnailWidth
+
+        private double _thumbnailWidth;
+        public double ThumbnailWidth
 		{
 			get 
             {
-                if (MaxThumbnailSize > Thumbnail.PixelWidth)
-                    return double.NaN;
-                else
-                    return Thumbnail.PixelWidth;
+                return _thumbnailWidth;
             }
 		}
 
+        private double _thumbnailHeight;
 		public double ThumbnailHeight
 		{
 			get 
             {
-                if (MaxThumbnailSize > Thumbnail.PixelHeight)
-                    return double.NaN;
-                else
-                    return Thumbnail.PixelHeight;
+                return _thumbnailHeight;
             }
 		}
 
@@ -143,14 +139,19 @@ namespace Funani.Gui.Controls
 		{
 			get
 			{
-				if (_thumbnail == null)
-				{
-					FileInfo thumbPath = Funani.Gui.Engine.Funani.GetThumbnail(
-						FileInformation.Id, FileInformation.MimeType) as FileInfo;
-					object value = thumbPath==null ? null : thumbPath.FullName;
-					_thumbnail = converter.Convert(value, typeof(BitmapSource), null, null) as BitmapSource;
-				}
-				return _thumbnail;
+				FileInfo thumbPath = Funani.Gui.Engine.Funani.GetThumbnail(
+					FileInformation.Id, FileInformation.MimeType) as FileInfo;
+				object value = thumbPath==null ? null : thumbPath.FullName;
+				var bitmap = converter.Convert(value, typeof(BitmapSource), null, null) as BitmapSource;
+                if (MaxThumbnailSize > bitmap.PixelHeight)
+                    _thumbnailHeight = double.NaN;
+                else
+                    _thumbnailHeight = bitmap.PixelHeight;
+                if (MaxThumbnailSize > bitmap.PixelWidth)
+                    _thumbnailWidth = double.NaN;
+                else
+                    _thumbnailWidth = bitmap.PixelWidth;
+                return bitmap;
 			}
 		}
 
@@ -169,7 +170,6 @@ namespace Funani.Gui.Controls
 			TriggerPropertyChanged(null);
 		}
 		
-		private BitmapSource _thumbnail;
 		private const int MaxThumbnailSize = 256;
 		private static readonly UriToThumbnailConverter converter = new UriToThumbnailConverter(MaxThumbnailSize);
 		
