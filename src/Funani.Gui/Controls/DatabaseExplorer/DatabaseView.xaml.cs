@@ -60,8 +60,9 @@ namespace Funani.Gui.Controls
 		{
 			var provider = new DatabaseViewModelProvider(
 				comboWhere.SelectedItem as String,
-				comboOrderBy.SelectedItem as String);
-			var items = new AsyncVirtualizingCollection<FileInformationViewModel>(provider, 20, 10 * 1000);
+				comboOrderBy.SelectedItem as String,
+                fromDate.SelectedDate, toDate.SelectedDate);
+			var items = new AsyncVirtualizingCollection<FileInformationViewModel>(provider, 40, 10 * 1000);
 			listControl.DataContext = items;
 		}
 		
@@ -87,12 +88,7 @@ namespace Funani.Gui.Controls
 			}
 		}
 		
-		private void ComboOrderBy_SelectionChanged(object sender, SelectionChangedEventArgs e)
-		{
-			ReloadFiles();
-		}
-		
-		private void ComboWhere_SelectionChanged(object sender, SelectionChangedEventArgs e)
+		private void ReloadFiles_Handler(object sender, SelectionChangedEventArgs e)
 		{
 			ReloadFiles();
 		}

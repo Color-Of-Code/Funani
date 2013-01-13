@@ -108,25 +108,7 @@ namespace Funani.Gui.Controls
 				return FileInformation.Paths;
 			}
 		}
-
-        private double _thumbnailWidth;
-        public double ThumbnailWidth
-		{
-			get 
-            {
-                return _thumbnailWidth;
-            }
-		}
-
-        private double _thumbnailHeight;
-		public double ThumbnailHeight
-		{
-			get 
-            {
-                return _thumbnailHeight;
-            }
-		}
-
+        
 		public Stretch Stretch
 		{
 			get
@@ -143,25 +125,7 @@ namespace Funani.Gui.Controls
 					FileInformation.Id, FileInformation.MimeType) as FileInfo;
 				object value = thumbPath==null ? null : thumbPath.FullName;
 				var bitmap = converter.Convert(value, typeof(BitmapSource), null, null) as BitmapSource;
-                if (MaxThumbnailSize > bitmap.PixelHeight)
-                    _thumbnailHeight = double.NaN;
-                else
-                    _thumbnailHeight = bitmap.PixelHeight;
-                if (MaxThumbnailSize > bitmap.PixelWidth)
-                    _thumbnailWidth = double.NaN;
-                else
-                    _thumbnailWidth = bitmap.PixelWidth;
                 return bitmap;
-			}
-		}
-
-		public BitmapScalingMode ScalingMode
-		{
-			get
-			{
-				if (ThumbnailWidth < MaxThumbnailSize && ThumbnailHeight < MaxThumbnailSize)
-					return BitmapScalingMode.Linear;
-				return BitmapScalingMode.HighQuality;
 			}
 		}
 

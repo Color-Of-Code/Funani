@@ -47,8 +47,10 @@ namespace Funani.Gui.Controls
 		/// <summary>
 		/// Initializes a new instance of the <see cref="FileViewModelProvider"/> class.
 		/// </summary>
-		public DatabaseViewModelProvider(String whereClause, String orderByClause)
+        public DatabaseViewModelProvider(String whereClause, String orderByClause, DateTime? fromDate, DateTime? toDate)
 		{
+            _fromDate = fromDate;
+            _toDate = toDate;
 			_whereClause = whereClause;
 			_orderByClause = orderByClause;
 		}
@@ -109,6 +111,16 @@ namespace Funani.Gui.Controls
 		{
 			var query = Engine.Funani.FileInformation;
 
+            if (_fromDate.HasValue)
+            {
+                query = query.Where(x => x.DateTaken >= _fromDate.Value);
+            }
+            if (_toDate.HasValue)
+            {
+                DateTime toDate = _toDate.Value.AddDays(1);
+                query = query.Where(x => x.DateTaken <= toDate);
+            }
+
 			if (_whereClause == "images")
 				query = query.Where(x => x.MimeType.StartsWith("image/"));
 			else if (_whereClause == "videos")
@@ -127,8 +139,10 @@ namespace Funani.Gui.Controls
 
 			return query;
 		}
-		
-		private String _whereClause;
+
+        private DateTime? _fromDate;
+        private DateTime? _toDate;
+        private String _whereClause;
 		private String _orderByClause;
 	}
 }

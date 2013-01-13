@@ -14,17 +14,29 @@
             <RowDefinition Height="Auto"></RowDefinition>
             <RowDefinition></RowDefinition>
         </Grid.RowDefinitions>
-        <Slider Name="sliderSize" Grid.Row="0" Minimum="32" Maximum="256" Value="128"></Slider>
+        <Grid Grid.Row="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition></ColumnDefinition>
+                <ColumnDefinition Width="64"></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+            <Slider Grid.Column="0" Name="sliderSize" Minimum="64" Maximum="256" Value="184"></Slider>
+            <TextBlock Grid.Column="1" Text="{Binding ElementName=sliderSize,Path=Value,StringFormat='{}{0:0}'}"
+                       TextAlignment="Center" VerticalAlignment="Center"></TextBlock>
+        </Grid>
         <Grid Grid.Row="1">
     		<Grid.ColumnDefinitions>
         		<ColumnDefinition></ColumnDefinition>
         		<ColumnDefinition></ColumnDefinition>
-        	</Grid.ColumnDefinitions>
-    		<ComboBox Grid.Column="0" x:Name="comboWhere" SelectionChanged="ComboWhere_SelectionChanged">
+                <ColumnDefinition Width="Auto"></ColumnDefinition>
+                <ColumnDefinition Width="Auto"></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+            <ComboBox Grid.Column="0" x:Name="comboWhere" SelectionChanged="ReloadFiles_Handler">
         	</ComboBox>
-    		<ComboBox Grid.Column="1" x:Name="comboOrderBy" SelectionChanged="ComboOrderBy_SelectionChanged">
+            <ComboBox Grid.Column="1" x:Name="comboOrderBy" SelectionChanged="ReloadFiles_Handler">
         	</ComboBox>
-    	</Grid>
+            <DatePicker Grid.Column="2" x:Name="fromDate" SelectedDateChanged="ReloadFiles_Handler" />
+            <DatePicker Grid.Column="3" x:Name="toDate" SelectedDateChanged="ReloadFiles_Handler" />
+        </Grid>
         <ListView Grid.Row="2" Name="listControl" ItemsSource="{Binding}"
 		          ScrollViewer.HorizontalScrollBarVisibility="Disabled"
 		          Background="Transparent"
@@ -35,7 +47,7 @@
 		    </ListView.Resources>
         	<ListView.ItemsPanel>
                 <ItemsPanelTemplate>
-                    <funani:VirtualizingWrapPanel
+                    <funani:VirtualizingWrapPanel Background="Black"
                         ItemHeight="{Binding ElementName=sliderSize,Path=Value}"
                         ItemWidth="{Binding ElementName=sliderSize,Path=Value}" />
                 </ItemsPanelTemplate>
@@ -51,7 +63,7 @@
 								<MenuItem Header="Update metadata" Click="RefreshMetadata_Click" DataContext="{Binding}"></MenuItem>
 							</ContextMenu>
 						</Canvas.ContextMenu>
-                        <Border Background="Gray" BorderBrush="White" BorderThickness="4"
+                        <Border Background="Black" BorderBrush="Gray" BorderThickness="4"
                                 Width="{Binding ElementName=sliderSize,Path=Value,
                                     Converter={StaticResource MathConverter},ConverterParameter=(@VALUE-8)}"
                                 Height="{Binding ElementName=sliderSize,Path=Value,
@@ -59,10 +71,8 @@
                                 Canvas.Left="2"
                                 Canvas.Top="2"
                                 >
-                            <Image RenderOptions.BitmapScalingMode="{Binding ScalingMode}"
+                            <Image  RenderOptions.BitmapScalingMode="HighQuality"
 								    Source="{Binding Thumbnail}"
-								    Width="{Binding ThumbnailWidth}"
-								    Height="{Binding ThumbnailHeight}"
 								    Stretch="{Binding Stretch}"
                                     HorizontalAlignment="Center"
                                     VerticalAlignment="Center"
