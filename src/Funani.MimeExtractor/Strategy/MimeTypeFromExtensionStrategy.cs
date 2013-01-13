@@ -59,8 +59,17 @@ namespace Funani.MimeExtractor.Strategy
                 case ".bmp":
                     mime = "image/bmp";
                     break;
+                case ".cab":
+                    mime = "application/vnd.ms-cab-compressed";
+                    break;
+                case ".css":
+                    mime = " text/css";
+                    break;
                 case ".doc":
                     mime = "application/msword";
+                    break;
+                case ".exe":
+                    mime = "application/exe";
                     break;
                 case ".gif":
                     mime = "image/gif";
@@ -71,6 +80,13 @@ namespace Funani.MimeExtractor.Strategy
                 case ".ini":
                 case ".txt":
                     mime = "text/plain";
+                    break;
+                case ".htm":
+                case ".html":
+                    mime = "text/html";
+                    break;
+                case ".xml":
+                    mime = "text/xml";
                     break;
                 case ".iso":
                     mime = "application/iso-image";
@@ -98,8 +114,24 @@ namespace Funani.MimeExtractor.Strategy
                 case ".php":
                     mime = "text/x-php";
                     break;
+                case ".odg":
+                    mime = "application/vnd.oasis.opendocument.graphics";
+                    break;
+                case ".ods":
+                    mime = "application/vnd.oasis.opendocument.spreadsheet";
+                    break;
+                case ".odt":
+                    mime = "application/vnd.oasis.opendocument.text";
+                    break;
                 case ".png":
                     mime = "image/png";
+                    break;
+                case ".pps":
+                case ".ppt":
+                    mime = "application/vnd.ms-powerpoint";
+                    break;
+                case ".rtf":
+                    mime = "application/rtf";
                     break;
                 case ".tif":
                 case ".tiff":
@@ -114,11 +146,39 @@ namespace Funani.MimeExtractor.Strategy
                 case ".xls":
                     mime = "application/msexcel";
                     break;
+                case ".gz":
+                    mime = "application/gzip";
+                    break;
                 case ".zip":
                     mime = "application/zip";
                     break;
+                case "":
+                case ".db":
+                case ".indexarrays":
+                case ".indexgroups":
+                case ".shadowindexgroups":
+                case ".indexhead":
+                case ".shadowindexhead":
+                case ".indexids":
+                case ".indexdirectory":
+                case ".shadowindexdirectory":
+                case ".indexpostings":
+                case ".indexpositions":
+                case ".indexpositiontable":
+                case ".indexcompactdirectory":
+                case ".plist": // MAC OS X trash folder
+                case ".trashes": // MAC OS X trash folder
+                case ".tag":
+                case ".hdr":
+                case ".dat":
+                case ".bin":
+                case ".dll":
+                    mime = "application/octet-stream";
+                    break;
                 default:
-                    throw new NotSupportedException("MIME type not recognized for file " + file.Name);
+                    mime = "application/octet-stream";
+                    System.Diagnostics.Trace.TraceWarning("MIME type not recognized for file '{0}'", file.Name);
+                    break;
             }
             return mime;
         }
