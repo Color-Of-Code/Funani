@@ -54,7 +54,19 @@ namespace Funani.Gui.Controls
 			
 			comboWhere.ItemsSource = DatabaseViewModelProvider.SupportedWhereClauses;
 			comboOrderBy.ItemsSource = DatabaseViewModelProvider.SupportedOrderingClauses;
-		}
+
+            tokenizerPeople.TokenMatcher = TokenMatcher;
+            tokenizerLocation.TokenMatcher = TokenMatcher;
+            tokenizerEvent.TokenMatcher = TokenMatcher;
+            tokenizerKeywords.TokenMatcher = TokenMatcher;
+        }
+
+        private static String TokenMatcher(String text)
+        {
+            if (text.EndsWith(" "))
+                return text.Substring(0, text.Length - 1).Trim().ToUpper();
+            return null;
+        }
 
 		public void ReloadFiles()
 		{

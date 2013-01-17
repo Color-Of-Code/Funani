@@ -75,7 +75,7 @@
                                 >
                             <Image  RenderOptions.BitmapScalingMode="HighQuality"
 								    Source="{Binding Thumbnail}"
-								    Stretch="{Binding Stretch}"
+								    Stretch="Uniform"
                                     HorizontalAlignment="Center"
                                     VerticalAlignment="Center"
 							/>
@@ -131,32 +131,55 @@
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>
-        <Grid Grid.Row="5">
+        <Grid Grid.Row="5" DataContext="{Binding ElementName=listControl,Path=SelectedItem}">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition></ColumnDefinition>
                 <ColumnDefinition></ColumnDefinition>
                 <ColumnDefinition></ColumnDefinition>
             </Grid.ColumnDefinitions>
-            <Image  Grid.Column="0"
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"></RowDefinition>
+                <RowDefinition Height="*"></RowDefinition>
+            </Grid.RowDefinitions>
+            
+            <Image  Grid.Column="0" Grid.RowSpan="2"
                     RenderOptions.BitmapScalingMode="HighQuality"
-					Source="{Binding Thumbnail}"
+					Source="{Binding Picture}"
 					Stretch="{Binding Stretch}"
                     HorizontalAlignment="Center"
                     VerticalAlignment="Center"
 							/>
-            <Grid Grid.Column="2">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto"></RowDefinition>
-                    <RowDefinition Height="Auto"></RowDefinition>
-                    <RowDefinition Height="Auto"></RowDefinition>
-                    <RowDefinition Height="Auto"></RowDefinition>
-                    <RowDefinition Height="Auto"></RowDefinition>
-                </Grid.RowDefinitions>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition></ColumnDefinition>
-                    <ColumnDefinition></ColumnDefinition>
-                </Grid.ColumnDefinitions>
-            </Grid>
+            <GroupBox Header="Tags" Grid.Column="2">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"></RowDefinition>
+                        <RowDefinition Height="Auto"></RowDefinition>
+                        <RowDefinition Height="Auto"></RowDefinition>
+                        <RowDefinition Height="Auto"></RowDefinition>
+                        <RowDefinition Height="Auto"></RowDefinition>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"></ColumnDefinition>
+                        <ColumnDefinition></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Grid.Column="0" Grid.Row="0">People</TextBlock>
+                    <TextBlock Grid.Column="0" Grid.Row="1">Location</TextBlock>
+                    <TextBlock Grid.Column="0" Grid.Row="2">Event</TextBlock>
+                    <TextBlock Grid.Column="0" Grid.Row="3">Keywords</TextBlock>
+                    <funani:TokenizingControl Grid.Column="1" Grid.Row="0"
+                                              x:Name="tokenizerPeople" TokenTemplate="{DynamicResource NameTokenTemplate}"
+                                              ></funani:TokenizingControl>
+                    <funani:TokenizingControl Grid.Column="1" Grid.Row="1"
+                                              x:Name="tokenizerLocation" TokenTemplate="{DynamicResource NameTokenTemplate}"
+                                              ></funani:TokenizingControl>
+                    <funani:TokenizingControl Grid.Column="1" Grid.Row="2"
+                                              x:Name="tokenizerEvent" TokenTemplate="{DynamicResource NameTokenTemplate}"
+                                              ></funani:TokenizingControl>
+                    <funani:TokenizingControl Grid.Column="1" Grid.Row="3"
+                                              x:Name="tokenizerKeywords" TokenTemplate="{DynamicResource NameTokenTemplate}"
+                                              ></funani:TokenizingControl>
+                </Grid>
+            </GroupBox>
         </Grid>
     </Grid>
 </UserControl>

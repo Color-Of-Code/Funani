@@ -129,7 +129,24 @@ namespace Funani.Gui.Controls
 			}
 		}
 
-		public void RefreshMetadata()
+        public BitmapSource Picture
+        {
+            get
+            {
+                if (FileInformation.MimeType.StartsWith("image/"))
+                {
+                    byte[] data = Funani.Gui.Engine.Funani.GetFileData(FileInformation.Id);
+                    BitmapImage bi = new BitmapImage();
+                    bi.BeginInit();
+                    bi.StreamSource = new MemoryStream(data);
+                    bi.EndInit();
+                    return bi;
+                }
+                return null;
+            }
+        }
+
+        public void RefreshMetadata()
 		{
 			TriggerPropertyChanged(null);
 		}
