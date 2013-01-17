@@ -192,6 +192,11 @@ namespace Funani.Engine
             }
         }
 
+        public void Save(FileInformation fileinfo)
+        {
+            _metadata.Save(fileinfo);
+        }
+
         public FileInformation GetFileInformation(FileInfo file)
         {
             return _metadata.Retrieve(file);

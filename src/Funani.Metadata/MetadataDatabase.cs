@@ -118,6 +118,15 @@ namespace Funani.Metadata
 			}
 		}
 
+        public void Save(FileInformation fileinfo)
+        {
+            if (fileinfo != null)
+            {
+                var files = Funani.GetCollection("fileinfo");
+                files.Save(fileinfo);
+            }
+        }
+
 		public IQueryable<FileInformation> FileInformation
 		{
 			get

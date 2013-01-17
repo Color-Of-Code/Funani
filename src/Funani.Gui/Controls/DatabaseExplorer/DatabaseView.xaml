@@ -82,8 +82,10 @@
                         </Border>
                         <Canvas.ToolTip>
                             <StackPanel Orientation="Vertical" Grid.Column="1">
-                                <TextBlock Text="{Binding Title,Mode=OneWay}" FontWeight="Bold">
-                                </TextBlock>
+                                <StackPanel Orientation="Horizontal">
+                                    <funani:RatingControl RatingValue="{Binding Rating}" Height="10"></funani:RatingControl>
+                                    <TextBlock Text="{Binding Title,Mode=OneWay}" FontWeight="Bold"></TextBlock>
+                                </StackPanel>
                                 <TextBlock>
 									<Run>Hash: </Run>
 									<Run Text="{Binding Hash,Mode=OneWay}"></Run>
@@ -131,7 +133,8 @@
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>
-        <Grid Grid.Row="5" DataContext="{Binding ElementName=listControl,Path=SelectedItem}">
+        <GridSplitter Grid.Row="3" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"></GridSplitter>
+        <Grid Grid.Row="4" DataContext="{Binding ElementName=listControl,Path=SelectedItem}">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition></ColumnDefinition>
                 <ColumnDefinition></ColumnDefinition>
@@ -139,17 +142,18 @@
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"></RowDefinition>
+                <RowDefinition Height="Auto"></RowDefinition>
                 <RowDefinition Height="*"></RowDefinition>
             </Grid.RowDefinitions>
             
-            <Image  Grid.Column="0" Grid.RowSpan="2"
+            <Image  Grid.Column="0" Grid.RowSpan="3"
                     RenderOptions.BitmapScalingMode="HighQuality"
 					Source="{Binding Picture}"
 					Stretch="{Binding Stretch}"
                     HorizontalAlignment="Center"
                     VerticalAlignment="Center"
 							/>
-            <GroupBox Header="Tags" Grid.Column="2">
+            <GroupBox Header="Tags" Grid.Column="2" Grid.Row="0">
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"></RowDefinition>
@@ -180,6 +184,11 @@
                                               ></funani:TokenizingControl>
                 </Grid>
             </GroupBox>
+            <StackPanel Grid.Column="2" Grid.Row="1" Orientation="Horizontal">
+                <GroupBox Header="Rating">
+                    <funani:RatingControl RatingValue="{Binding Rating}" Height="16"></funani:RatingControl>
+                </GroupBox>
+            </StackPanel>
         </Grid>
     </Grid>
 </UserControl>

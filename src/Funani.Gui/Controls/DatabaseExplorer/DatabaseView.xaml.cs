@@ -63,7 +63,7 @@ namespace Funani.Gui.Controls
 
         private static String TokenMatcher(String text)
         {
-            if (text.EndsWith(" "))
+            if (text.EndsWith(";") || text.EndsWith(","))
                 return text.Substring(0, text.Length - 1).Trim().ToUpper();
             return null;
         }

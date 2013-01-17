@@ -64,7 +64,9 @@ namespace Funani.Gui.Controls
 					"DateTaken descending",
 					"DateTaken ascending",
 					"Size descending",
-					"Size ascending"
+					"Size ascending",
+					"Rating descending",
+					"Rating ascending"
 				};
 			}
 		}
@@ -136,6 +138,10 @@ namespace Funani.Gui.Controls
 				query = query.OrderByDescending(x => x.FileSize);
 			else if (_orderByClause == "Size ascending")
 				query = query.OrderBy(x => x.FileSize);
+            else if (_orderByClause == "Rating descending")
+                query = query.OrderByDescending(x => x.Rating);
+            else if (_orderByClause == "Rating ascending")
+                query = query.OrderBy(x => x.Rating);
 
 			return query;
 		}

@@ -101,7 +101,23 @@ namespace Funani.Gui.Controls
 			get { return FileInformation.MimeType; }
 		}
 
-		public IList<String> Paths
+        public int? Rating
+        {
+            get 
+            {
+                return FileInformation.Rating; 
+            }
+            set
+            {
+                if (FileInformation.Rating != value)
+                {
+                    FileInformation.Rating = value;
+                    Funani.Gui.Engine.Funani.Save(FileInformation);
+                }
+            }
+        }
+        
+        public IList<String> Paths
 		{
 			get
 			{

@@ -107,6 +107,12 @@ namespace Funani.Api
         IQueryable<FileInformation> FileInformation {get;}
 
         /// <summary>
+        /// Persist the fileinfo to the metadata database
+        /// </summary>
+        /// <param name="fileinfo"></param>
+        void Save(FileInformation fileinfo);
+
+        /// <summary>
         /// Get the info associated in mongodb for the path of the specified file.
         /// If no info could be found, null is returned. This method is intended for
         /// frequent use and does not make any other check than the path/size/timestamp
