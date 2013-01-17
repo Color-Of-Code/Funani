@@ -109,6 +109,7 @@
       <DependentUpon>CommandProgressControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\Progress\CommandProgressViewModel.cs" />
+    <Compile Include="Controls\TokenizingControl.cs" />
     <Compile Include="Controls\UriToThumbnailConverter.cs" />
     <Compile Include="Controls\VirtualizingWrapPanel.cs" />
     <Compile Include="Engine\Funani.cs" />
