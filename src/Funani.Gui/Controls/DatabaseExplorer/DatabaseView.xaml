@@ -47,6 +47,7 @@
         <ListView Grid.Row="2" Name="listControl" ItemsSource="{Binding}"
 		          ScrollViewer.HorizontalScrollBarVisibility="Disabled"
 		          Background="Transparent"
+                  SelectionMode="Single"
 		          ScrollViewer.IsDeferredScrollingEnabled="True">
 		    <ListView.Resources>
 		        <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}" Color="Salmon" />                
