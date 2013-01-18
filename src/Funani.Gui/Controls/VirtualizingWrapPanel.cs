@@ -15,36 +15,38 @@
 
     // class from: https://github.com/samueldjack/VirtualCollection/blob/master/VirtualCollection/VirtualCollection/VirtualizingWrapPanel.cs
     // MakeVisible() method from: http://www.switchonthecode.com/tutorials/wpf-tutorial-implementing-iscrollinfo
+
+    /// <summary>
+    /// 1) Measure: ask children how big they want to be (MeasureOverride)
+    ///     panels MUST always call Measure on each child
+    /// 2) Arrange: actual position and size for the children (ArrangeOverride)
+    /// !! Don't do anything in MeasureOverride or ArrangeOverride that invalidates layout
+    /// </summary>
     public class VirtualizingWrapPanel : VirtualizingPanel, IScrollInfo
     {
-        private const double ScrollLineAmount = 16.0;
-
-        private Size _extentSize;
-        private Size _viewportSize;
-        private Point _offset;
-        private ItemsControl _itemsControl;
-        private readonly Dictionary<UIElement, Rect> _childLayouts = new Dictionary<UIElement, Rect>();
-
         public static readonly DependencyProperty ItemWidthProperty =
-            DependencyProperty.Register("ItemWidth", typeof(double), typeof(VirtualizingWrapPanel), new PropertyMetadata(1.0, HandleItemDimensionChanged));
+            DependencyProperty.Register("ItemWidth", typeof(double), typeof(VirtualizingWrapPanel), 
+            new PropertyMetadata(1.0, HandleItemDimensionChanged));
 
         public static readonly DependencyProperty ItemHeightProperty =
-            DependencyProperty.Register("ItemHeight", typeof(double), typeof(VirtualizingWrapPanel), new PropertyMetadata(1.0, HandleItemDimensionChanged));
+            DependencyProperty.Register("ItemHeight", typeof(double), typeof(VirtualizingWrapPanel),
+            new PropertyMetadata(1.0, HandleItemDimensionChanged));
 
         private static readonly DependencyProperty VirtualItemIndexProperty =
-            DependencyProperty.RegisterAttached("VirtualItemIndex", typeof(int), typeof(VirtualizingWrapPanel), new PropertyMetadata(-1));
+            DependencyProperty.RegisterAttached("VirtualItemIndex", typeof(int), typeof(VirtualizingWrapPanel),
+            new PropertyMetadata(-1));
         private IRecyclingItemContainerGenerator _itemsGenerator;
 
-        private bool _isInMeasure;
-
-        private static int GetVirtualItemIndex(DependencyObject obj)
+        private static int GetVirtualItemIndex(UIElement element)
         {
-            return (int)obj.GetValue(VirtualItemIndexProperty);
+            if (element == null) throw new ArgumentNullException("element");
+            return (int)element.GetValue(VirtualItemIndexProperty);
         }
 
-        private static void SetVirtualItemIndex(DependencyObject obj, int value)
+        private static void SetVirtualItemIndex(UIElement element, int value)
         {
-            obj.SetValue(VirtualItemIndexProperty, value);
+            if (element == null) throw new ArgumentNullException("element");
+            element.SetValue(VirtualItemIndexProperty, value);
         }
 
         public double ItemHeight
@@ -84,97 +86,105 @@
 
         protected override Size MeasureOverride(Size availableSize)
         {
-            if (_itemsControl == null)
-            {
-                return availableSize;
-            }
-
             _isInMeasure = true;
-            _childLayouts.Clear();
-
-            var extentInfo = GetExtentInfo(availableSize, ItemHeight);
-
-            EnsureScrollOffsetIsWithinConstrains(extentInfo);
-
-            var layoutInfo = GetLayoutInfo(availableSize, ItemHeight, extentInfo);
-
-            RecycleItems(layoutInfo);
-
-            // Determine where the first item is in relation to previously realized items
-            var generatorStartPosition = _itemsGenerator.GeneratorPositionFromIndex(layoutInfo.FirstRealizedItemIndex);
-
-            var visualIndex = 0;
-
-            var currentX = layoutInfo.FirstRealizedItemLeft;
-            var currentY = layoutInfo.FirstRealizedLineTop;
-
-            using (_itemsGenerator.StartAt(generatorStartPosition, GeneratorDirection.Forward, true))
+            if (_itemsControl != null)
             {
-                for (var itemIndex = layoutInfo.FirstRealizedItemIndex; itemIndex <= layoutInfo.LastRealizedItemIndex; itemIndex++, visualIndex++)
+                _childLayouts.Clear();
+
+                var extentInfo = GetExtentInfo(availableSize, ItemHeight);
+
+                EnsureScrollOffsetIsWithinConstrains(extentInfo);
+
+                var layoutInfo = GetLayoutInfo(availableSize, ItemHeight, extentInfo);
+
+                RecycleItems(layoutInfo);
+
+                // Determine where the first item is in relation to previously realized items
+                var generatorStartPosition = _itemsGenerator.GeneratorPositionFromIndex(layoutInfo.FirstRealizedItemIndex);
+
+                var visualIndex = 0;
+
+                var currentX = layoutInfo.FirstRealizedItemLeft;
+                var currentY = layoutInfo.FirstRealizedLineTop;
+                var availableItemSize = new Size(ItemWidth, ItemHeight);
+
+                using (_itemsGenerator.StartAt(generatorStartPosition, GeneratorDirection.Forward, true))
                 {
-                    bool newlyRealized;
-
-                    var child = (UIElement)_itemsGenerator.GenerateNext(out newlyRealized);
-                    SetVirtualItemIndex(child, itemIndex);
-
-                    if (newlyRealized)
+                    for (var itemIndex = layoutInfo.FirstRealizedItemIndex; itemIndex <= layoutInfo.LastRealizedItemIndex; itemIndex++, visualIndex++)
                     {
-                        InsertInternalChild(visualIndex, child);
-                    }
-                    else
-                    {
-                        // check if item needs to be moved into a new position in the Children collection
-                        if (visualIndex < Children.Count)
+                        bool newlyRealized;
+
+                        var child = (UIElement)_itemsGenerator.GenerateNext(out newlyRealized);
+                        SetVirtualItemIndex(child, itemIndex);
+
+                        if (newlyRealized)
                         {
-                            if (Children[visualIndex] != child)
-                            {
-                                var childCurrentIndex = Children.IndexOf(child);
-
-                                if (childCurrentIndex >= 0)
-                                {
-                                    RemoveInternalChildRange(childCurrentIndex, 1);
-                                }
-
-                                InsertInternalChild(visualIndex, child);
-                            }
+                            InsertInternalChild(visualIndex, child);
                         }
                         else
                         {
-                            // we know that the child can't already be in the children collection
-                            // because we've been inserting children in correct visualIndex order,
-                            // and this child has a visualIndex greater than the Children.Count
-                            AddInternalChild(child);
+                            // check if item needs to be moved into a new position in the Children collection
+                            if (visualIndex < Children.Count)
+                            {
+                                if (Children[visualIndex] != child)
+                                {
+                                    var childCurrentIndex = Children.IndexOf(child);
+
+                                    if (childCurrentIndex >= 0)
+                                    {
+                                        RemoveInternalChildRange(childCurrentIndex, 1);
+                                    }
+
+                                    InsertInternalChild(visualIndex, child);
+                                }
+                            }
+                            else
+                            {
+                                // we know that the child can't already be in the children collection
+                                // because we've been inserting children in correct visualIndex order,
+                                // and this child has a visualIndex greater than the Children.Count
+                                AddInternalChild(child);
+                            }
+                        }
+
+                        // only prepare the item once it has been added to the visual tree
+                        _itemsGenerator.PrepareItemContainer(child);
+
+                        child.Measure(availableItemSize);
+
+                        _childLayouts.Add(child, new Rect(currentX, currentY, ItemWidth, ItemHeight));
+
+                        if (currentX + ItemWidth * 2 >= availableSize.Width)
+                        {
+                            // wrap to a new line
+                            currentY += ItemHeight;
+                            currentX = 0;
+                        }
+                        else
+                        {
+                            currentX += ItemWidth;
                         }
                     }
-
-                    // only prepare the item once it has been added to the visual tree
-                    _itemsGenerator.PrepareItemContainer(child);
-
-                    child.Measure(new Size(ItemWidth, ItemHeight));
-
-                    _childLayouts.Add(child, new Rect(currentX, currentY, ItemWidth, ItemHeight));
-
-                    if (currentX + ItemWidth * 2 >= availableSize.Width)
-                    {
-                        // wrap to a new line
-                        currentY += ItemHeight;
-                        currentX = 0;
-                    }
-                    else
-                    {
-                        currentX += ItemWidth;
-                    }
                 }
+
+                RemoveRedundantChildren();
+                UpdateScrollInfo(availableSize, extentInfo);
+
             }
+            var desiredSize = GetPanelDesiredSize(availableSize);
+            _isInMeasure = false;
+            return desiredSize;
+        }
 
-            RemoveRedundantChildren();
-            UpdateScrollInfo(availableSize, extentInfo);
-
+        /// <summary>
+        /// The panel itself doesn't need a size but by default takes the available size
+        /// </summary>
+        /// <param name="availableSize"></param>
+        /// <returns></returns>
+        private static Size GetPanelDesiredSize(Size availableSize)
+        {
             var desiredSize = new Size(double.IsInfinity(availableSize.Width) ? 0 : availableSize.Width,
                                        double.IsInfinity(availableSize.Height) ? 0 : availableSize.Height);
-
-            _isInMeasure = false;
-
             return desiredSize;
         }
 
@@ -189,7 +199,8 @@
             {
                 var virtualItemIndex = GetVirtualItemIndex(child);
 
-                if (virtualItemIndex < layoutInfo.FirstRealizedItemIndex || virtualItemIndex > layoutInfo.LastRealizedItemIndex)
+                if (virtualItemIndex < layoutInfo.FirstRealizedItemIndex ||
+                    virtualItemIndex > layoutInfo.LastRealizedItemIndex)
                 {
                     var generatorPosition = _itemsGenerator.GeneratorPositionFromIndex(virtualItemIndex);
                     if (generatorPosition.Index >= 0)
@@ -198,7 +209,7 @@
                     }
                 }
 
-                SetVirtualItemIndex(child, -1);
+                SetVirtualItemIndex(child, RECYCLED_INDEX);
             }
         }
 
@@ -230,7 +241,7 @@
 
                 // if the virtual item index is -1, this indicates
                 // it is a recycled item that hasn't been reused this time round
-                if (GetVirtualItemIndex(child) == -1)
+                if (GetVirtualItemIndex(child) == RECYCLED_INDEX)
                 {
                     RemoveInternalChildRange(i, 1);
                 }
@@ -288,6 +299,8 @@
                 MaxVerticalOffset = extentHeight - viewPortSize.Height,
             };
         }
+
+        #region Scrolling
 
         public void LineUp()
         {
@@ -376,6 +389,13 @@
             InvalidateScrollInfo();
             InvalidateMeasure();
         }
+
+        private double Clamp(double value, double min, double max)
+        {
+            return Math.Min(Math.Max(value, min), max);
+        }
+
+        #endregion
 
         public Rect MakeVisible(Visual visual, Rect rectangle)
         {
@@ -491,11 +511,9 @@
                 wrapPanel.InvalidateMeasure();
         }
 
-        private double Clamp(double value, double min, double max)
-        {
-            return Math.Min(Math.Max(value, min), max);
-        }
-
+        /// <summary>
+        /// One visible set of items
+        /// </summary>
         internal class ExtentInfo
         {
             public int ItemsPerLine;
@@ -511,5 +529,20 @@
             public double FirstRealizedItemLeft;
             public int LastRealizedItemIndex;
         }
+
+        private const double ScrollLineAmount = 16.0;
+        private const int RECYCLED_INDEX = -1;
+
+        private Size _extentSize;
+        private Size _viewportSize;
+        private Point _offset;
+        private ItemsControl _itemsControl;
+        private bool _isInMeasure;
+
+        /// <summary>
+        /// Record the layout for the children
+        /// </summary>
+        private readonly Dictionary<UIElement, Rect> _childLayouts = new Dictionary<UIElement, Rect>();
+
     }
 }

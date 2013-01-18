@@ -50,6 +50,11 @@ namespace Funani.Gui.Controls
 			FileInformation = fileInformation;
 		}
 
+        public override string ToString()
+        {
+            return String.Format("FileInfo: {0}", Hash);
+        }
+
 		public FileInformation FileInformation
 		{
 			get;
