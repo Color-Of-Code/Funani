@@ -136,6 +136,8 @@ namespace Funani.Api
         /// <returns>The file contents as a byte array</returns>
         byte[] GetFileData(String hash);
 
+        void RefreshMetadata(FileInformation fileinfo);
+
         /// <summary>
         /// Return the metadata database for direct manipulation
         /// </summary>

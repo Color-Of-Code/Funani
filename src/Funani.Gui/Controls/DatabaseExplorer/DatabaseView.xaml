@@ -69,7 +69,8 @@
 						<Canvas.ContextMenu>
 							<ContextMenu>
 								<MenuItem Header="Update metadata" Click="RefreshMetadata_Click" DataContext="{Binding}"></MenuItem>
-							</ContextMenu>
+                                <MenuItem Header="Update metadata for all files" Click="RefreshMetadataAll_Click"  DataContext="{Binding}"></MenuItem>
+                            </ContextMenu>
 						</Canvas.ContextMenu>
                         <Border Background="Black" BorderBrush="Gray" BorderThickness="4"
                                 Width="{Binding ElementName=sliderSize,Path=Value,

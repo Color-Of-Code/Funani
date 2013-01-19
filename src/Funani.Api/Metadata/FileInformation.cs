@@ -50,7 +50,7 @@ namespace Funani.Api.Metadata
 			FileSize = file.Length;
 			Title = file.Name;
 			MimeType = MimeExtractor.MimeType.Extract(file);
-			ExtractMetadata(file);
+            RefreshMetadata(file);
 			AddPath(file);
 		}
 
@@ -60,7 +60,7 @@ namespace Funani.Api.Metadata
 				Paths.Add(file.FullName);
 		}
 		
-		private void ExtractMetadata(FileInfo file)
+		public void RefreshMetadata(FileInfo file)
 		{
 			var uri = new Uri(file.FullName);
             var metadata = MetadataExtractor.Metadata.Extract(uri, MimeType);
@@ -77,7 +77,9 @@ namespace Funani.Api.Metadata
 					DateTaken = DateTime.ParseExact(metadata["DateTaken"], "dd.MM.yyyy HH:mm:ss", null);
 				if (metadata.ContainsKey("ApplicationName"))
                     ApplicationName = metadata["ApplicationName"];
-			}
+                if (metadata.ContainsKey("Angle"))
+                    Angle = int.Parse(metadata["Angle"]);
+            }
 		}
 		
 		public String Id { get; private set; }
@@ -101,7 +103,9 @@ namespace Funani.Api.Metadata
 
         public String Device { get; set; }          // digitalizing device
         public String ApplicationName { get; set; } // application used to process the data
-        
+
+        public int? Angle { get; set; }             // orientation for view
+
         // 0 -> 5
         public int? Rating { get; set; }
 

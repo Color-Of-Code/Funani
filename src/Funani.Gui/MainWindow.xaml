@@ -92,10 +92,10 @@
 				<TabItem.Header>
 					<StackPanel
 						Orientation="Horizontal">
-						<TextBlock
-							VerticalAlignment="Center">Database explorer</TextBlock>
-					</StackPanel>
-				</TabItem.Header>
+                        <TextBlock
+							VerticalAlignment="Center"><Run Text="Database explorer"/></TextBlock>
+                    </StackPanel>
+                </TabItem.Header>
 				<Grid>
 					<funani:DatabaseView
 						Grid.Column="0"

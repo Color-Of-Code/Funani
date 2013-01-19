@@ -106,6 +106,22 @@ namespace Funani.Gui.Controls
 			get { return FileInformation.MimeType; }
 		}
 
+        public int? Angle
+        {
+            get
+            {
+                return FileInformation.Angle;
+            }
+            set
+            {
+                if (FileInformation.Angle != value)
+                {
+                    FileInformation.Angle = value;
+                    Funani.Gui.Engine.Funani.Save(FileInformation);
+                }
+            }
+        }
+
         public int? Rating
         {
             get 
@@ -154,13 +170,23 @@ namespace Funani.Gui.Controls
         {
             get
             {
-                if (FileInformation.MimeType.StartsWith("image/"))
+                if (MimeType.StartsWith("image/"))
                 {
                     byte[] data = Funani.Gui.Engine.Funani.GetFileData(FileInformation.Id);
                     BitmapImage bi = new BitmapImage();
                     bi.BeginInit();
                     bi.StreamSource = new MemoryStream(data);
                     bi.EndInit();
+
+                    if (Angle.HasValue)
+                    {
+                        int angle = Angle.Value;
+                        if (angle != 0)
+                        {
+                            return new TransformedBitmap(bi.Clone(), new RotateTransform(angle));
+                        }
+                    }
+
                     return bi;
                 }
                 return null;
@@ -169,6 +195,7 @@ namespace Funani.Gui.Controls
 
         public void RefreshMetadata()
 		{
+            Funani.Gui.Engine.Funani.RefreshMetadata(FileInformation);
 			TriggerPropertyChanged(null);
 		}
 		

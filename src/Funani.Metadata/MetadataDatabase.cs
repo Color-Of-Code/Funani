@@ -77,6 +77,13 @@ namespace Funani.Metadata
 			}
 			return info;
 		}
+
+        public void RefreshMetadata(FileInformation fileinfo, FileInfo file)
+        {
+            var files = Funani.GetCollection("fileinfo");
+            fileinfo.RefreshMetadata(file);
+            files.Save(fileinfo);
+        }
 		
 		public IEnumerable<String> GetCollectionNames()
 		{

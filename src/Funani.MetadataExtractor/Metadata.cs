@@ -28,6 +28,24 @@
 			            else
 			            	dictionary.Add("Device", String.Format("{0} {1}", meta.CameraManufacturer, meta.CameraModel));
 		            }
+
+                    var orientation = meta.GetQuery("/app1/ifd/{ushort=274}");
+                    if (orientation != null)
+                    {
+                        String orientationName = orientation.ToString();
+                        switch (orientationName)
+                        {
+                            case "3":
+                                dictionary.Add("Angle", "180");
+                                break;
+                            case "6":
+                                dictionary.Add("Angle", "90");
+                                break;
+                            case "8":
+                                dictionary.Add("Angle", "-90");
+                                break;
+                        }
+                    }
 	            }
             }
             return dictionary;

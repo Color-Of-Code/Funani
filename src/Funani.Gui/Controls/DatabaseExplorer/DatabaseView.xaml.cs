@@ -31,7 +31,9 @@ namespace Funani.Gui.Controls
 {
 	using System;
 	using System.Collections.Generic;
-	using System.Text;
+    using System.ComponentModel;
+    using System.Linq;
+    using System.Text;
 	using System.Windows;
 	using System.Windows.Controls;
 	using System.Windows.Data;
@@ -70,20 +72,30 @@ namespace Funani.Gui.Controls
 
 		public void ReloadFiles()
 		{
-			var provider = new DatabaseViewModelProvider(
-				comboWhere.SelectedItem as String,
-				comboOrderBy.SelectedItem as String,
-                fromDate.SelectedDate, toDate.SelectedDate);
-			var items = new AsyncVirtualizingCollection<FileInformationViewModel>(provider, 40, 10 * 1000);
-			listControl.DataContext = items;
+            if (!DesignerProperties.GetIsInDesignMode(this))
+            {
+                var provider = new DatabaseViewModelProvider(
+                    comboWhere.SelectedItem as String,
+                    comboOrderBy.SelectedItem as String,
+                    fromDate.SelectedDate, toDate.SelectedDate);
+                var items = new AsyncVirtualizingCollection<FileInformationViewModel>(provider, 40, 10 * 1000);
+                listControl.DataContext = items;
+            }
 		}
 		
 		private void UserControl_GotFocus(object sender, RoutedEventArgs e)
 		{
 			ReloadFiles();
 		}
-		
-		private void RefreshMetadata_Click(object sender, RoutedEventArgs e)
+
+        private void RefreshMetadataAll_Click(object sender, RoutedEventArgs e)
+        {
+            foreach (var fi in Engine.Funani.FileInformation)
+                Funani.Gui.Engine.Funani.RefreshMetadata(fi);
+            ReloadFiles();
+        }
+
+        private void RefreshMetadata_Click(object sender, RoutedEventArgs e)
 		{
 			var canvas = sender as Control;
 			var viewModel = canvas.DataContext as FileInformationViewModel;
@@ -104,6 +116,6 @@ namespace Funani.Gui.Controls
 		{
 			ReloadFiles();
 		}
-		
+
 	}
 }

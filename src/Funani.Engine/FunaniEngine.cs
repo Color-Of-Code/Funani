@@ -212,6 +212,12 @@ namespace Funani.Engine
             return _fileStorage.LoadFile(hash);
         }
 
+        public void RefreshMetadata(FileInformation fileinfo)
+        {
+            FileInfo fi = _fileStorage.GetFileInfo(fileinfo.Id);
+            _metadata.RefreshMetadata(fileinfo, fi);
+        }
+
         public object MetadataDatabase
         {
             get
