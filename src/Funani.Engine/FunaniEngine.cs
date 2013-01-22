@@ -150,6 +150,11 @@ namespace Funani.Engine
             TriggerPropertyChanged(null);
         }
 
+        public void Backup()
+        {
+            _metadata.Backup();
+        }
+
         private void SaveDatabaseInfo()
         {
             XmlSerializer s = new XmlSerializer(typeof(DatabaseInfo));

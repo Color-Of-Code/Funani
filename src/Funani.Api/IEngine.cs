@@ -77,6 +77,11 @@ namespace Funani.Api
         void CloseDatabase();
 
         /// <summary>
+        /// Dump the database to a file
+        /// </summary>
+        void Backup();
+
+        /// <summary>
         /// Path to the currently open database
         /// </summary>
         String DatabasePath { get; }

@@ -77,5 +77,10 @@ namespace Funani.Gui.Controls
         }
         
         private MongoDbViewModel _viewModel;
+
+        private void Backup_Click(object sender, RoutedEventArgs e)
+        {
+            _viewModel.Backup();
+        }
     }
 }

@@ -79,7 +79,12 @@ namespace Funani.Gui.Controls
 		{
 			TriggerPropertyChanged("Statistics");
 		}
-		
+
+        public void Backup()
+        {
+            global::Funani.Gui.Engine.Funani.Backup();
+        }
+
 		private MongoDatabase Funani
 		{
 			get 

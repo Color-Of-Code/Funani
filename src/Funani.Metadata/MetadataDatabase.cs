@@ -152,6 +152,15 @@ namespace Funani.Metadata
             }
         }
 
+        public void Backup()
+        {
+            ProcessStartInfo psi = new ProcessStartInfo();
+            psi.FileName = Path.Combine(_pathToMongod, "mongodump.exe");
+            psi.Arguments = String.Format(" --db Funani --port {0}", 27017);
+            psi.WorkingDirectory = _pathToMongod;
+            Process.Start(psi).WaitForExit();
+        }
+
         public void Start(IConsoleRedirect listener)
 		{
 			Stop();
