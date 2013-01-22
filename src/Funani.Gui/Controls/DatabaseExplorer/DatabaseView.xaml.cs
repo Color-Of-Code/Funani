@@ -75,6 +75,7 @@ namespace Funani.Gui.Controls
             if (!DesignerProperties.GetIsInDesignMode(this))
             {
                 var provider = new DatabaseViewModelProvider(
+                    regexLookFor.Text as String,
                     comboWhere.SelectedItem as String,
                     comboOrderBy.SelectedItem as String,
                     fromDate.SelectedDate, toDate.SelectedDate);
@@ -117,5 +118,9 @@ namespace Funani.Gui.Controls
 			ReloadFiles();
 		}
 
+        private void ReloadFiles_Handler(object sender, RoutedEventArgs e)
+        {
+            ReloadFiles();
+        }
 	}
 }

@@ -29,6 +29,7 @@
     		<Grid.ColumnDefinitions>
         		<ColumnDefinition></ColumnDefinition>
         		<ColumnDefinition></ColumnDefinition>
+                <ColumnDefinition></ColumnDefinition>
                 <ColumnDefinition Width="Auto"></ColumnDefinition>
                 <ColumnDefinition Width="Auto"></ColumnDefinition>
                 <ColumnDefinition Width="100"></ColumnDefinition>
@@ -37,9 +38,17 @@
         	</ComboBox>
             <ComboBox Grid.Column="1" x:Name="comboOrderBy" SelectionChanged="ReloadFiles_Handler">
         	</ComboBox>
-            <DatePicker Grid.Column="2" x:Name="fromDate" SelectedDateChanged="ReloadFiles_Handler" />
-            <DatePicker Grid.Column="3" x:Name="toDate" SelectedDateChanged="ReloadFiles_Handler" />
-            <TextBlock Grid.Column="4" HorizontalAlignment="Center" VerticalAlignment="Center">
+            <Grid Grid.Column="2">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition></ColumnDefinition>
+                    <ColumnDefinition Width="Auto"></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+                <TextBox Grid.Column="0" x:Name="regexLookFor" ToolTip="Regular expression for the query on the title"></TextBox>
+                <Button Grid.Column="1" Click="ReloadFiles_Handler">Run Query</Button>
+            </Grid>
+            <DatePicker Grid.Column="3" x:Name="fromDate" SelectedDateChanged="ReloadFiles_Handler" />
+            <DatePicker Grid.Column="4" x:Name="toDate" SelectedDateChanged="ReloadFiles_Handler" />
+            <TextBlock Grid.Column="5" HorizontalAlignment="Center" VerticalAlignment="Center">
                 <Run Text="Selected:"></Run>
                 <Run Text="{Binding ElementName=listControl,Path=SelectedItems.Count,Mode=OneWay}"></Run>
             </TextBlock>

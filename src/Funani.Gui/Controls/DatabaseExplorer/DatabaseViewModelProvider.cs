@@ -35,7 +35,8 @@ namespace Funani.Gui.Controls
 	using System.Diagnostics;
 	using System.IO;
 	using System.Linq;
-	using System.Threading;
+    using System.Text.RegularExpressions;
+    using System.Threading;
 
 	using Funani.Gui.Model;
 
@@ -47,8 +48,10 @@ namespace Funani.Gui.Controls
 		/// <summary>
 		/// Initializes a new instance of the <see cref="FileViewModelProvider"/> class.
 		/// </summary>
-        public DatabaseViewModelProvider(String whereClause, String orderByClause, DateTime? fromDate, DateTime? toDate)
+        public DatabaseViewModelProvider(String regexTitle,
+            String whereClause, String orderByClause, DateTime? fromDate, DateTime? toDate)
 		{
+            _regexTitle = regexTitle;
             _fromDate = fromDate;
             _toDate = toDate;
 			_whereClause = whereClause;
@@ -113,6 +116,17 @@ namespace Funani.Gui.Controls
 		{
 			var query = Engine.Funani.FileInformation;
 
+            if (!String.IsNullOrWhiteSpace(_regexTitle))
+            {
+                try
+                {
+                    Regex regex = new Regex(_regexTitle);
+                    query = query.Where(x => regex.IsMatch(x.Title));
+                }
+                catch
+                {
+                }
+            }
             if (_fromDate.HasValue)
             {
                 query = query.Where(x => x.DateTaken >= _fromDate.Value);
@@ -148,6 +162,7 @@ namespace Funani.Gui.Controls
 
         private DateTime? _fromDate;
         private DateTime? _toDate;
+        private String _regexTitle;
         private String _whereClause;
 		private String _orderByClause;
 	}
