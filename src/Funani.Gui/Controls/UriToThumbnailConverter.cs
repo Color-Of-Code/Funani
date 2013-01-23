@@ -79,6 +79,7 @@ namespace Funani.Gui.Controls
                 BitmapSource ret = Funani.Thumbnailer.Thumbnail.Extract(new Uri(value.ToString()),
                     "image/", ThumbnailSize
                     );
+                //TODO: why is this called twice?
             	System.Diagnostics.Trace.TraceInformation("Generating thumbnail for '{0}'", value);
                 return ret;
             }

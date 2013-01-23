@@ -83,7 +83,7 @@ namespace Funani.Api.Metadata
 		}
 		
 		public String Id { get; private set; }
-		public Int64  FileSize { get; private set; }
+        public Int64 FileSize { get; private set; }
 		public String MimeType { get; private set; }
 
         public IList<String> Paths { get; private set; }
@@ -105,6 +105,7 @@ namespace Funani.Api.Metadata
         public String ApplicationName { get; set; } // application used to process the data
 
         public int? Angle { get; set; }             // orientation for view
+        public Boolean IsDeleted { get; set; }
 
         // 0 -> 5
         public int? Rating { get; set; }

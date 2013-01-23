@@ -26,19 +26,22 @@
                        TextAlignment="Center" VerticalAlignment="Center"></TextBlock>
         </Grid>
         <Grid Grid.Row="1">
-    		<Grid.ColumnDefinitions>
-        		<ColumnDefinition></ColumnDefinition>
-        		<ColumnDefinition></ColumnDefinition>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"></ColumnDefinition>
+                <ColumnDefinition></ColumnDefinition>
+                <ColumnDefinition></ColumnDefinition>
                 <ColumnDefinition></ColumnDefinition>
                 <ColumnDefinition Width="Auto"></ColumnDefinition>
                 <ColumnDefinition Width="Auto"></ColumnDefinition>
                 <ColumnDefinition Width="100"></ColumnDefinition>
+                <ColumnDefinition Width="100"></ColumnDefinition>
             </Grid.ColumnDefinitions>
-            <ComboBox Grid.Column="0" x:Name="comboWhere" SelectionChanged="ReloadFiles_Handler">
-        	</ComboBox>
-            <ComboBox Grid.Column="1" x:Name="comboOrderBy" SelectionChanged="ReloadFiles_Handler">
-        	</ComboBox>
-            <Grid Grid.Column="2">
+            <CheckBox Grid.Column="0" x:Name="checkBoxDeleted" Click="ReloadFiles_Handler" VerticalAlignment="Center" Margin="2">Show deleted</CheckBox>
+            <ComboBox Grid.Column="1" x:Name="comboWhere" SelectionChanged="ReloadFiles_Handler">
+            </ComboBox>
+            <ComboBox Grid.Column="2" x:Name="comboOrderBy" SelectionChanged="ReloadFiles_Handler">
+            </ComboBox>
+            <Grid Grid.Column="3">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition></ColumnDefinition>
                     <ColumnDefinition Width="Auto"></ColumnDefinition>
@@ -46,11 +49,15 @@
                 <TextBox Grid.Column="0" x:Name="regexLookFor" ToolTip="Regular expression for the query on the title"></TextBox>
                 <Button Grid.Column="1" Click="ReloadFiles_Handler">Run Query</Button>
             </Grid>
-            <DatePicker Grid.Column="3" x:Name="fromDate" SelectedDateChanged="ReloadFiles_Handler" />
-            <DatePicker Grid.Column="4" x:Name="toDate" SelectedDateChanged="ReloadFiles_Handler" />
-            <TextBlock Grid.Column="5" HorizontalAlignment="Center" VerticalAlignment="Center">
+            <DatePicker Grid.Column="4" x:Name="fromDate" SelectedDateChanged="ReloadFiles_Handler" />
+            <DatePicker Grid.Column="5" x:Name="toDate" SelectedDateChanged="ReloadFiles_Handler" />
+            <TextBlock Grid.Column="6" HorizontalAlignment="Center" VerticalAlignment="Center">
                 <Run Text="Selected:"></Run>
                 <Run Text="{Binding ElementName=listControl,Path=SelectedItems.Count,Mode=OneWay}"></Run>
+            </TextBlock>
+            <TextBlock Grid.Column="7" HorizontalAlignment="Center" VerticalAlignment="Center">
+                <Run Text="Count:"></Run>
+                <Run Text="{Binding ElementName=listControl,Path=Items.Count,Mode=OneWay}"></Run>
             </TextBlock>
         </Grid>
         <ListView Grid.Row="2" Name="listControl" ItemsSource="{Binding}"
@@ -58,11 +65,11 @@
 		          Background="Transparent"
                   SelectionMode="Single"
 		          ScrollViewer.IsDeferredScrollingEnabled="True">
-		    <ListView.Resources>
-		        <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}" Color="Salmon" />                
-		        <SolidColorBrush x:Key="{x:Static SystemColors.ControlBrushKey}" Color="Salmon" />
-		    </ListView.Resources>
-        	<ListView.ItemsPanel>
+            <ListView.Resources>
+                <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}" Color="Salmon" />
+                <SolidColorBrush x:Key="{x:Static SystemColors.ControlBrushKey}" Color="Salmon" />
+            </ListView.Resources>
+            <ListView.ItemsPanel>
                 <ItemsPanelTemplate>
                     <funani:VirtualizingWrapPanel Background="Black"
                         ItemHeight="{Binding ElementName=sliderSize,Path=Value}"
@@ -75,12 +82,12 @@
                             Width="{Binding ElementName=sliderSize,Path=Value}"
                             Height="{Binding ElementName=sliderSize,Path=Value}"
                             >
-						<Canvas.ContextMenu>
-							<ContextMenu>
-								<MenuItem Header="Update metadata" Click="RefreshMetadata_Click" DataContext="{Binding}"></MenuItem>
+                        <Canvas.ContextMenu>
+                            <ContextMenu>
+                                <MenuItem Header="Update metadata" Click="RefreshMetadata_Click" DataContext="{Binding}"></MenuItem>
                                 <MenuItem Header="Update metadata for all files" Click="RefreshMetadataAll_Click"  DataContext="{Binding}"></MenuItem>
                             </ContextMenu>
-						</Canvas.ContextMenu>
+                        </Canvas.ContextMenu>
                         <Border Background="Black" BorderBrush="Gray" BorderThickness="4"
                                 Width="{Binding ElementName=sliderSize,Path=Value,
                                     Converter={StaticResource MathConverter},ConverterParameter=(@VALUE-8)}"
@@ -134,14 +141,14 @@
 									<Run Text="{Binding MimeType,Mode=OneWay}"></Run>
                                 </TextBlock>
                                 <ItemsControl ItemsSource="{Binding Paths,Mode=OneWay}">
-                            		<ItemsControl.ItemTemplate>
-                            			<DataTemplate>
-			                                <TextBlock>
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <TextBlock>
 												<Run>Path: </Run>
 												<Run Text="{Binding .,Mode=OneWay}"></Run>
-			                                </TextBlock>
-										</DataTemplate>
-                                	</ItemsControl.ItemTemplate>
+                                            </TextBlock>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
                                 </ItemsControl>
                             </StackPanel>
                         </Canvas.ToolTip>
@@ -159,17 +166,69 @@
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"></RowDefinition>
                 <RowDefinition Height="Auto"></RowDefinition>
+                <RowDefinition Height="Auto"></RowDefinition>
                 <RowDefinition Height="*"></RowDefinition>
             </Grid.RowDefinitions>
-            
-            <Image  Grid.Column="0" Grid.RowSpan="3"
+
+            <Image  Grid.Column="0" Grid.RowSpan="4"
                     RenderOptions.BitmapScalingMode="HighQuality"
 					Source="{Binding Picture}"
 					Stretch="{Binding Stretch}"
                     HorizontalAlignment="Center"
                     VerticalAlignment="Center"
 							/>
-            <GroupBox Header="Tags" Grid.Column="2" Grid.Row="0">
+            <GroupBox Grid.Column="2" Grid.Row="0">
+                <GroupBox.Header>
+                    <StackPanel Orientation="Horizontal">
+                        <CheckBox IsChecked="{Binding IsDeleted}">Deleted</CheckBox>
+                        <funani:RatingControl RatingValue="{Binding Rating}" Height="16" Margin="10,0"></funani:RatingControl>
+                        <TextBlock Margin="10,0">
+									<Run>Size: </Run>
+									<Run Text="{Binding FileSize,Mode=OneWay}"></Run>
+									<Run> bytes</Run>
+                        </TextBlock>
+                        <TextBlock>
+									<Run>Hash: </Run>
+									<Run Text="{Binding Hash,Mode=OneWay}"></Run>
+                        </TextBlock>
+                    </StackPanel>
+                </GroupBox.Header>
+                <StackPanel Orientation="Vertical" HorizontalAlignment="Stretch">
+                    <TextBlock>
+									<Run>Dimensions: </Run>
+									<Run Text="{Binding Width,Mode=OneWay}"></Run>
+									<Run> x </Run>
+									<Run Text="{Binding Height,Mode=OneWay}"></Run>
+                    </TextBlock>
+                    <TextBlock>
+									<Run>Application name: </Run>
+									<Run Text="{Binding ApplicationName,Mode=OneWay}"></Run>
+                    </TextBlock>
+                    <TextBlock>
+									<Run>Device: </Run>
+									<Run Text="{Binding Device,Mode=OneWay}"></Run>
+                    </TextBlock>
+                    <TextBlock>
+									<Run>Date taken: </Run>
+									<Run Text="{Binding DateTaken,Mode=OneWay}"></Run>
+                    </TextBlock>
+                    <TextBlock>
+									<Run>MIME: </Run>
+									<Run Text="{Binding MimeType,Mode=OneWay}"></Run>
+                    </TextBlock>
+                    <ItemsControl ItemsSource="{Binding Paths,Mode=OneWay}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock>
+												<Run>Path: </Run>
+												<Run Text="{Binding .,Mode=OneWay}"></Run>
+                                </TextBlock>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </StackPanel>
+            </GroupBox>
+            <GroupBox Header="Tags" Grid.Column="2" Grid.Row="2">
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"></RowDefinition>
@@ -200,11 +259,6 @@
                                               ></funani:TokenizingControl>
                 </Grid>
             </GroupBox>
-            <StackPanel Grid.Column="2" Grid.Row="1" Orientation="Horizontal">
-                <GroupBox Header="Rating">
-                    <funani:RatingControl RatingValue="{Binding Rating}" Height="16"></funani:RatingControl>
-                </GroupBox>
-            </StackPanel>
         </Grid>
     </Grid>
 </UserControl>

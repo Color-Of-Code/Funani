@@ -48,9 +48,10 @@ namespace Funani.Gui.Controls
 		/// <summary>
 		/// Initializes a new instance of the <see cref="FileViewModelProvider"/> class.
 		/// </summary>
-        public DatabaseViewModelProvider(String regexTitle,
+        public DatabaseViewModelProvider(Boolean deleted, String regexTitle,
             String whereClause, String orderByClause, DateTime? fromDate, DateTime? toDate)
 		{
+            _deleted = deleted;
             _regexTitle = regexTitle;
             _fromDate = fromDate;
             _toDate = toDate;
@@ -115,6 +116,10 @@ namespace Funani.Gui.Controls
 		IQueryable<Funani.Api.Metadata.FileInformation> BuildQuery()
 		{
 			var query = Engine.Funani.FileInformation;
+            if (_deleted)
+                query = query.Where(x => x.IsDeleted);
+            else
+                query = query.Where(x => !x.IsDeleted);
 
             if (!String.IsNullOrWhiteSpace(_regexTitle))
             {
@@ -160,6 +165,7 @@ namespace Funani.Gui.Controls
 			return query;
 		}
 
+        private Boolean _deleted;
         private DateTime? _fromDate;
         private DateTime? _toDate;
         private String _regexTitle;

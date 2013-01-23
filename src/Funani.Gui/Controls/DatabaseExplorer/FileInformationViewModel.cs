@@ -137,7 +137,23 @@ namespace Funani.Gui.Controls
                 }
             }
         }
-        
+
+        public bool IsDeleted
+        {
+            get
+            {
+                return FileInformation.IsDeleted;
+            }
+            set
+            {
+                if (FileInformation.IsDeleted != value)
+                {
+                    FileInformation.IsDeleted = value;
+                    Funani.Gui.Engine.Funani.Save(FileInformation);
+                }
+            }
+        }
+
         public IList<String> Paths
 		{
 			get

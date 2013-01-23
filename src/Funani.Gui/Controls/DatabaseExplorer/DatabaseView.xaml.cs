@@ -75,6 +75,7 @@ namespace Funani.Gui.Controls
             if (!DesignerProperties.GetIsInDesignMode(this))
             {
                 var provider = new DatabaseViewModelProvider(
+                    (bool)checkBoxDeleted.IsChecked,
                     regexLookFor.Text as String,
                     comboWhere.SelectedItem as String,
                     comboOrderBy.SelectedItem as String,
