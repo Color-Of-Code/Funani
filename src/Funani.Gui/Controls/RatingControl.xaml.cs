@@ -22,24 +22,31 @@ namespace Funani.Gui.Controls
     public partial class RatingControl : UserControl
     {
         public static readonly DependencyProperty RatingValueProperty =
-            DependencyProperty.Register("RatingValue", typeof(int), typeof(RatingControl),
-            new FrameworkPropertyMetadata(0, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault, new PropertyChangedCallback(RatingValueChanged)));
+            DependencyProperty.Register("RatingValue", typeof(int?), typeof(RatingControl),
+            new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault, new PropertyChangedCallback(RatingValueChanged)));
 
 
         private int _maxValue = 5;
 
-        public int RatingValue
+        public int? RatingValue
         {
             get { return (int)GetValue(RatingValueProperty); }
             set
             {
-                if (value < 0)
+                if (value.HasValue)
                 {
-                    SetValue(RatingValueProperty, 0);
-                }
-                else if (value > _maxValue)
-                {
-                    SetValue(RatingValueProperty, _maxValue);
+                    if (value < 0)
+                    {
+                        SetValue(RatingValueProperty, 0);
+                    }
+                    else if (value > _maxValue)
+                    {
+                        SetValue(RatingValueProperty, _maxValue);
+                    }
+                    else
+                    {
+                        SetValue(RatingValueProperty, value);
+                    }
                 }
                 else
                 {
@@ -51,22 +58,34 @@ namespace Funani.Gui.Controls
         private static void RatingValueChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e)
         {
             RatingControl parent = sender as RatingControl;
-            int ratingValue = (int)e.NewValue;
+            int? ratingValue = (int?)e.NewValue;
             UIElementCollection children = ((Grid)(parent.Content)).Children;
             ToggleButton button = null;
 
-            for (int i = 0; i < ratingValue; i++)
+            if (ratingValue.HasValue)
             {
-                button = children[i] as ToggleButton;
-                if (button != null)
-                    button.IsChecked = true;
-            }
+                for (int i = 0; i < ratingValue.Value; i++)
+                {
+                    button = children[i] as ToggleButton;
+                    if (button != null)
+                        button.IsChecked = true;
+                }
 
-            for (int i = ratingValue; i < children.Count; i++)
+                for (int i = ratingValue.Value; i < children.Count; i++)
+                {
+                    button = children[i] as ToggleButton;
+                    if (button != null)
+                        button.IsChecked = false;
+                }
+            }
+            else
             {
-                button = children[i] as ToggleButton;
-                if (button != null)
-                    button.IsChecked = false;
+                for (int i = 0; i < children.Count; i++)
+                {
+                    button = children[i] as ToggleButton;
+                    if (button != null)
+                        button.IsChecked = false;
+                }
             }
         }
 
