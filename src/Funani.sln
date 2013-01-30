@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
-# SharpDevelop 4.2.2.8818
+# SharpDevelop 4.3
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "3rdparty", "3rdparty", "{15E73228-F271-4960-AE32-00B16366DD40}"
 	ProjectSection(SolutionItems) = postProject
 	EndProjectSection
@@ -37,6 +37,12 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Funani.Gui", "Funani.Gui\Funani.Gui.csproj", "{C95D597D-D070-430B-811B-53E5EA7C04BA}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Funani.Engine", "Funani.Engine\Funani.Engine.csproj", "{5E00AF3C-5557-4619-80F0-83BCF42F1AD2}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "UnitTests", "UnitTests", "{83E4ABF3-DA63-4977-B1E5-3FC80CBDFE9A}"
+	ProjectSection(SolutionItems) = postProject
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Funani.Tests", "Funani.Tests\Funani.Tests.csproj", "{AD073388-4128-4738-89A4-8FA9D13183F0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -156,6 +162,18 @@ Global
 		{0D47F911-0867-434B-9CDB-F3B8FE0062CA}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{0D47F911-0867-434B-9CDB-F3B8FE0062CA}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{0D47F911-0867-434B-9CDB-F3B8FE0062CA}.Release|x86.ActiveCfg = Release|Any CPU
+		{AD073388-4128-4738-89A4-8FA9D13183F0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AD073388-4128-4738-89A4-8FA9D13183F0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AD073388-4128-4738-89A4-8FA9D13183F0}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{AD073388-4128-4738-89A4-8FA9D13183F0}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{AD073388-4128-4738-89A4-8FA9D13183F0}.Debug|x86.Build.0 = Debug|Any CPU
+		{AD073388-4128-4738-89A4-8FA9D13183F0}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{AD073388-4128-4738-89A4-8FA9D13183F0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AD073388-4128-4738-89A4-8FA9D13183F0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AD073388-4128-4738-89A4-8FA9D13183F0}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{AD073388-4128-4738-89A4-8FA9D13183F0}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{AD073388-4128-4738-89A4-8FA9D13183F0}.Release|x86.Build.0 = Release|Any CPU
+		{AD073388-4128-4738-89A4-8FA9D13183F0}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -168,5 +186,6 @@ Global
 		{0D47F911-0867-434B-9CDB-F3B8FE0062CA} = {DFF73DE4-5DA7-45DF-9BA9-3924991C944E}
 		{AE28652D-3B84-4477-A119-6109619F6CD2} = {BB4DB62D-210F-4534-83A9-C6DFCCAAB816}
 		{06EDE14C-9A11-4ECB-80EF-AD14AF61EAFA} = {BB4DB62D-210F-4534-83A9-C6DFCCAAB816}
+		{AD073388-4128-4738-89A4-8FA9D13183F0} = {83E4ABF3-DA63-4977-B1E5-3FC80CBDFE9A}
 	EndGlobalSection
 EndGlobal
