@@ -1,12 +1,12 @@
-<UserControl x:Class="Funani.Gui.Controls.DirectoryExplorer"
+<UserControl x:Class="Funani.Gui.Controls.FileExplorer.DirectoryExplorer"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:funani="clr-namespace:Funani.Gui.Controls"
              mc:Ignorable="d" xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:fileExplorer="clr-namespace:Funani.Gui.Controls.FileExplorer"
              d:DesignHeight="200" d:DesignWidth="640">
 	<Grid>
-		<TreeView x:Name="directories" SelectedItemChanged="directories_SelectedItemChanged"
+		<TreeView x:Name="Directories" SelectedItemChanged="directories_SelectedItemChanged"
 		          ItemsSource="{Binding FirstGeneration}"
 		          Background="#FFFFFFFF" BorderBrush="#FFFFFFFF" Foreground="#FFFFFFFF">
 			<TreeView.ContextMenu>
@@ -28,7 +28,7 @@
 				</Style>
 			</TreeView.ItemContainerStyle>
 			<TreeView.ItemTemplate>
-				<HierarchicalDataTemplate ItemsSource="{Binding Directories}" DataType="{x:Type funani:DirectoryViewModel}">
+				<HierarchicalDataTemplate ItemsSource="{Binding Directories}" DataType="{x:Type fileExplorer:DirectoryViewModel}">
 					<StackPanel Orientation="Horizontal">
 						<Image Width="16" Height="16" Margin="3,0" Source="{Binding Icon}" />
 						<TextBlock Text="{Binding Name}" />

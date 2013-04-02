@@ -27,27 +27,28 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
+
+using System;
+using System.Windows.Input;
+
 namespace Funani.Engine.Commands
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using System.Windows.Input;
-
     public class ActionCommand : ICommand
     {
+        private readonly Action _action;
+        private bool _isEnabled;
+
         public ActionCommand(Action action)
         {
             _action = action;
         }
 
         public ActionCommand(Action action, String description)
-        	: this(action)
+            : this(action)
         {
-        	Description = description;
+            Description = description;
         }
-        
+
         public bool IsEnabled
         {
             get { return _isEnabled; }
@@ -61,6 +62,8 @@ namespace Funani.Engine.Commands
             }
         }
 
+        public String Description { get; protected set; }
+
         public bool CanExecute(object parameter)
         {
             return _isEnabled;
@@ -70,26 +73,19 @@ namespace Funani.Engine.Commands
         {
             _action();
         }
-        
+
+        public event EventHandler CanExecuteChanged;
+
         public override string ToString()
-		{
-			return string.Format("{0}", Description);
-		}
+        {
+            return string.Format("{0}", Description);
+        }
 
         private void TriggerCanExecuteChanged()
         {
-            var handler = CanExecuteChanged;
+            EventHandler handler = CanExecuteChanged;
             if (handler != null)
                 handler(this, EventArgs.Empty);
         }
-        
-        public String Description
-        {
-        	get; protected set;
-        }
-        
-        private Action _action;
-        private bool _isEnabled = false;
-        public event EventHandler CanExecuteChanged;
     }
 }

@@ -1,36 +1,33 @@
-﻿
+﻿using System;
+using System.Diagnostics;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
+
 namespace Funani.Gui.Controls
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using System.Windows;
-    using System.Windows.Controls;
-    using System.Windows.Data;
-    using System.Windows.Documents;
-    using System.Windows.Input;
-    using System.Windows.Media;
-    using System.Windows.Media.Imaging;
-    using System.Windows.Navigation;
-    using System.Windows.Shapes;
-    using System.Windows.Controls.Primitives;
-
     /// <summary>
-    /// Interaction logic for RatingControl.xaml
+    ///     Interaction logic for RatingControl.xaml
     /// </summary>
     public partial class RatingControl : UserControl
     {
         public static readonly DependencyProperty RatingValueProperty =
-            DependencyProperty.Register("RatingValue", typeof(int?), typeof(RatingControl),
-            new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault, new PropertyChangedCallback(RatingValueChanged)));
+            DependencyProperty.Register("RatingValue", typeof (int?), typeof (RatingControl),
+                                        new FrameworkPropertyMetadata(null,
+                                                                      FrameworkPropertyMetadataOptions
+                                                                          .BindsTwoWayByDefault, RatingValueChanged));
 
 
-        private int _maxValue = 5;
+        private const int MaxValue = 5;
+
+        public RatingControl()
+        {
+            InitializeComponent();
+        }
 
         public int? RatingValue
         {
-            get { return (int)GetValue(RatingValueProperty); }
+            get { return (int) GetValue(RatingValueProperty); }
             set
             {
                 if (value.HasValue)
@@ -39,9 +36,9 @@ namespace Funani.Gui.Controls
                     {
                         SetValue(RatingValueProperty, 0);
                     }
-                    else if (value > _maxValue)
+                    else if (value > MaxValue)
                     {
-                        SetValue(RatingValueProperty, _maxValue);
+                        SetValue(RatingValueProperty, MaxValue);
                     }
                     else
                     {
@@ -50,16 +47,17 @@ namespace Funani.Gui.Controls
                 }
                 else
                 {
-                    SetValue(RatingValueProperty, value);
+                    SetValue(RatingValueProperty, null);
                 }
             }
         }
 
         private static void RatingValueChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e)
         {
-            RatingControl parent = sender as RatingControl;
-            int? ratingValue = (int?)e.NewValue;
-            UIElementCollection children = ((Grid)(parent.Content)).Children;
+            var parent = sender as RatingControl;
+            var ratingValue = (int?) e.NewValue;
+            Debug.Assert(parent != null, "parent != null");
+            UIElementCollection children = ((Grid) (parent.Content)).Children;
             ToggleButton button = null;
 
             if (ratingValue.HasValue)
@@ -89,18 +87,14 @@ namespace Funani.Gui.Controls
             }
         }
 
-        public RatingControl()
-        {
-            InitializeComponent();
-        }
-
         private void RatingButtonClickEventHandler(Object sender, RoutedEventArgs e)
         {
-            ToggleButton button = sender as ToggleButton;
+            var button = sender as ToggleButton;
 
-            int newRating = int.Parse((String)button.Tag);
-
-            if ((bool)button.IsChecked || newRating < RatingValue)
+            Debug.Assert(button != null, "button is null");
+            int newRating = int.Parse((String) button.Tag);
+            bool isChecked = button.IsChecked ?? false;
+            if (isChecked || newRating < RatingValue)
             {
                 RatingValue = newRating;
             }

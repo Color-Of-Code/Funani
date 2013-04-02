@@ -5,7 +5,7 @@
              StartupUri="MainWindow.xaml">
     <Application.Resources>
         <funani:MathConverter x:Key="MathConverter"></funani:MathConverter>
-        <Style x:Key="checkBoxStyle" TargetType="{x:Type CheckBox}">
+        <Style x:Key="CheckBoxStyle" TargetType="{x:Type CheckBox}">
             <Style.Triggers>
                 <Trigger Property="IsChecked" Value="True">
                     <Setter Property="Background" Value="DarkGreen" />

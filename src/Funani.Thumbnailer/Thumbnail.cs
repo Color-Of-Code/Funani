@@ -28,38 +28,39 @@
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+using System;
+using System.Diagnostics;
+using System.IO;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
+
 namespace Funani.Thumbnailer
 {
-    using System;
-    using System.IO;
-    using System.Windows.Media;
-    using System.Windows.Media.Imaging;
-
     public static class Thumbnail
     {
         public static void Create(Uri uri, String mime, int thumbnailSize, FileInfo destination)
         {
-        	BitmapSource bitmap = Extract(uri, mime, thumbnailSize, BitmapCreateOptions.None);
-        	if (bitmap != null)
-        	{
-        		if (bitmap.CheckAccess())
-        		{
-        			System.Diagnostics.Trace.TraceInformation("Creating thumbnail '{0}'", destination.Name);
-			        var encoder = new PngBitmapEncoder();
-			        String photolocation = destination.FullName;
-			        var frame = BitmapFrame.Create(bitmap);
-			        encoder.Frames.Add(frame);
-			        	
-			        Directory.CreateDirectory(destination.DirectoryName);
-			        using (var filestream = new FileStream(photolocation, FileMode.Create))
-			        	encoder.Save(filestream);
-        		}
-        	}
+            BitmapSource bitmap = Extract(uri, mime, thumbnailSize, BitmapCreateOptions.None);
+            if (bitmap != null)
+            {
+                if (bitmap.CheckAccess())
+                {
+                    Trace.TraceInformation("Creating thumbnail '{0}'", destination.Name);
+                    var encoder = new PngBitmapEncoder();
+                    String photolocation = destination.FullName;
+                    BitmapFrame frame = BitmapFrame.Create(bitmap);
+                    encoder.Frames.Add(frame);
+
+                    Directory.CreateDirectory(destination.DirectoryName);
+                    using (var filestream = new FileStream(photolocation, FileMode.Create))
+                        encoder.Save(filestream);
+                }
+            }
         }
-        
+
         /// <summary>
-        /// Create a thumbnail of the given max size for the resource specified by the uri
-        /// assuming the mime type is correctly specified too.
+        ///     Create a thumbnail of the given max size for the resource specified by the uri
+        ///     assuming the mime type is correctly specified too.
         /// </summary>
         /// <param name="uri"></param>
         /// <param name="mime"></param>
@@ -67,24 +68,25 @@ namespace Funani.Thumbnailer
         /// <returns></returns>
         public static BitmapSource Extract(Uri uri, String mime, int thumbnailSize)
         {
-        	return Extract(uri, mime, thumbnailSize, BitmapCreateOptions.DelayCreation);
+            return Extract(uri, mime, thumbnailSize, BitmapCreateOptions.DelayCreation);
         }
-        
-        public static BitmapSource Extract(Uri uri, String mime, int thumbnailSize, BitmapCreateOptions bitmapCreateOptions)
+
+        public static BitmapSource Extract(Uri uri, String mime, int thumbnailSize,
+                                           BitmapCreateOptions bitmapCreateOptions)
         {
-        	if (!mime.StartsWith("image/"))
-        		return null;
-        	
+            if (!mime.StartsWith("image/"))
+                return null;
+
             //TODO: write thumbnailers depending on the mime type
             // this works for WPF supported image formats only
-            Orientation orientation = Orientation.Normal;
+            var orientation = Orientation.Normal;
             BitmapFrame frame = BitmapFrame.Create(
                 uri, bitmapCreateOptions, BitmapCacheOption.None);
             BitmapSource ret = null;
-            BitmapMetadata meta = frame.Metadata as BitmapMetadata;
+            var meta = frame.Metadata as BitmapMetadata;
             if (frame.PixelHeight < thumbnailSize && frame.PixelWidth < thumbnailSize)
             {
-                BitmapImage image = new BitmapImage();
+                var image = new BitmapImage();
                 image.BeginInit();
                 image.UriSource = uri;
                 image.CacheOption = BitmapCacheOption.None;
@@ -100,7 +102,7 @@ namespace Funani.Thumbnailer
             {
                 if (frame.Thumbnail == null)
                 {
-                    BitmapImage image = new BitmapImage();
+                    var image = new BitmapImage();
                     image.BeginInit();
                     image.UriSource = uri;
                     if (frame.PixelHeight >= frame.PixelWidth)
@@ -127,8 +129,8 @@ namespace Funani.Thumbnailer
                 double angle = 0;
                 if (meta.GetQuery("/app1/ifd/{ushort=274}") != null)
                 {
-                    orientation = (Orientation)Enum.Parse(typeof(Orientation),
-                        meta.GetQuery("/app1/ifd/{ushort=274}").ToString());
+                    orientation = (Orientation) Enum.Parse(typeof (Orientation),
+                                                           meta.GetQuery("/app1/ifd/{ushort=274}").ToString());
                 }
 
                 switch (orientation)
@@ -153,6 +155,5 @@ namespace Funani.Thumbnailer
 
             return ret;
         }
-
     }
 }

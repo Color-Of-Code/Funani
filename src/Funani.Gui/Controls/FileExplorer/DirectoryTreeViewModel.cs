@@ -28,22 +28,27 @@
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace Funani.Gui.Controls
-{
-    using System;
-    using System.Collections.Generic;
-    using System.Collections.ObjectModel;
-    using System.IO;
-    using System.Linq;
-    using System.Text;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.IO;
+using System.Linq;
+using System.Threading;
+using Funani.Api;
+using Funani.Engine.Commands;
 
+namespace Funani.Gui.Controls.FileExplorer
+{
     public class DirectoryTreeViewModel
     {
-        public DirectoryTreeViewModel()
-		{
-            var rootDirectories = Directory.GetLogicalDrives().Select(x => new DirectoryInfo(x));
+        private readonly IEngine _engine;
+        private readonly ObservableCollection<DirectoryViewModel> _firstGeneration;
+
+        public DirectoryTreeViewModel(IEngine engine)
+        {
+            _engine = engine;
+            IEnumerable<DirectoryInfo> rootDirectories = Directory.GetLogicalDrives().Select(x => new DirectoryInfo(x));
             _firstGeneration = new ObservableCollection<DirectoryViewModel>();
-            foreach (var model in rootDirectories)
+            foreach (DirectoryInfo model in rootDirectories)
             {
                 try
                 {
@@ -53,7 +58,12 @@ namespace Funani.Gui.Controls
                 {
                 }
             }
-		}
+        }
+
+        public ObservableCollection<DirectoryViewModel> FirstGeneration
+        {
+            get { return _firstGeneration; }
+        }
 
         public void ExpandAndSelect(DirectoryInfo path)
         {
@@ -63,6 +73,28 @@ namespace Funani.Gui.Controls
                 vm.IsExpanded = true;
                 vm.IsSelected = true;
             }
+        }
+
+        public void UploadAllFilesRecursively(DirectoryViewModel dvm)
+        {
+            if (dvm == null)
+                return;
+            DirectoryInfo di = dvm.DirectoryInfo;
+            var t = new Thread(() =>
+                               AddFilesInDirectory(di, true)
+                );
+            t.Start();
+        }
+
+        public void UploadAllFiles(DirectoryViewModel dvm)
+        {
+            if (dvm == null)
+                return;
+            DirectoryInfo di = dvm.DirectoryInfo;
+            var t = new Thread(() =>
+                               AddFilesInDirectory(di, false)
+                );
+            t.Start();
         }
 
         private DirectoryViewModel LookupRoot(DirectoryInfo path)
@@ -78,14 +110,19 @@ namespace Funani.Gui.Controls
             return null;
         }
 
-        public ObservableCollection<DirectoryViewModel> FirstGeneration
-		{
-			get
-			{
-				return _firstGeneration;
-			}
-		}
-
-        readonly ObservableCollection<DirectoryViewModel> _firstGeneration;
+        private void AddFilesInDirectory(DirectoryInfo di, bool recurse)
+        {
+            foreach (FileInfo fi in di.EnumerateFiles())
+            {
+                _engine.CommandQueue.AddCommand(new AddFileCommand(_engine, fi));
+            }
+            if (recurse)
+            {
+                foreach (DirectoryInfo sdi in di.EnumerateDirectories())
+                {
+                    AddFilesInDirectory(sdi, true);
+                }
+            }
+        }
     }
 }

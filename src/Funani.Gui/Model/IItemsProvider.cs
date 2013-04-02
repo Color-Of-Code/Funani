@@ -1,4 +1,6 @@
-﻿namespace Funani.Gui.Model
+﻿using Funani.Api;
+
+namespace Funani.Gui.Model
 {
     using System.Collections.Generic;
 

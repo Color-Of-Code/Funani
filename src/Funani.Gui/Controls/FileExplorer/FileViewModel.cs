@@ -28,117 +28,123 @@
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace Funani.Gui.Controls
+using System;
+using System.ComponentModel;
+using System.IO;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
+using Funani.Api;
+
+namespace Funani.Gui.Controls.FileExplorer
 {
-	using System;
-	using System.ComponentModel;
-	using System.IO;
-    using System.Windows.Media;
-	using System.Windows.Media.Imaging;
+    /// <summary>
+    ///     FileViewModel
+    /// </summary>
+    public class FileViewModel : INotifyPropertyChanged
+    {
+        private const int MaxThumbnailSize = 120;
+        private static readonly UriToThumbnailConverter Converter = new UriToThumbnailConverter(MaxThumbnailSize);
 
-	using Funani.Api;
+        #region INotifyPropertyChanged Members
 
-	/// <summary>
-	/// FileViewModel
-	/// </summary>
-	public class FileViewModel : INotifyPropertyChanged
-	{
-		public FileViewModel(FileInfo fileInfo)
-		{
-			FileInfo = fileInfo;
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        private void TriggerPropertyChanged(string propertyName)
+        {
+            PropertyChangedEventHandler handler = PropertyChanged;
+            if (handler != null)
+                handler(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        #endregion
+
+        private Boolean? _insideFunani;
+        private BitmapSource _thumbnail;
+        private readonly IEngine _engine;
+
+        public FileViewModel(FileInfo fileInfo, IEngine engine)
+        {
+            FileInfo = fileInfo;
+            _engine = engine;
             UpdateInsideFunani();
         }
 
-		public FileInfo FileInfo
-		{
-			get;
-			private set;
-		}
+        public FileInfo FileInfo { get; private set; }
 
-		public string Name
-		{
-			get { return FileInfo.Name; }
-		}
+        public string Name
+        {
+            get { return FileInfo.Name; }
+        }
 
-		public string FullName
-		{
-			get { return FileInfo.FullName; }
-		}
+        public string FullName
+        {
+            get { return FileInfo.FullName; }
+        }
 
-		public long Length
-		{
-			get { return FileInfo.Length; }
-		}
+        public long Length
+        {
+            get { return FileInfo.Length; }
+        }
 
-		public DateTime LastWriteTime
-		{
-			get { return FileInfo.LastWriteTime; }
-		}
+        public DateTime LastWriteTime
+        {
+            get { return FileInfo.LastWriteTime; }
+        }
 
-		public double ThumbnailWidth
-		{
-			get 
+        public double ThumbnailWidth
+        {
+            get
             {
                 if (MaxThumbnailSize < Thumbnail.PixelWidth)
                     return double.NaN;
-                else
-                    return Thumbnail.PixelWidth;
+                return Thumbnail.PixelWidth;
             }
-		}
+        }
 
-		public double ThumbnailHeight
-		{
-			get 
+        public double ThumbnailHeight
+        {
+            get
             {
                 if (MaxThumbnailSize < Thumbnail.PixelHeight)
                     return double.NaN;
-                else
-                    return Thumbnail.PixelHeight;
+                return Thumbnail.PixelHeight;
             }
-		}
+        }
 
-		public Stretch Stretch
-		{
-			get
-			{
-				return Stretch.Uniform;
-			}
-		}
+        public Stretch Stretch
+        {
+            get { return Stretch.Uniform; }
+        }
 
-		public BitmapSource Thumbnail
-		{
-			get
-			{
-				if (_thumbnail == null)
-					_thumbnail = converter.Convert(FullName, typeof(BitmapSource), null, null) as BitmapSource;
-				return _thumbnail;
-			}
-		}
+        public BitmapSource Thumbnail
+        {
+            get
+            {
+                return _thumbnail ??
+                       (_thumbnail = Converter.Convert(FullName, typeof (BitmapSource), null, null) as BitmapSource);
+            }
+        }
 
-		public BitmapScalingMode ScalingMode
-		{
-			get
-			{
-				if (ThumbnailWidth < MaxThumbnailSize && ThumbnailHeight < MaxThumbnailSize)
-					return BitmapScalingMode.Linear;
-				return BitmapScalingMode.HighQuality;
-			}
-		}
+        public BitmapScalingMode ScalingMode
+        {
+            get
+            {
+                if (ThumbnailWidth < MaxThumbnailSize && ThumbnailHeight < MaxThumbnailSize)
+                    return BitmapScalingMode.Linear;
+                return BitmapScalingMode.HighQuality;
+            }
+        }
 
-		private Boolean? _insideFunani;
-		public Boolean? InsideFunani
-		{
-			get
-			{
-				return _insideFunani;
-			}
-			set
-			{
+        public Boolean? InsideFunani
+        {
+            get { return _insideFunani; }
+            set
+            {
                 if (value.HasValue)
                 {
                     if (InsideFunani != value)
                     {
-                        AddOrRemoveFile((bool)value);
+                        AddOrRemoveFile((bool) value);
                     }
                 }
                 else
@@ -147,7 +153,7 @@ namespace Funani.Gui.Controls
                     TriggerPropertyChanged("InsideFunani");
                 }
             }
-		}
+        }
 
         private void AddOrRemoveFile(bool value)
         {
@@ -156,12 +162,12 @@ namespace Funani.Gui.Controls
                 if (value)
                 {
                     // add
-                    Engine.Funani.AddFile(FileInfo);
+                    _engine.AddFile(FileInfo);
                 }
                 else
                 {
                     // remove
-                    Engine.Funani.RemoveFile(FileInfo);
+                    _engine.RemoveFile(FileInfo);
                 }
             }
             finally
@@ -172,25 +178,8 @@ namespace Funani.Gui.Controls
 
         private void UpdateInsideFunani()
         {
-            _insideFunani = Engine.Funani.GetFileInformation(FileInfo) != null;
+            _insideFunani = _engine.GetFileInformation(FileInfo) != null;
             TriggerPropertyChanged("InsideFunani");
         }
-		
-		private BitmapSource _thumbnail;
-		private const int MaxThumbnailSize = 120;
-		private static readonly UriToThumbnailConverter converter = new UriToThumbnailConverter(MaxThumbnailSize);
-		
-		#region INotifyPropertyChanged Members
-
-		public event PropertyChangedEventHandler PropertyChanged;
-
-		private void TriggerPropertyChanged(string propertyName)
-		{
-			var handler = this.PropertyChanged;
-			if (handler != null)
-				handler(this, new PropertyChangedEventArgs(propertyName));
-		}
-
-		#endregion
-	}
+    }
 }

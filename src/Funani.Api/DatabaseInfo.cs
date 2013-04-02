@@ -1,13 +1,10 @@
-﻿namespace Funani.Api
-{
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using System.Xml;
-    using System.Xml.Schema;
-    using System.Xml.Serialization;
+﻿using System;
+using System.Xml;
+using System.Xml.Schema;
+using System.Xml.Serialization;
 
+namespace Funani.Api
+{
     public class DatabaseInfo : IXmlSerializable
     {
         public DatabaseInfo()

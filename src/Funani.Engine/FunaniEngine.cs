@@ -28,38 +28,40 @@
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+using System;
+using System.ComponentModel;
+using System.IO;
+using System.Linq;
+using System.Xml;
+using System.Xml.Serialization;
+using Funani.Api;
+using Funani.Api.Metadata;
+using Funani.FileStorage;
+using Funani.Metadata;
+
 namespace Funani.Engine
 {
-    using System;
-    using System.Collections.Generic;
-    using System.ComponentModel;
-    using System.IO;
-    using System.Linq;
-    using System.Text;
-    using System.Xml;
-    using System.Xml.Serialization;
-
-    using Funani.Api;
-    using Funani.Api.Metadata;
-    using Funani.FileStorage;
-    using Funani.Metadata;
-
     public class FunaniEngine : IEngine
     {
-        public FunaniEngine()
-        {
-        	CommandQueue = new FunaniCommandQueue();
-        }
-
         private IFileStorage _fileStorage;
-        private Metadata.MetadataDatabase _metadata;
         private DatabaseInfo _info;
+        private MetadataDatabase _metadata;
         private String _rootPath;
 
+        public FunaniEngine()
+        {
+            CommandQueue = new FunaniCommandQueue();
+        }
+
+        private String DatabaseInfoPath
+        {
+            get { return Path.Combine(_rootPath, "funani.info"); }
+        }
+
         public Boolean IsValidDatabase(String path)
-		{
-			if (String.IsNullOrWhiteSpace(path) ||
-			    !Directory.Exists(path))
+        {
+            if (String.IsNullOrWhiteSpace(path) ||
+                !Directory.Exists(path))
                 return false;
             if (!File.Exists(Path.Combine(path, "funani.info")))
                 return false;
@@ -67,36 +69,13 @@ namespace Funani.Engine
                 !Directory.Exists(Path.Combine(path, "data")))
                 return false;
             return true;
-		}
-        
-        public ICommandQueue CommandQueue
-        {
-        	get; private set;
         }
+
+        public ICommandQueue CommandQueue { get; private set; }
 
         public DatabaseInfo DatabaseInfo
         {
-            get
-            {
-                return _info;
-            }
-        }
-
-        private String DatabaseInfoPath
-        {
-            get
-            {
-                return Path.Combine(_rootPath, "funani.info");
-            }
-        }
-
-        private void CreateDatabase(String path)
-        {
-            _rootPath = path;
-            _info = new Api.DatabaseInfo();
-            _info.Title = "<Give a title here>";
-            _info.Description = "<Write a description here>";
-            SaveDatabaseInfo();
+            get { return _info; }
         }
 
         public void OpenDatabase(String pathToMongod, String path, IConsoleRedirect listener)
@@ -115,25 +94,6 @@ namespace Funani.Engine
             }
             if (!IsValidDatabase(path))
                 throw new Exception("Invalid Funani Database");
-        }
-
-        private void CommonCreationOpening(String pathToMongod, String path, IConsoleRedirect listener)
-        {
-            XmlSerializer s = new XmlSerializer(typeof(DatabaseInfo));
-            using (var reader = XmlReader.Create(DatabaseInfoPath))
-            {
-                _info = s.Deserialize(reader) as DatabaseInfo;
-            }
-
-            // create the file database
-            _fileStorage = new FileDatabase(path);
-            _fileStorage.Start();
-
-            // create the mongodb
-            _metadata = new MetadataDatabase(pathToMongod, path);
-            _metadata.Start(listener);
-
-            TriggerPropertyChanged(null);
         }
 
         public void CloseDatabase()
@@ -155,19 +115,10 @@ namespace Funani.Engine
             _metadata.Backup();
         }
 
-        private void SaveDatabaseInfo()
-        {
-            XmlSerializer s = new XmlSerializer(typeof(DatabaseInfo));
-            using (var writer = XmlWriter.Create(DatabaseInfoPath))
-            {
-                s.Serialize(writer, _info);
-            }
-        }
-
         public FileInformation AddFile(FileInfo file)
         {
-            var hash = _fileStorage.StoreFile(file);
-            var fileInformation = _metadata.Retrieve(hash, file);
+            string hash = _fileStorage.StoreFile(file);
+            FileInformation fileInformation = _metadata.Retrieve(hash, file);
             TriggerPropertyChanged("TotalFileCount");
             return fileInformation;
         }
@@ -192,7 +143,7 @@ namespace Funani.Engine
             get
             {
                 if (_metadata == null)
-                	return null;
+                    return null;
                 return _metadata.FileInformation;
             }
         }
@@ -206,10 +157,10 @@ namespace Funani.Engine
         {
             return _metadata.Retrieve(file);
         }
-        
+
         public FileInfo GetThumbnail(String hash, String mime)
         {
-        	return _fileStorage.LoadThumbnail(hash, mime);
+            return _fileStorage.LoadThumbnail(hash, mime);
         }
 
         public byte[] GetFileData(String hash)
@@ -235,10 +186,7 @@ namespace Funani.Engine
 
         public string DatabasePath
         {
-            get
-            {
-                return _rootPath;
-            }
+            get { return _rootPath; }
         }
 
         #region INotifyPropertyChanged Members
@@ -247,11 +195,50 @@ namespace Funani.Engine
 
         private void TriggerPropertyChanged(string propertyName)
         {
-            var handler = this.PropertyChanged;
+            PropertyChangedEventHandler handler = PropertyChanged;
             if (handler != null)
                 handler(this, new PropertyChangedEventArgs(propertyName));
         }
 
         #endregion
+
+        private void CreateDatabase(String path)
+        {
+            _rootPath = path;
+            _info = new DatabaseInfo
+                {
+                    Title = "<Give a title here>",
+                    Description = "<Write a description here>"
+                };
+            SaveDatabaseInfo();
+        }
+
+        private void CommonCreationOpening(String pathToMongod, String path, IConsoleRedirect listener)
+        {
+            var s = new XmlSerializer(typeof (DatabaseInfo));
+            using (XmlReader reader = XmlReader.Create(DatabaseInfoPath))
+            {
+                _info = s.Deserialize(reader) as DatabaseInfo;
+            }
+
+            // create the file database
+            _fileStorage = new FileDatabase(path);
+            _fileStorage.Start();
+
+            // create the mongodb
+            _metadata = new MetadataDatabase(pathToMongod, path);
+            _metadata.Start(listener);
+
+            TriggerPropertyChanged(null);
+        }
+
+        private void SaveDatabaseInfo()
+        {
+            var s = new XmlSerializer(typeof (DatabaseInfo));
+            using (XmlWriter writer = XmlWriter.Create(DatabaseInfoPath))
+            {
+                s.Serialize(writer, _info);
+            }
+        }
     }
 }

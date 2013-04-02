@@ -1,5 +1,4 @@
-﻿using MongoDB.Driver.Linq;
-/*
+﻿/*
  * Copyright (c) 2008-2013, Jaap de Haan <jaap.dehaan@color-of-code.de>
  * All rights reserved.
  * 
@@ -29,132 +28,173 @@
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
+using System.Linq;
+using Funani.Api;
+using Funani.Api.Metadata;
+using MongoDB.Bson;
+using MongoDB.Driver;
+using MongoDB.Driver.Builders;
+using MongoDB.Driver.Linq;
+
 namespace Funani.Metadata
 {
-	using System;
-	using System.Collections.Generic;
-	using System.IO;
-	using System.Linq;
-	using System.Text;
-	using System.Text.RegularExpressions;
-	using System.Reflection;
-	using System.Threading;
-	using System.Diagnostics;
-
-	using MongoDB.Driver;
-	using MongoDB.Driver.Builders;
-
-	using Funani.Api;
-	using Funani.Api.Metadata;
-
-	public class MetadataDatabase
-	{
-		public MetadataDatabase(String pathToMongod, String path)
-		{
-			_pathToMongod = pathToMongod;
-			_pathToDatabase = path;
-		}
-
-		public MongoDatabase Funani
-		{ get { return _funani; } }
-
-		public object Database
-		{ get { return _funani; } }
-
-		public FileInformation Retrieve(String hash, FileInfo file)
-		{
-			var files = Funani.GetCollection("fileinfo");
-			var info = files.FindOneByIdAs<FileInformation>(hash);
-			if (info == null)
-			{
-				info = new FileInformation(file);
-				files.Insert<FileInformation>(info);
-			}
-			else
-			{
-				info.AddPath(file);
-				files.Save(info);
-			}
-			return info;
-		}
-
-        public void RefreshMetadata(FileInformation fileinfo, FileInfo file)
+    public class MetadataDatabase
+    {
+        public MetadataDatabase(String pathToMongod, String path)
         {
-            var files = Funani.GetCollection("fileinfo");
-            fileinfo.RefreshMetadata(file);
-            files.Save(fileinfo);
+            _pathToMongod = pathToMongod;
+            _pathToDatabase = path;
         }
-		
-		public IEnumerable<String> GetCollectionNames()
-		{
-			return Funani.GetCollectionNames();
-		}
 
-		public DatabaseStatsResult GetStats()
-		{
-			return Funani.GetStats();
-		}
-
-		public FileInformation Retrieve(FileInfo file)
-		{
-			var files = Funani.GetCollection("fileinfo");
-			string path = file.FullName;
-			var list = new String[] { path };
-			var queryBuilder = new QueryBuilder<FileInformation>();
-			var query = queryBuilder.In(x => x.Paths, list);
-			var info = files.FindOneAs<FileInformation>(query);
-            // check if the provided file is of the same length
-            // than the one stored
-            if (info!= null && info.FileSize != file.Length)
-                info = null;
-            return info;
-		}
-
-		public void RemovePath(FileInfo file)
-		{
-			var files = Funani.GetCollection("fileinfo");
-			string path = file.FullName;
-			var list = new String[] { path };
-			var queryBuilder = new QueryBuilder<FileInformation>();
-			var query = queryBuilder.In(x => x.Paths, list);
-			var info = files.FindOneAs<FileInformation>(query);
-			if (info != null)
-			{
-				info.Paths.Remove(file.FullName);
-				files.Save(info);
-			}
-		}
-
-        public void Save(FileInformation fileinfo)
+        public MongoDatabase Funani
         {
-            if (fileinfo != null)
+            get { return _funani; }
+        }
+
+        public object Database
+        {
+            get { return _funani; }
+        }
+
+        public IQueryable<FileInformation> FileInformation
+        {
+            get
             {
-                var files = Funani.GetCollection("fileinfo");
-                files.Save(fileinfo);
+                MongoCollection<BsonDocument> files = Funani.GetCollection("fileinfo");
+                return files.AsQueryable<FileInformation>();
             }
         }
-
-		public IQueryable<FileInformation> FileInformation
-		{
-			get
-			{
-				var files = Funani.GetCollection("fileinfo");
-				return files.AsQueryable<FileInformation>();
-			}
-		}
 
         public IQueryable<Tag> Tag
         {
             get
             {
-                var tags = Funani.GetCollection("tag");
+                MongoCollection<BsonDocument> tags = Funani.GetCollection("tag");
                 return tags.AsQueryable<Tag>();
+            }
+        }
+
+        private string DatabasePath
+        {
+            get { return Path.Combine(_pathToDatabase, "metadata"); }
+        }
+
+        private string JournalPath
+        {
+            get { return Path.Combine(DatabasePath, "journal"); }
+        }
+
+        #region Private
+
+        private readonly String _pathToDatabase;
+        private readonly String _pathToMongod;
+        private MongoDatabase _funani;
+        private MongoClient _mongoClient;
+        private MongoServer _mongoServer;
+        private Process _process;
+
+        #endregion
+
+        #region Console I/O to listener redirection
+
+        private IConsoleRedirect _listener;
+
+        private void _process_ErrorDataReceived(object sender, DataReceivedEventArgs e)
+        {
+            IConsoleRedirect l = _listener;
+            if (l != null)
+                l.OnErrorDataReceived(e.Data);
+        }
+
+        private void _process_OutputDataReceived(object sender, DataReceivedEventArgs e)
+        {
+            IConsoleRedirect l = _listener;
+            if (l != null)
+                l.OnOutputDataReceived(e.Data);
+        }
+
+        #endregion
+
+        public FileInformation Retrieve(String hash, FileInfo file)
+        {
+            MongoCollection<BsonDocument> files = Funani.GetCollection("fileinfo");
+            var info = files.FindOneByIdAs<FileInformation>(hash);
+            if (info == null)
+            {
+                info = new FileInformation(file);
+                files.Insert(info);
+            }
+            else
+            {
+                info.AddPath(file);
+                files.Save(info);
+            }
+            return info;
+        }
+
+        public void RefreshMetadata(FileInformation fileinfo, FileInfo file)
+        {
+            MongoCollection<BsonDocument> files = Funani.GetCollection("fileinfo");
+            fileinfo.RefreshMetadata(file);
+            files.Save(fileinfo);
+        }
+
+        public IEnumerable<String> GetCollectionNames()
+        {
+            return Funani.GetCollectionNames();
+        }
+
+        public DatabaseStatsResult GetStats()
+        {
+            return Funani.GetStats();
+        }
+
+        public FileInformation Retrieve(FileInfo file)
+        {
+            MongoCollection<BsonDocument> files = Funani.GetCollection("fileinfo");
+            string path = file.FullName;
+            var list = new[] {path};
+            var queryBuilder = new QueryBuilder<FileInformation>();
+            IMongoQuery query = queryBuilder.In(x => x.Paths, list);
+            var info = files.FindOneAs<FileInformation>(query);
+            // check if the provided file is of the same length
+            // than the one stored
+            if (info != null && info.FileSize != file.Length)
+                info = null;
+            return info;
+        }
+
+        public void RemovePath(FileInfo file)
+        {
+            MongoCollection<BsonDocument> files = Funani.GetCollection("fileinfo");
+            string path = file.FullName;
+            var list = new[] {path};
+            var queryBuilder = new QueryBuilder<FileInformation>();
+            IMongoQuery query = queryBuilder.In(x => x.Paths, list);
+            var info = files.FindOneAs<FileInformation>(query);
+            if (info != null)
+            {
+                info.Paths.Remove(file.FullName);
+                files.Save(info);
+            }
+        }
+
+        public void Save(FileInformation fileinfo)
+        {
+            if (fileinfo != null)
+            {
+                MongoCollection<BsonDocument> files = Funani.GetCollection("fileinfo");
+                files.Save(fileinfo);
             }
         }
 
         public void Backup()
         {
-            ProcessStartInfo psi = new ProcessStartInfo();
+            var psi = new ProcessStartInfo();
             psi.FileName = Path.Combine(_pathToMongod, "mongodump.exe");
             psi.Arguments = String.Format(" --db Funani --port {0}", 27017);
             psi.WorkingDirectory = _pathToMongod;
@@ -162,114 +202,72 @@ namespace Funani.Metadata
         }
 
         public void Start(IConsoleRedirect listener)
-		{
-			Stop();
+        {
+            Stop();
 
-			if (!Directory.Exists(DatabasePath))
-				Directory.CreateDirectory(DatabasePath);
-			if (!Directory.Exists(JournalPath))
-				Directory.CreateDirectory(JournalPath);
+            if (!Directory.Exists(DatabasePath))
+                Directory.CreateDirectory(DatabasePath);
+            if (!Directory.Exists(JournalPath))
+                Directory.CreateDirectory(JournalPath);
 
-			_listener = listener;
-			ProcessStartInfo psi = new ProcessStartInfo();
-			psi.FileName = Path.Combine(_pathToMongod, "mongod");
-			psi.Arguments = String.Format(" --journal --dbpath \"{0}\" --port {1}",
-			                              DatabasePath, 27017);
-			psi.CreateNoWindow = true;
-			psi.WindowStyle = ProcessWindowStyle.Hidden;
-			psi.RedirectStandardError = true;
-			psi.RedirectStandardOutput = true;
-			psi.UseShellExecute = false;
-			_process = new Process();
-			_process.StartInfo = psi;
-			_process.OutputDataReceived += new DataReceivedEventHandler(_process_OutputDataReceived);
-			_process.ErrorDataReceived += new DataReceivedEventHandler(_process_ErrorDataReceived);
-			_process.EnableRaisingEvents = true;
-			_process.Start();
-			_process.BeginOutputReadLine();
-			_process.BeginErrorReadLine();
+            _listener = listener;
+            var psi = new ProcessStartInfo();
+            psi.FileName = Path.Combine(_pathToMongod, "mongod");
+            psi.Arguments = String.Format(" --journal --dbpath \"{0}\" --port {1}",
+                                          DatabasePath, 27017);
+            psi.CreateNoWindow = true;
+            psi.WindowStyle = ProcessWindowStyle.Hidden;
+            psi.RedirectStandardError = true;
+            psi.RedirectStandardOutput = true;
+            psi.UseShellExecute = false;
+            _process = new Process();
+            _process.StartInfo = psi;
+            _process.OutputDataReceived += _process_OutputDataReceived;
+            _process.ErrorDataReceived += _process_ErrorDataReceived;
+            _process.EnableRaisingEvents = true;
+            _process.Start();
+            _process.BeginOutputReadLine();
+            _process.BeginErrorReadLine();
 
-			String connectionString = "mongodb://localhost:27017";
+            String connectionString = "mongodb://localhost:27017";
 
-			_mongoClient = new MongoClient(connectionString);
-			_mongoServer = _mongoClient.GetServer();
-			_funani = _mongoServer.GetDatabase("Funani");
-		}
+            _mongoClient = new MongoClient(connectionString);
+            _mongoServer = _mongoClient.GetServer();
+            _funani = _mongoServer.GetDatabase("Funani");
+        }
 
-		public void Stop()
-		{
-			if (_process != null)
-			{
-				if (_mongoServer != null)
-				{
-					try
-					{
-						// according to the documentation there should not be a need to call disconnect
-						_mongoServer.Shutdown();
-					}
-					catch (Exception ex)
-					{
-						Console.WriteLine(ex.Message);
-					}
-				}
+        public void Stop()
+        {
+            if (_process != null)
+            {
+                if (_mongoServer != null)
+                {
+                    try
+                    {
+                        // according to the documentation there should not be a need to call disconnect
+                        _mongoServer.Shutdown();
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine(ex.Message);
+                    }
+                }
 
-				_mongoServer = null;
-				_mongoClient = null;
+                _mongoServer = null;
+                _mongoClient = null;
 
-				try
-				{
-					_process.CloseMainWindow();
-					_process.WaitForExit();
-				}
-				catch (Exception ex)
-				{
-					Console.WriteLine(ex.Message);
-				}
-				_process = null;
-				_listener = null;
-			}
-		}
-
-		private string DatabasePath
-		{
-			get
-			{
-				return Path.Combine(_pathToDatabase, "metadata");
-			}
-		}
-
-		private string JournalPath
-		{
-			get
-			{
-				return Path.Combine(DatabasePath, "journal");
-			}
-		}
-
-		#region Private
-		private Process _process;
-		private String _pathToDatabase;
-		private String _pathToMongod;
-		private MongoClient _mongoClient;
-		private MongoServer _mongoServer;
-		private MongoDatabase _funani;
-		#endregion
-
-		#region Console I/O to listener redirection
-		private void _process_ErrorDataReceived(object sender, DataReceivedEventArgs e)
-		{
-			var l = _listener;
-			if (l != null)
-				l.OnErrorDataReceived(e.Data);
-		}
-
-		private void _process_OutputDataReceived(object sender, DataReceivedEventArgs e)
-		{
-			var l = _listener;
-			if (l != null)
-				l.OnOutputDataReceived(e.Data);
-		}
-		private IConsoleRedirect _listener;
-		#endregion
-	}
+                try
+                {
+                    _process.CloseMainWindow();
+                    _process.WaitForExit();
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                }
+                _process = null;
+                _listener = null;
+            }
+        }
+    }
 }

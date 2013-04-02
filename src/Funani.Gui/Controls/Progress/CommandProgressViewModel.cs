@@ -27,101 +27,112 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
-namespace Funani.Gui.Controls
+
+using System;
+using System.ComponentModel;
+using Funani.Api;
+
+namespace Funani.Gui.Controls.Progress
 {
-	using System;
-	using System.Collections.Generic;
-	using System.ComponentModel;
-	using System.Linq;
-	using System.Text;
-	using System.Windows.Input;
-	
-	using Funani.Api;
-	using Funani.Engine;
+    public class CommandProgressViewModel : INotifyPropertyChanged
+    {
+        private readonly ICommandQueue _model;
+        private String _eta;
+        private String _info;
+        private Int32 _performed;
+        private Int32 _total;
 
-	public class CommandProgressViewModel : INotifyPropertyChanged
-	{
-		public CommandProgressViewModel(ICommandQueue model)
-		{
-			_model = model;
-			BindEvents();
-		}
+        #region INotifyPropertyChanged Members
 
-		private Int32 _total;
-		public Int32 Total
-		{
-			get { return _total; }
-			set { _total = value; OnPropertyChanged("Total"); }
-		}
+        public event PropertyChangedEventHandler PropertyChanged;
 
-		private Int32 _performed;
-		public Int32 Performed
-		{
-			get { return _performed; }
-			set { _performed = value; OnPropertyChanged("Performed"); }
-		}
+        protected virtual void OnPropertyChanged(string propertyName)
+        {
+            PropertyChangedEventHandler handler = PropertyChanged;
+            if (handler != null)
+                handler(this, new PropertyChangedEventArgs(propertyName));
+        }
 
-		private String _info;
-		public String Info
-		{
-			get { return _info; }
-			set { _info = value; OnPropertyChanged("Info"); }
-		}
+        #endregion
 
-		private String _eta;
-		public String Eta
-		{
-			get { return _eta; }
-			set { _eta = value; OnPropertyChanged("Eta"); }
-		}
+        public CommandProgressViewModel(ICommandQueue model)
+        {
+            _model = model;
+            BindEvents();
+        }
 
-		private ICommandQueue _model;
+        public Int32 Total
+        {
+            get { return _total; }
+            set
+            {
+                _total = value;
+                OnPropertyChanged("Total");
+            }
+        }
 
-		#region INotifyPropertyChanged Members
+        public Int32 Performed
+        {
+            get { return _performed; }
+            set
+            {
+                _performed = value;
+                OnPropertyChanged("Performed");
+            }
+        }
 
-		public event PropertyChangedEventHandler PropertyChanged;
+        public String Info
+        {
+            get { return _info; }
+            set
+            {
+                _info = value;
+                OnPropertyChanged("Info");
+            }
+        }
 
-		protected virtual void OnPropertyChanged(string propertyName)
-		{
-			var handler = this.PropertyChanged;
-			if (handler != null)
-				handler(this, new PropertyChangedEventArgs(propertyName));
-		}
+        public String Eta
+        {
+            get { return _eta; }
+            set
+            {
+                _eta = value;
+                OnPropertyChanged("Eta");
+            }
+        }
 
-		#endregion
+        private void model_CommandStarted(object sender, CommandProgressEventArgs e)
+        {
+            Info = e.Command.ToString();
+        }
 
-		private void model_CommandStarted(object sender, CommandProgressEventArgs e)
-		{
-			Info = e.Command.ToString();
-		}
+        private void model_CommandEnded(object sender, CommandProgressEventArgs e)
+        {
+            Performed++;
+            Total = _model.Count;
+            //TODO: refresh Eta
+        }
 
-		private void model_CommandEnded(object sender, CommandProgressEventArgs e)
-		{
-			Performed++;
-			Total = _model.Count;
-			//TODO: refresh Eta
-		}
+        private void model_ThreadStarted(object sender, EventArgs e)
+        {
+            Performed = 0;
+            Total = _model.Count;
+            Info = String.Empty;
+            Eta = String.Empty;
+        }
 
-		private void model_ThreadStarted(object sender, EventArgs e)
-		{
-			Performed = 0;
-			Total = _model.Count;
-			Info = String.Empty;
-			Eta = String.Empty;
-		}
+        private void model_ThreadEnded(object sender, EventArgs e)
+        {
+            Performed = Total;
+            Info = String.Format("{0} actions performed", Total);
+        }
 
-		private void model_ThreadEnded(object sender, EventArgs e)
-		{
-			Performed = Total;
-			Info = String.Format("{0} actions performed", Total);
-		}
-
-		private void BindEvents()
-		{
-			_model.ThreadStarted += model_ThreadStarted;
-			_model.ThreadEnded += model_ThreadEnded;
-			_model.CommandStarted += model_CommandStarted;
-			_model.CommandEnded += model_CommandEnded;
-		}
-	}
+        private void BindEvents()
+        {
+            _model.ThreadStarted += model_ThreadStarted;
+            _model.ThreadEnded += model_ThreadEnded;
+            _model.CommandStarted += model_CommandStarted;
+            _model.CommandEnded += model_CommandEnded;
+        }
+    }
 }

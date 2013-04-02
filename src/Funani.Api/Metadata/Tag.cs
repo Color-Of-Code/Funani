@@ -28,13 +28,10 @@
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+using System;
+
 namespace Funani.Api.Metadata
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-
     public class Tag
     {
         public String Id { get; private set; }

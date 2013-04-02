@@ -28,23 +28,21 @@
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+using System;
+using System.IO;
+using Funani.Api;
+
 namespace Funani.Engine.Commands
 {
-	using System;
-	using System.IO;
-	using System.Windows.Input;
-	
-	using Funani.Api;
-	
-	/// <summary>
-	/// Description of AddFileCommand.
-	/// </summary>
-	public class AddFileCommand : ActionCommand
-	{
-		public AddFileCommand(IEngine engine, FileInfo file)
-			: base( () => engine.AddFile(file) )
-		{
-			Description = String.Format("Adding file '{0}'", file.FullName);
-		}
-	}
+    /// <summary>
+    ///     Description of AddFileCommand.
+    /// </summary>
+    public class AddFileCommand : ActionCommand
+    {
+        public AddFileCommand(IEngine engine, FileInfo file)
+            : base(() => engine.AddFile(file))
+        {
+            Description = String.Format("Adding file '{0}'", file.FullName);
+        }
+    }
 }

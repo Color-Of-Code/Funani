@@ -28,28 +28,25 @@
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+using System;
+using System.Diagnostics;
+using System.Globalization;
+using System.Windows.Data;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
+using Funani.Thumbnailer;
+
 namespace Funani.Gui.Controls
 {
-    using System;
-    using System.Windows;
-    using System.Windows.Data;
-    using System.Windows.Media;
-    using System.Windows.Media.Imaging;
-
-    using Funani.Api.Metadata;
-
-    [ValueConversion(typeof(string), typeof(ImageSource))]
+    [ValueConversion(typeof (string), typeof (ImageSource))]
     public class UriToThumbnailConverter : IValueConverter
     {
-        public UriToThumbnailConverter(int thumbnailSize)
-        {
-            ThumbnailSize = thumbnailSize;
-        }
+        private static readonly BitmapSource DefaultThumbnail;
 
         static UriToThumbnailConverter()
         {
             var packUri = new Uri("pack://application:,,,/Images/funani.png");
-            BitmapImage image = new BitmapImage();
+            var image = new BitmapImage();
             image.BeginInit();
             image.UriSource = packUri;
             image.CacheOption = BitmapCacheOption.OnLoad;
@@ -59,37 +56,36 @@ namespace Funani.Gui.Controls
             if (image.CanFreeze)
                 image.Freeze();
 
-            _defaultThumbnail = image;
+            DefaultThumbnail = image;
         }
 
-        private static readonly BitmapSource _defaultThumbnail;
-
-        public int ThumbnailSize
+        public UriToThumbnailConverter(int thumbnailSize)
         {
-            get;
-            private set;
+            ThumbnailSize = thumbnailSize;
         }
 
-        public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+        public int ThumbnailSize { get; private set; }
+
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-        	if (value == null)
-        		return _defaultThumbnail;
+            if (value == null)
+                return DefaultThumbnail;
             try
             {
-                BitmapSource ret = Funani.Thumbnailer.Thumbnail.Extract(new Uri(value.ToString()),
-                    "image/", ThumbnailSize
+                BitmapSource ret = Thumbnail.Extract(new Uri(value.ToString()),
+                                                     "image/", ThumbnailSize
                     );
                 //TODO: why is this called twice?
-            	System.Diagnostics.Trace.TraceInformation("Generating thumbnail for '{0}'", value);
+                Trace.TraceInformation("Generating thumbnail for '{0}'", value);
                 return ret;
             }
             catch
             {
-                return _defaultThumbnail;
+                return DefaultThumbnail;
             }
         }
 
-        public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
             throw new NotSupportedException();
         }

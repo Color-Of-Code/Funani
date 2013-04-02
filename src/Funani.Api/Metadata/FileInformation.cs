@@ -28,94 +28,93 @@
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+using System;
+using System.Collections.Generic;
+using System.IO;
+using Funani.Api.Utils;
+
 namespace Funani.Api.Metadata
 {
-	using System;
-	using System.Collections.Generic;
-	using System.IO;
-	using System.Linq;
-	using System.Text;
+    public class FileInformation
+    {
+        public FileInformation()
+        {
+            Paths = new List<String>();
+        }
 
-	public class FileInformation
-	{
-		public FileInformation()
-		{
-			Paths = new List<String>();
-		}
-
-		public FileInformation(FileInfo file)
-			: this()
-		{
-			Id = Utils.ComputeHash.SHA1(file);
-			FileSize = file.Length;
-			Title = file.Name;
-			MimeType = MimeExtractor.MimeType.Extract(file);
+        public FileInformation(FileInfo file)
+            : this()
+        {
+            Id = ComputeHash.SHA1(file);
+            FileSize = file.Length;
+            Title = file.Name;
+            MimeType = MimeExtractor.MimeType.Extract(file);
             RefreshMetadata(file);
-			AddPath(file);
-		}
+            AddPath(file);
+        }
 
-		public void AddPath(FileInfo file)
-		{
-			if (!Paths.Contains(file.FullName))
-				Paths.Add(file.FullName);
-		}
-		
-		public void RefreshMetadata(FileInfo file)
-		{
-			var uri = new Uri(file.FullName);
-            var metadata = MetadataExtractor.Metadata.Extract(uri, MimeType);
-			if (metadata != null)
-			{
-				if (metadata.ContainsKey("Width"))
-				    Width = Convert.ToInt64(metadata["Width"]);
-				if (metadata.ContainsKey("Height"))
-				    Height = Convert.ToInt64(metadata["Height"]);
-				
-				if (metadata.ContainsKey("Device"))
-                    Device = metadata["Device"];
-				if (metadata.ContainsKey("DateTaken"))
-					DateTaken = DateTime.ParseExact(metadata["DateTaken"], "dd.MM.yyyy HH:mm:ss", null);
-				if (metadata.ContainsKey("ApplicationName"))
-                    ApplicationName = metadata["ApplicationName"];
-                if (metadata.ContainsKey("Angle"))
-                    Angle = int.Parse(metadata["Angle"]);
-            }
-		}
-		
-		public String Id { get; private set; }
+        public String Id { get; private set; }
         public Int64 FileSize { get; private set; }
-		public String MimeType { get; private set; }
+        public String MimeType { get; private set; }
 
         public IList<String> Paths { get; private set; }
-        
+
         public Int64 Width { get; private set; }
         public Int64 Height { get; private set; }
 
         public Double Latitude { get; set; }
         public Double Longitude { get; set; }
-        
+
         public String Title { get; set; }
 
-		public DateTime? DateTaken { get; set; }    // start date for video
-        public Int64 Duration { get; set; }         // for videos, sound
+        public DateTime? DateTaken { get; set; } // start date for video
+        public Int64 Duration { get; set; } // for videos, sound
 
         public DateTime? LastModification { get; set; }
 
-        public String Device { get; set; }          // digitalizing device
+        public String Device { get; set; } // digitalizing device
         public String ApplicationName { get; set; } // application used to process the data
 
-        public int? Angle { get; set; }             // orientation for view
+        public int? Angle { get; set; } // orientation for view
         public Boolean IsDeleted { get; set; }
 
         // 0 -> 5
         public int? Rating { get; set; }
+
+        public IList<Tag> Tags { get; private set; }
+
+        public void AddPath(FileInfo file)
+        {
+            if (!Paths.Contains(file.FullName))
+                Paths.Add(file.FullName);
+        }
+
+        public void RefreshMetadata(FileInfo file)
+        {
+            var uri = new Uri(file.FullName);
+            Dictionary<string, string> metadata = MetadataExtractor.Metadata.Extract(uri, MimeType);
+            if (metadata != null)
+            {
+                if (metadata.ContainsKey("Width"))
+                    Width = Convert.ToInt64(metadata["Width"]);
+                if (metadata.ContainsKey("Height"))
+                    Height = Convert.ToInt64(metadata["Height"]);
+
+                if (metadata.ContainsKey("Device"))
+                    Device = metadata["Device"];
+                if (metadata.ContainsKey("DateTaken"))
+                    DateTaken = DateTime.ParseExact(metadata["DateTaken"], "dd.MM.yyyy HH:mm:ss", null);
+                if (metadata.ContainsKey("ApplicationName"))
+                    ApplicationName = metadata["ApplicationName"];
+                if (metadata.ContainsKey("Angle"))
+                    Angle = int.Parse(metadata["Angle"]);
+            }
+        }
 
         public void AddTag(Tag tag)
         {
             if (!Tags.Contains(tag))
                 Tags.Add(tag);
         }
-		
-        public IList<Tag> Tags { get; private set; }
     }
 }

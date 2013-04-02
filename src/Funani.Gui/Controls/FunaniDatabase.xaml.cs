@@ -27,26 +27,19 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
+
+using System.Windows.Controls;
+
 namespace Funani.Gui.Controls
 {
-	using System;
-	using System.Collections.Generic;
-	using System.Text;
-	using System.Windows;
-	using System.Windows.Controls;
-	using System.Windows.Data;
-	using System.Windows.Documents;
-	using System.Windows.Input;
-	using System.Windows.Media;
-
-	/// <summary>
-	/// Interaction logic for FunaniDatabase.xaml
-	/// </summary>
-	public partial class FunaniDatabase : UserControl
-	{
-		public FunaniDatabase()
-		{
-			InitializeComponent();
-		}
-	}
+    /// <summary>
+    ///     Interaction logic for FunaniDatabase.xaml
+    /// </summary>
+    public partial class FunaniDatabase : UserControl
+    {
+        public FunaniDatabase()
+        {
+            InitializeComponent();
+        }
+    }
 }

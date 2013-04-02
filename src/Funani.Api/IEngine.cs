@@ -28,124 +28,124 @@
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+using System;
+using System.ComponentModel;
+using System.IO;
+using System.Linq;
+using Funani.Api.Metadata;
+
 namespace Funani.Api
 {
-    using System;
-	using System.ComponentModel;
-    using System.Collections.Generic;
-    using System.IO;
-    using System.Linq;
-    using System.Text;
-
-    using Funani.Api.Metadata;
-
     /// <summary>
-    /// Unification of the metadata and file databases inside this interface.
-    /// Hides the complexity of handling the file storage and querying the
-    /// metadata database.
-    /// TODO: maybe split into a connection information and the engine
+    ///     Unification of the metadata and file databases inside this interface.
+    ///     Hides the complexity of handling the file storage and querying the
+    ///     metadata database.
+    ///     TODO: maybe split into a connection information and the engine
     /// </summary>
     public interface IEngine : INotifyPropertyChanged
     {
-    	/// <summary>
-    	/// Return the command queue associated with this engine for operations
-    	/// performed on a separate worker thread.
-    	/// </summary>
-    	ICommandQueue CommandQueue { get; }
-    	
         /// <summary>
-        /// Allows to check if the provided path points to a valid funani db structure
+        ///     Return the command queue associated with this engine for operations
+        ///     performed on a separate worker thread.
+        /// </summary>
+        ICommandQueue CommandQueue { get; }
+
+        /// <summary>
+        ///     Get the database info for the currently open database
+        /// </summary>
+        DatabaseInfo DatabaseInfo { get; }
+
+        /// <summary>
+        ///     Path to the currently open database
+        /// </summary>
+        String DatabasePath { get; }
+
+        /// <summary>
+        ///     Number of files in the database
+        /// </summary>
+        long TotalFileCount { get; }
+
+        /// <summary>
+        ///     Return the file information as a queryable
+        /// </summary>
+        IQueryable<FileInformation> FileInformation { get; }
+
+        /// <summary>
+        ///     Return the metadata database for direct manipulation
+        /// </summary>
+        object MetadataDatabase { get; }
+
+        /// <summary>
+        ///     Allows to check if the provided path points to a valid funani db structure
         /// </summary>
         /// <param name="path"></param>
         /// <returns></returns>
         Boolean IsValidDatabase(String path);
 
         /// <summary>
-        /// Get the database info for the currently open database
+        ///     Opens a funani database initializing the path if it is initially empty
         /// </summary>
-        DatabaseInfo DatabaseInfo { get; }
-
-        /// <summary>
-        /// Opens a funani database initializing the path if it is initially empty
-        /// </summary>
+        /// <param name="pathToMongod">Path to the directory containing the mongo server executable</param>
         /// <param name="path">Path to the directory containing the funani data</param>
+        /// <param name="listener">Callback interface</param>
         void OpenDatabase(String pathToMongod, String path, IConsoleRedirect listener);
 
         /// <summary>
-        /// Closes the funani database and flushes any pending operation to disk
+        ///     Closes the funani database and flushes any pending operation to disk
         /// </summary>
         void CloseDatabase();
 
         /// <summary>
-        /// Dump the database to a file
+        ///     Dump the database to a file
         /// </summary>
         void Backup();
 
         /// <summary>
-        /// Path to the currently open database
-        /// </summary>
-        String DatabasePath { get; }
-        
-        /// <summary>
-        /// Number of files in the database
-        /// </summary>
-        long TotalFileCount { get; }
-        
-        /// <summary>
-        /// Add a file to the database (if not already present) and get its info back
+        ///     Add a file to the database (if not already present) and get its info back
         /// </summary>
         /// <param name="file"></param>
         /// <returns></returns>
         FileInformation AddFile(FileInfo file);
 
         /// <summary>
-        /// Remove a file path from the metadata but leaves the file inside the storage area.
-        /// A file gets physically removed only by purging the database.
+        ///     Remove a file path from the metadata but leaves the file inside the storage area.
+        ///     A file gets physically removed only by purging the database.
         /// </summary>
         /// <param name="file"></param>
         /// <returns></returns>
         void RemoveFile(FileInfo file);
-        
-        /// <summary>
-        /// Return the file information as a queryable
-        /// </summary>
-        IQueryable<FileInformation> FileInformation {get;}
 
         /// <summary>
-        /// Persist the fileinfo to the metadata database
+        ///     Persist the fileinfo to the metadata database
         /// </summary>
         /// <param name="fileinfo"></param>
         void Save(FileInformation fileinfo);
 
         /// <summary>
-        /// Get the info associated in mongodb for the path of the specified file.
-        /// If no info could be found, null is returned. This method is intended for
-        /// frequent use and does not make any other check than the path/size/timestamp
-        /// check
+        ///     Get the info associated in mongodb for the path of the specified file.
+        ///     If no info could be found, null is returned. This method is intended for
+        ///     frequent use and does not make any other check than the path/size/timestamp
+        ///     check
         /// </summary>
         /// <param name="file"></param>
         /// <returns></returns>
         FileInformation GetFileInformation(FileInfo file);
 
         /// <summary>
-        /// Return a bitmap source for the thumbnail of this file
+        ///     Return a bitmap source for the thumbnail of this file
         /// </summary>
-        /// <param name="hash"></param>
+        /// <param name="hash">Hash of the file to get a thumbnail for</param>
+        /// <param name="mime">Mime-type of the file</param>
         /// <returns></returns>
         FileInfo GetThumbnail(String hash, String mime);
-        
+
         /// <summary>
-        /// Returns the file data of the file with the given hash
+        ///     Returns the file data of the file with the given hash
         /// </summary>
         /// <param name="hash">SHA1 hash of the file to retrieve</param>
         /// <returns>The file contents as a byte array</returns>
         byte[] GetFileData(String hash);
 
         void RefreshMetadata(FileInformation fileinfo);
-
-        /// <summary>
-        /// Return the metadata database for direct manipulation
-        /// </summary>
-        object MetadataDatabase { get; }
     }
 }

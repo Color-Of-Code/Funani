@@ -27,19 +27,21 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
+
+using System;
+using System.Collections.Generic;
+using System.Threading;
+using System.Windows.Input;
+using Funani.Api;
+
 namespace Funani.Engine
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using System.Threading;
-    using System.Windows.Input;
-
-    using Funani.Api;
-    
     public class FunaniCommandQueue : ICommandQueue
     {
+        private readonly Queue<ICommand> _actions;
+        private Int32 _processed;
+        private Thread _thread;
+
         public FunaniCommandQueue()
         {
             _thread = null;
@@ -50,12 +52,12 @@ namespace Funani.Engine
         {
             lock (_actions)
             {
-	            _actions.Enqueue(action);
-	            if (_thread == null)
-	            {
-	                _thread = new Thread(Worker);
-	                _thread.Start();
-	            }
+                _actions.Enqueue(action);
+                if (_thread == null)
+                {
+                    _thread = new Thread(Worker);
+                    _thread.Start();
+                }
             }
         }
 
@@ -65,7 +67,7 @@ namespace Funani.Engine
             {
                 lock (_actions)
                 {
-                	return _actions.Count + _processed;
+                    return _actions.Count + _processed;
                 }
             }
         }
@@ -84,7 +86,7 @@ namespace Funani.Engine
                 while (_actions.Count > 0)
                 {
                     ICommand command = _actions.Peek();
-                    var handler = CommandStarted;
+                    EventHandler<CommandProgressEventArgs> handler = CommandStarted;
                     if (handler != null)
                         handler(this, new CommandProgressEventArgs(command));
 
@@ -92,8 +94,8 @@ namespace Funani.Engine
 
                     lock (_actions)
                     {
-	                    _processed++;
-                    	_actions.Dequeue();
+                        _processed++;
+                        _actions.Dequeue();
                     }
 
                     handler = CommandEnded;
@@ -110,21 +112,17 @@ namespace Funani.Engine
         private void TearDown()
         {
             _thread = null;
-            var handler = ThreadEnded;
+            EventHandler handler = ThreadEnded;
             if (handler != null)
                 handler(this, null);
         }
 
         private void Setup()
         {
-        	_processed = 0;
-            var handler = ThreadStarted;
+            _processed = 0;
+            EventHandler handler = ThreadStarted;
             if (handler != null)
                 handler(this, null);
         }
-
-        private Int32 _processed;
-        private Thread _thread;
-        private Queue<ICommand> _actions;
     }
 }

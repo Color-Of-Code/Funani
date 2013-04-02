@@ -28,81 +28,79 @@
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace Funani.Gui.Controls
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using Funani.Api;
+using Funani.Gui.Model;
+
+namespace Funani.Gui.Controls.FileExplorer
 {
-	using System;
-	using System.Collections.Generic;
-	using System.Diagnostics;
-	using System.IO;
-	using System.Linq;
-	using System.Threading;
-
-	using Funani.Gui.Model;
-
-	/// <summary>
-	/// Implementation of IItemsProvider returning <see cref="FileViewModel"/> items
-	/// </summary>
-	public class FileViewModelProvider : IItemsProvider<FileViewModel>
-	{
-		private readonly int _fetchDelay;
-		private readonly DirectoryInfo _di;
-		private IEnumerable<FileInfo> _files;
+    /// <summary>
+    ///     Implementation of IItemsProvider returning <see cref="FileViewModel" /> items
+    /// </summary>
+    public class FileViewModelProvider : IItemsProvider<FileViewModel>
+    {
+        private readonly DirectoryInfo _di;
+        private readonly IEnumerable<FileInfo> _files;
+        private readonly bool _filterAlreadyStored;
         private IEnumerable<FileViewModel> _filteredFiles;
-        private bool _filterAlreadyStored;
+        private readonly IEngine _engine;
 
-		/// <summary>
-		/// Initializes a new instance of the <see cref="FileViewModelProvider"/> class.
-		/// </summary>
-        public FileViewModelProvider(String path, bool filterAlreadyStored)
-		{
-			_di = new DirectoryInfo(path);
+        /// <summary>
+        ///     Initializes a new instance of the <see cref="FileViewModelProvider" /> class.
+        /// </summary>
+        public FileViewModelProvider(IEngine engine, String path, bool filterAlreadyStored)
+        {
+            _engine = engine;
+            _di = new DirectoryInfo(path);
             _filterAlreadyStored = filterAlreadyStored;
-			try
-			{
-				_files = _di.EnumerateFiles();
-			}
-			catch(Exception ex)
-			{
-				//TODO: handle probable access rights issue in a cleaner fashion
-				_files = new List<FileInfo>(); // empty list...
-			}
-		}
+            try
+            {
+                _files = _di.EnumerateFiles();
+            }
+            catch (Exception)
+            {
+                //TODO: handle probable access rights issue in a cleaner fashion
+                _files = new List<FileInfo>(); // empty list...
+            }
+        }
 
-		/// <summary>
-		/// Fetches the total number of items available.
-		/// </summary>
-		/// <returns></returns>
-		public int FetchCount()
-		{
+        /// <summary>
+        ///     Fetches the total number of items available.
+        /// </summary>
+        /// <returns></returns>
+        public int FetchCount()
+        {
             if (_filterAlreadyStored)
             {
-                _filteredFiles = _files.Select(x => new FileViewModel(x)).Where(x => x.InsideFunani == false);
+                _filteredFiles = _files.Select(x => new FileViewModel(x, _engine))
+                    .Where(x => x.InsideFunani == false);
                 return _filteredFiles.Count();
             }
-            else
-            {
-                return _files.Count();
-            }
-		}
+            return _files.Count();
+        }
 
-		/// <summary>
-		/// Fetches a range of items.
-		/// </summary>
-		/// <param name="startIndex">The start index.</param>
-		/// <param name="count">The number of items to fetch.</param>
-		/// <returns></returns>
-		public IList<FileViewModel> FetchRange(int startIndex, int count)
-		{
-			List<FileViewModel> list = new List<FileViewModel>();
+        /// <summary>
+        ///     Fetches a range of items.
+        /// </summary>
+        /// <param name="startIndex">The start index.</param>
+        /// <param name="count">The number of items to fetch.</param>
+        /// <returns></returns>
+        public IList<FileViewModel> FetchRange(int startIndex, int count)
+        {
+            var list = new List<FileViewModel>();
             if (_filterAlreadyStored)
             {
                 list.AddRange(_filteredFiles.Skip(startIndex).Take(count));
             }
             else
             {
-                list.AddRange(_files.Skip(startIndex).Take(count).Select(x => new FileViewModel(x)));
+                list.AddRange(_files.Skip(startIndex).Take(count).Select(x => new FileViewModel(x, _engine)));
             }
-			return list;
-		}
-	}
+            return list;
+        }
+    }
+
 }

@@ -28,18 +28,18 @@
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+using System;
+using System.IO;
+using Funani.MimeExtractor.Strategy;
+
 namespace Funani.MimeExtractor
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using System.IO;
-
-    using Funani.MimeExtractor.Strategy;
-
     public static class MimeType
     {
+        private static readonly IMimeTypeExtractor _fromExtension = new MimeTypeFromExtensionStrategy();
+        private static readonly IMimeTypeExtractor _fromData = new MimeTypeFromDataStrategy();
+
+        /// <summary>
         /// Extract the Mime type from the file
         /// </summary>
         /// <param name="file"></param>
@@ -54,8 +54,5 @@ namespace Funani.MimeExtractor
                 mime = _fromExtension.ExtractMimeType(file);
             return mime;
         }
-
-        private static readonly IMimeTypeExtractor _fromExtension = new MimeTypeFromExtensionStrategy();
-        private static readonly IMimeTypeExtractor _fromData = new MimeTypeFromDataStrategy();
     }
 }

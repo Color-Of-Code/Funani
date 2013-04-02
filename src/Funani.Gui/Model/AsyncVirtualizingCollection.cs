@@ -1,20 +1,21 @@
-﻿namespace Funani.Gui.Model
-{
-    using System.Collections.Generic;
-    using System.Collections.Specialized;
-    using System.ComponentModel;
-    using System.Threading;
+﻿using System.Collections.Generic;
+using System.Collections.Specialized;
+using System.ComponentModel;
+using System.Threading;
 
+namespace Funani.Gui.Model
+{
     /// <summary>
-    /// Derived VirtualizatingCollection, performing loading asychronously.
+    ///     Derived VirtualizatingCollection, performing loading asychronously.
     /// </summary>
     /// <typeparam name="T">The type of items in the collection</typeparam>
-    public class AsyncVirtualizingCollection<T> : VirtualizingCollection<T>, INotifyCollectionChanged, INotifyPropertyChanged
+    public class AsyncVirtualizingCollection<T> : VirtualizingCollection<T>, INotifyCollectionChanged,
+                                                  INotifyPropertyChanged
     {
         #region Constructors
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="AsyncVirtualizingCollection&lt;T&gt;"/> class.
+        ///     Initializes a new instance of the <see cref="AsyncVirtualizingCollection&lt;T&gt;" /> class.
         /// </summary>
         /// <param name="itemsProvider">The items provider.</param>
         public AsyncVirtualizingCollection(IItemsProvider<T> itemsProvider)
@@ -24,7 +25,7 @@
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="AsyncVirtualizingCollection&lt;T&gt;"/> class.
+        ///     Initializes a new instance of the <see cref="AsyncVirtualizingCollection&lt;T&gt;" /> class.
         /// </summary>
         /// <param name="itemsProvider">The items provider.</param>
         /// <param name="pageSize">Size of the page.</param>
@@ -35,7 +36,7 @@
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="AsyncVirtualizingCollection&lt;T&gt;"/> class.
+        ///     Initializes a new instance of the <see cref="AsyncVirtualizingCollection&lt;T&gt;" /> class.
         /// </summary>
         /// <param name="itemsProvider">The items provider.</param>
         /// <param name="pageSize">Size of the page.</param>
@@ -53,8 +54,8 @@
         private readonly SynchronizationContext _synchronizationContext;
 
         /// <summary>
-        /// Gets the synchronization context used for UI-related operations. This is obtained as
-        /// the current SynchronizationContext when the AsyncVirtualizingCollection is created.
+        ///     Gets the synchronization context used for UI-related operations. This is obtained as
+        ///     the current SynchronizationContext when the AsyncVirtualizingCollection is created.
         /// </summary>
         /// <value>The synchronization context.</value>
         protected SynchronizationContext SynchronizationContext
@@ -67,14 +68,16 @@
         #region INotifyCollectionChanged
 
         /// <summary>
-        /// Occurs when the collection changes.
+        ///     Occurs when the collection changes.
         /// </summary>
         public event NotifyCollectionChangedEventHandler CollectionChanged;
 
         /// <summary>
-        /// Raises the <see cref="E:CollectionChanged"/> event.
+        ///     Raises the <see cref="E:CollectionChanged" /> event.
         /// </summary>
-        /// <param name="e">The <see cref="System.Collections.Specialized.NotifyCollectionChangedEventArgs"/> instance containing the event data.</param>
+        /// <param name="e">
+        ///     The <see cref="System.Collections.Specialized.NotifyCollectionChangedEventArgs" /> instance containing the event data.
+        /// </param>
         protected virtual void OnCollectionChanged(NotifyCollectionChangedEventArgs e)
         {
             NotifyCollectionChangedEventHandler h = CollectionChanged;
@@ -83,11 +86,11 @@
         }
 
         /// <summary>
-        /// Fires the collection reset event.
+        ///     Fires the collection reset event.
         /// </summary>
         private void FireCollectionReset()
         {
-            NotifyCollectionChangedEventArgs e = new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset);
+            var e = new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset);
             OnCollectionChanged(e);
         }
 
@@ -96,14 +99,16 @@
         #region INotifyPropertyChanged
 
         /// <summary>
-        /// Occurs when a property value changes.
+        ///     Occurs when a property value changes.
         /// </summary>
         public event PropertyChangedEventHandler PropertyChanged;
 
         /// <summary>
-        /// Raises the <see cref="E:PropertyChanged"/> event.
+        ///     Raises the <see cref="E:PropertyChanged" /> event.
         /// </summary>
-        /// <param name="e">The <see cref="System.ComponentModel.PropertyChangedEventArgs"/> instance containing the event data.</param>
+        /// <param name="e">
+        ///     The <see cref="System.ComponentModel.PropertyChangedEventArgs" /> instance containing the event data.
+        /// </param>
         protected virtual void OnPropertyChanged(PropertyChangedEventArgs e)
         {
             PropertyChangedEventHandler h = PropertyChanged;
@@ -112,12 +117,12 @@
         }
 
         /// <summary>
-        /// Fires the property changed event.
+        ///     Fires the property changed event.
         /// </summary>
         /// <param name="propertyName">Name of the property.</param>
         private void FirePropertyChanged(string propertyName)
         {
-            PropertyChangedEventArgs e = new PropertyChangedEventArgs(propertyName);
+            var e = new PropertyChangedEventArgs(propertyName);
             OnPropertyChanged(e);
         }
 
@@ -128,24 +133,21 @@
         private bool _isLoading;
 
         /// <summary>
-        /// Gets or sets a value indicating whether the collection is loading.
+        ///     Gets or sets a value indicating whether the collection is loading.
         /// </summary>
         /// <value>
-        /// 	<c>true</c> if this collection is loading; otherwise, <c>false</c>.
+        ///     <c>true</c> if this collection is loading; otherwise, <c>false</c>.
         /// </value>
         public bool IsLoading
         {
-            get
-            {
-                return _isLoading;
-            }
+            get { return _isLoading; }
             set
             {
-                if ( value != _isLoading )
+                if (value != _isLoading)
                 {
                     _isLoading = value;
+                    FirePropertyChanged("IsLoading");
                 }
-                FirePropertyChanged("IsLoading");
             }
         }
 
@@ -154,7 +156,7 @@
         #region Load overrides
 
         /// <summary>
-        /// Asynchronously loads the count of items.
+        ///     Asynchronously loads the count of items.
         /// </summary>
         protected override void LoadCount()
         {
@@ -164,7 +166,7 @@
         }
 
         /// <summary>
-        /// Performed on background thread.
+        ///     Performed on background thread.
         /// </summary>
         /// <param name="args">None required.</param>
         private void LoadCountWork(object args)
@@ -174,18 +176,18 @@
         }
 
         /// <summary>
-        /// Performed on UI-thread after LoadCountWork.
+        ///     Performed on UI-thread after LoadCountWork.
         /// </summary>
         /// <param name="args">Number of items returned.</param>
         private void LoadCountCompleted(object args)
         {
-            Count = (int)args;
+            Count = (int) args;
             IsLoading = false;
             FireCollectionReset();
         }
 
         /// <summary>
-        /// Asynchronously loads the page.
+        ///     Asynchronously loads the page.
         /// </summary>
         /// <param name="index">The index.</param>
         protected override void LoadPage(int index)
@@ -195,24 +197,24 @@
         }
 
         /// <summary>
-        /// Performed on background thread.
+        ///     Performed on background thread.
         /// </summary>
         /// <param name="args">Index of the page to load.</param>
         private void LoadPageWork(object args)
         {
-            int pageIndex = (int)args;
+            var pageIndex = (int) args;
             IList<T> page = FetchPage(pageIndex);
-            SynchronizationContext.Send(LoadPageCompleted, new object[]{ pageIndex, page });
+            SynchronizationContext.Send(LoadPageCompleted, new object[] {pageIndex, page});
         }
 
         /// <summary>
-        /// Performed on UI-thread after LoadPageWork.
+        ///     Performed on UI-thread after LoadPageWork.
         /// </summary>
         /// <param name="args">object[] { int pageIndex, IList(T) page }</param>
         private void LoadPageCompleted(object args)
         {
-            int pageIndex = (int)((object[]) args)[0];
-            IList<T> page = (IList<T>)((object[])args)[1];
+            var pageIndex = (int) ((object[]) args)[0];
+            var page = (IList<T>) ((object[]) args)[1];
 
             PopulatePage(pageIndex, page);
             IsLoading = false;

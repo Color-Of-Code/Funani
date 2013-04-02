@@ -28,55 +28,47 @@
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+using System.Windows;
+using System.Windows.Controls;
+using Funani.Api;
+
 namespace Funani.Gui.Controls
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using System.Windows;
-    using System.Windows.Controls;
-    using System.Windows.Data;
-    using System.Windows.Documents;
-    using System.Windows.Input;
-    using System.Windows.Media;
-    using System.Windows.Media.Imaging;
-    using System.Windows.Navigation;
-    using System.Windows.Shapes;
-
-    using Funani.Api;
-
     /// <summary>
-    /// Interaction logic for MongoDbView.xaml
+    ///     Interaction logic for MongoDbView.xaml
     /// </summary>
     public partial class MongoDbView : UserControl
     {
+        private MongoDbViewModel _viewModel;
+
         public MongoDbView()
         {
             InitializeComponent();
-            _viewModel = new MongoDbViewModel(Dispatcher);
-            DataContext = _viewModel;
         }
-        
-		private void Run_Click(object sender, RoutedEventArgs e)
-		{
-			_viewModel.RunQuery();
-		}
-		
-		private void Button_Click(object sender, RoutedEventArgs e)
-		{
-			_viewModel.RefreshStatistics();
-		}
-		
-        public IConsoleRedirect MongoDbListener
+
+        public IEngine FunaniEngine
         {
-            get
+            set
             {
-                return DataContext as MongoDbViewModel;
+                _viewModel = new MongoDbViewModel(value, Dispatcher);
+                DataContext = _viewModel;
             }
         }
-        
-        private MongoDbViewModel _viewModel;
+
+        public IConsoleRedirect MongoDbListener
+        {
+            get { return DataContext as MongoDbViewModel; }
+        }
+
+        private void Run_Click(object sender, RoutedEventArgs e)
+        {
+            _viewModel.RunQuery();
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            _viewModel.RefreshStatistics();
+        }
 
         private void Backup_Click(object sender, RoutedEventArgs e)
         {

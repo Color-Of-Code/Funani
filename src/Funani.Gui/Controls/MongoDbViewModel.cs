@@ -28,104 +28,95 @@
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
+using System.Windows.Threading;
+using Funani.Api;
+using MongoDB.Driver;
+
 namespace Funani.Gui.Controls
 {
-	using System;
-	using System.Collections.Generic;
-	using System.Collections.ObjectModel;
-	using System.ComponentModel;
-	using System.Linq;
-	using System.Text;
-	using System.Windows.Threading;
+    public class MongoDbViewModel : IConsoleRedirect, INotifyPropertyChanged
+    {
+        private readonly Dispatcher _dispatcher;
+        private readonly IEngine _engine;
 
-	using Funani.Api;
+        #region INotifyPropertyChanged Members
 
-    using MongoDB.Driver;
-    using MongoDB.Driver.Builders;
+        public event PropertyChangedEventHandler PropertyChanged;
 
-	public class MongoDbViewModel : IConsoleRedirect, INotifyPropertyChanged
-	{
-		public MongoDbViewModel(Dispatcher dispatcher)
-		{
-			_dispatcher = dispatcher;
-			Lines = new ObservableCollection<string>();
-		}
+        private void TriggerPropertyChanged(string propertyName)
+        {
+            PropertyChangedEventHandler handler = PropertyChanged;
+            if (handler != null)
+                handler(this, new PropertyChangedEventArgs(propertyName));
+        }
 
-		public ObservableCollection<String> Lines
-		{ get; private set; }
+        #endregion
 
-		public String Query
-		{ get; set; }
+        public MongoDbViewModel(IEngine engine, Dispatcher dispatcher)
+        {
+            _dispatcher = dispatcher;
+            _engine = engine;
+            Lines = new ObservableCollection<string>();
+        }
 
-		public IList<String> QueryResults
-		{ get; set; }
-		
-		public void RunQuery()
-		{
-			TriggerPropertyChanged("QueryResults");
-		}
-		
-		public DatabaseStatsResult Statistics
-		{
-			get 
-			{
+        public ObservableCollection<String> Lines { get; private set; }
+
+        public String Query { get; set; }
+
+        public IList<String> QueryResults { get; set; }
+
+        public DatabaseStatsResult Statistics
+        {
+            get
+            {
                 if (Funani == null)
                     return null;
-				return Funani.GetStats();
-			}
-		}
-		
-		public void RefreshStatistics()
-		{
-			TriggerPropertyChanged("Statistics");
-		}
+                return Funani.GetStats();
+            }
+        }
+
+        private MongoDatabase Funani
+        {
+            get { return _engine.MetadataDatabase as MongoDatabase; }
+        }
+
+        public void OnOutputDataReceived(string data)
+        {
+            if (data != null)
+            {
+                _dispatcher.BeginInvoke((Action) (() =>
+                                                  Lines.Add(data.TrimEnd()))
+                    );
+            }
+        }
+
+        public void OnErrorDataReceived(string data)
+        {
+            if (data != null)
+            {
+                _dispatcher.BeginInvoke((Action) (() =>
+                                                  Lines.Add(data.TrimEnd()))
+                    );
+            }
+        }
+
+        public void RunQuery()
+        {
+            TriggerPropertyChanged("QueryResults");
+        }
+
+        public void RefreshStatistics()
+        {
+            TriggerPropertyChanged("Statistics");
+        }
 
         public void Backup()
         {
-            global::Funani.Gui.Engine.Funani.Backup();
+            _engine.Backup();
         }
-
-		private MongoDatabase Funani
-		{
-			get 
-			{
-				return global::Funani.Gui.Engine.Funani.MetadataDatabase as MongoDatabase;
-			}
-		}
-		
-		public void OnOutputDataReceived(string data)
-		{
-			if (data != null)
-			{
-				_dispatcher.BeginInvoke((Action)(() =>
-				                                 Lines.Add(data.TrimEnd()))
-				                       );
-			}
-		}
-
-		public void OnErrorDataReceived(string data)
-		{
-			if (data != null)
-			{
-				_dispatcher.BeginInvoke((Action)(() =>
-				                                 Lines.Add(data.TrimEnd()))
-				                       );
-			}
-		}
-
-		private Dispatcher _dispatcher;
-		
-		#region INotifyPropertyChanged Members
-
-		public event PropertyChangedEventHandler PropertyChanged;
-
-		private void TriggerPropertyChanged(string propertyName)
-		{
-			var handler = this.PropertyChanged;
-			if (handler != null)
-				handler(this, new PropertyChangedEventArgs(propertyName));
-		}
-
-		#endregion
-	}
+    }
 }

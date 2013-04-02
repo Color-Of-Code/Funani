@@ -28,94 +28,105 @@
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace Funani.Gui.Controls
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text.RegularExpressions;
+using Funani.Api;
+using Funani.Api.Metadata;
+using Funani.Gui.Controls.FileExplorer;
+using Funani.Gui.Model;
+
+namespace Funani.Gui.Controls.DatabaseExplorer
 {
-	using System;
-	using System.Collections.Generic;
-	using System.Diagnostics;
-	using System.IO;
-	using System.Linq;
-    using System.Text.RegularExpressions;
-    using System.Threading;
+    /// <summary>
+    ///     Implementation of IItemsProvider returning <see cref="FileViewModel" /> items
+    /// </summary>
+    public class DatabaseViewModelProvider : IItemsProvider<FileInformationViewModel>
+    {
+        private readonly Boolean _deleted;
+        private readonly String _orderByClause;
+        private readonly String _regexTitle;
+        private readonly String _whereClause;
+        private DateTime? _fromDate;
+        private DateTime? _toDate;
 
-	using Funani.Gui.Model;
-
-	/// <summary>
-	/// Implementation of IItemsProvider returning <see cref="FileViewModel"/> items
-	/// </summary>
-	public class DatabaseViewModelProvider : IItemsProvider<FileInformationViewModel>
-	{
-		/// <summary>
-		/// Initializes a new instance of the <see cref="FileViewModelProvider"/> class.
-		/// </summary>
-        public DatabaseViewModelProvider(Boolean deleted, String regexTitle,
-            String whereClause, String orderByClause, DateTime? fromDate, DateTime? toDate)
-		{
+        /// <summary>
+        ///     Initializes a new instance of the <see cref="FileViewModelProvider" /> class.
+        /// </summary>
+        public DatabaseViewModelProvider(IEngine engine, Boolean deleted, String regexTitle,
+                                         String whereClause, String orderByClause, DateTime? fromDate, DateTime? toDate)
+        {
+            _funaniEngine = engine;
             _deleted = deleted;
             _regexTitle = regexTitle;
             _fromDate = fromDate;
             _toDate = toDate;
-			_whereClause = whereClause;
-			_orderByClause = orderByClause;
-		}
+            _whereClause = whereClause;
+            _orderByClause = orderByClause;
+        }
 
-		public static IEnumerable<String> SupportedOrderingClauses
-		{
-			get
-			{
-				return new String[] {
-					"Default",
-					"DateTaken descending",
-					"DateTaken ascending",
-					"Size descending",
-					"Size ascending",
-					"Rating descending",
-					"Rating ascending"
-				};
-			}
-		}
-		
-		public static IEnumerable<String> SupportedWhereClauses
-		{
-			get
-			{
-				return new String[] {
-					"All",
-					"images",
-					"videos",
-					"others"
-				};
-			}
-		}
+        private readonly IEngine _funaniEngine;
 
-		/// <summary>
-		/// Fetches the total number of items available.
-		/// </summary>
-		/// <returns></returns>
-		public int FetchCount()
-		{
-			return BuildQuery().Count();
-		}
+        public static IEnumerable<String> SupportedOrderingClauses
+        {
+            get
+            {
+                return new[]
+                    {
+                        "Default",
+                        "DateTaken descending",
+                        "DateTaken ascending",
+                        "Size descending",
+                        "Size ascending",
+                        "Rating descending",
+                        "Rating ascending"
+                    };
+            }
+        }
 
-		/// <summary>
-		/// Fetches a range of items.
-		/// </summary>
-		/// <param name="startIndex">The start index.</param>
-		/// <param name="count">The number of items to fetch.</param>
-		/// <returns></returns>
-		public IList<FileInformationViewModel> FetchRange(int startIndex, int count)
-		{
-			var query = BuildQuery();
-			List<FileInformationViewModel> list = new List<FileInformationViewModel>();
-			list.AddRange(
-				query.Skip(startIndex).Take(count).Select(x => new FileInformationViewModel(x))
-			);
-			return list;
-		}
+        public static IEnumerable<String> SupportedWhereClauses
+        {
+            get
+            {
+                return new[]
+                    {
+                        "All",
+                        "images",
+                        "videos",
+                        "others"
+                    };
+            }
+        }
 
-		IQueryable<Funani.Api.Metadata.FileInformation> BuildQuery()
-		{
-			var query = Engine.Funani.FileInformation;
+        /// <summary>
+        ///     Fetches the total number of items available.
+        /// </summary>
+        /// <returns></returns>
+        public int FetchCount()
+        {
+            return BuildQuery().Count();
+        }
+
+        /// <summary>
+        ///     Fetches a range of items.
+        /// </summary>
+        /// <param name="startIndex">The start index.</param>
+        /// <param name="count">The number of items to fetch.</param>
+        /// <returns></returns>
+        public IList<FileInformationViewModel> FetchRange(int startIndex, int count)
+        {
+            IQueryable<FileInformation> query = BuildQuery();
+            var list = new List<FileInformationViewModel>();
+            list.AddRange(
+                query.Skip(startIndex).Take(count).Select(x => new FileInformationViewModel(x, _funaniEngine))
+                );
+            return list;
+        }
+
+        private IQueryable<FileInformation> BuildQuery()
+        {
+            IQueryable<FileInformation> query = _funaniEngine.FileInformation;
             if (_deleted)
                 query = query.Where(x => x.IsDeleted);
             else
@@ -125,7 +136,7 @@ namespace Funani.Gui.Controls
             {
                 try
                 {
-                    Regex regex = new Regex(_regexTitle);
+                    var regex = new Regex(_regexTitle);
                     query = query.Where(x => regex.IsMatch(x.Title));
                 }
                 catch
@@ -142,34 +153,27 @@ namespace Funani.Gui.Controls
                 query = query.Where(x => x.DateTaken <= toDate);
             }
 
-			if (_whereClause == "images")
-				query = query.Where(x => x.MimeType.StartsWith("image/"));
-			else if (_whereClause == "videos")
-				query = query.Where(x => x.MimeType.StartsWith("video/"));
-			else if (_whereClause == "others")
-				query = query.Where(x => !x.MimeType.StartsWith("image/") && !x.MimeType.StartsWith("video/"));
-			
-			if (_orderByClause == "DateTaken descending")
-				query = query.OrderByDescending(x => x.DateTaken);
-			else if (_orderByClause == "DateTaken ascending")
-				query = query.OrderBy(x => x.DateTaken);
-			else if (_orderByClause == "Size descending")
-				query = query.OrderByDescending(x => x.FileSize);
-			else if (_orderByClause == "Size ascending")
-				query = query.OrderBy(x => x.FileSize);
+            if (_whereClause == "images")
+                query = query.Where(x => x.MimeType.StartsWith("image/"));
+            else if (_whereClause == "videos")
+                query = query.Where(x => x.MimeType.StartsWith("video/"));
+            else if (_whereClause == "others")
+                query = query.Where(x => !x.MimeType.StartsWith("image/") && !x.MimeType.StartsWith("video/"));
+
+            if (_orderByClause == "DateTaken descending")
+                query = query.OrderByDescending(x => x.DateTaken);
+            else if (_orderByClause == "DateTaken ascending")
+                query = query.OrderBy(x => x.DateTaken);
+            else if (_orderByClause == "Size descending")
+                query = query.OrderByDescending(x => x.FileSize);
+            else if (_orderByClause == "Size ascending")
+                query = query.OrderBy(x => x.FileSize);
             else if (_orderByClause == "Rating descending")
                 query = query.OrderByDescending(x => x.Rating);
             else if (_orderByClause == "Rating ascending")
                 query = query.OrderBy(x => x.Rating);
 
-			return query;
-		}
-
-        private Boolean _deleted;
-        private DateTime? _fromDate;
-        private DateTime? _toDate;
-        private String _regexTitle;
-        private String _whereClause;
-		private String _orderByClause;
-	}
+            return query;
+        }
+    }
 }

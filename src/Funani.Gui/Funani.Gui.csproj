@@ -119,7 +119,6 @@
     <Compile Include="Controls\TokenizingControl.cs" />
     <Compile Include="Controls\UriToThumbnailConverter.cs" />
     <Compile Include="Controls\VirtualizingWrapPanel.cs" />
-    <Compile Include="Engine\Funani.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>

@@ -8,7 +8,7 @@
     <Grid>
     	<TabControl>
     		<TabItem Header="Console">
-		        <ListView Name="console" ItemsSource="{Binding Lines}">
+		        <ListView Name="Console" ItemsSource="{Binding Lines}">
 		        </ListView>
     		</TabItem>
     		<TabItem Header="Query">
@@ -21,9 +21,9 @@
     					<RowDefinition Height="Auto"></RowDefinition>
     					<RowDefinition></RowDefinition>
     				</Grid.RowDefinitions>
-	    			<TextBox Name="query" Text="{Binding Query}" Grid.Column="0" Grid.Row="0"></TextBox>
-	    			<Button Name="run" Content="Run" Click="Run_Click" Grid.Column="1" Grid.Row="0"></Button>
-			        <ListView Name="queryResult" ItemsSource="{Binding QueryResults}" Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2">
+	    			<TextBox Name="Query" Text="{Binding Query}" Grid.Column="0" Grid.Row="0"></TextBox>
+	    			<Button Name="Run" Content="Run" Click="Run_Click" Grid.Column="1" Grid.Row="0"></Button>
+			        <ListView Name="QueryResult" ItemsSource="{Binding QueryResults}" Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2">
 			        </ListView>
 				</Grid>
     		</TabItem>

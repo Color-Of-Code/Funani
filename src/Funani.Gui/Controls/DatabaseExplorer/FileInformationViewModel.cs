@@ -28,159 +28,157 @@
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace Funani.Gui.Controls
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.IO;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
+using Funani.Api;
+using Funani.Api.Metadata;
+
+namespace Funani.Gui.Controls.DatabaseExplorer
 {
-	using System;
-	using System.Collections.Generic;
-	using System.ComponentModel;
-	using System.IO;
-	using System.Windows.Media;
-	using System.Windows.Media.Imaging;
+    /// <summary>
+    ///     FileViewModel
+    /// </summary>
+    public class FileInformationViewModel : INotifyPropertyChanged
+    {
+        private const int MaxThumbnailSize = 256;
+        private static readonly UriToThumbnailConverter Converter = new UriToThumbnailConverter(MaxThumbnailSize);
 
-	using Funani.Api;
-	using Funani.Api.Metadata;
+        #region INotifyPropertyChanged Members
 
-	/// <summary>
-	/// FileViewModel
-	/// </summary>
-	public class FileInformationViewModel : INotifyPropertyChanged
-	{
-		public FileInformationViewModel(FileInformation fileInformation)
-		{
-			FileInformation = fileInformation;
-		}
+        public event PropertyChangedEventHandler PropertyChanged;
 
-        public override string ToString()
+        private void TriggerPropertyChanged(string propertyName)
         {
-            return String.Format("FileInfo: {0}", Hash);
+            PropertyChangedEventHandler handler = PropertyChanged;
+            if (handler != null)
+                handler(this, new PropertyChangedEventArgs(propertyName));
         }
 
-		public FileInformation FileInformation
-		{
-			get;
-			private set;
-		}
+        #endregion
 
-		public string Hash
-		{
-			get { return FileInformation.Id; }
-		}
+        public FileInformationViewModel(FileInformation fileInformation, IEngine engine)
+        {
+            FileInformation = fileInformation;
+            _engine = engine;
+        }
 
-		public string Title
-		{
-			get { return FileInformation.Title; }
-		}
+        private readonly IEngine _engine;
+        public FileInformation FileInformation { get; private set; }
 
-		public long FileSize
-		{
-			get { return FileInformation.FileSize; }
-		}
+        public string Hash
+        {
+            get { return FileInformation.Id; }
+        }
 
-		public string DateTaken
-		{
-			get { return FileInformation.DateTaken.HasValue ? FileInformation.DateTaken.Value.ToString("yyyy-MM-dd HH:mm:ss") : null; }
-		}
+        public string Title
+        {
+            get { return FileInformation.Title; }
+        }
 
-		public Int64 Width
-		{
-			get { return FileInformation.Width; }
-		}
+        public long FileSize
+        {
+            get { return FileInformation.FileSize; }
+        }
 
-		public Int64 Height
-		{
-			get { return FileInformation.Height; }
-		}
-
-		public string Device
-		{
-			get { return FileInformation.Device; }
-		}
-
-		public string ApplicationName
-		{
-			get { return FileInformation.ApplicationName; }
-		}
-
-		public String MimeType
-		{
-			get { return FileInformation.MimeType; }
-		}
-
-        public int? Angle
+        public string DateTaken
         {
             get
             {
-                return FileInformation.Angle;
+                return FileInformation.DateTaken.HasValue
+                           ? FileInformation.DateTaken.Value.ToString("yyyy-MM-dd HH:mm:ss")
+                           : null;
             }
+        }
+
+        public Int64 Width
+        {
+            get { return FileInformation.Width; }
+        }
+
+        public Int64 Height
+        {
+            get { return FileInformation.Height; }
+        }
+
+        public string Device
+        {
+            get { return FileInformation.Device; }
+        }
+
+        public string ApplicationName
+        {
+            get { return FileInformation.ApplicationName; }
+        }
+
+        public String MimeType
+        {
+            get { return FileInformation.MimeType; }
+        }
+
+        public int? Angle
+        {
+            get { return FileInformation.Angle; }
             set
             {
                 if (FileInformation.Angle != value)
                 {
                     FileInformation.Angle = value;
-                    Funani.Gui.Engine.Funani.Save(FileInformation);
+                    _engine.Save(FileInformation);
                 }
             }
         }
 
         public int? Rating
         {
-            get 
-            {
-                return FileInformation.Rating; 
-            }
+            get { return FileInformation.Rating; }
             set
             {
                 if (FileInformation.Rating != value)
                 {
                     FileInformation.Rating = value;
-                    Funani.Gui.Engine.Funani.Save(FileInformation);
+                    _engine.Save(FileInformation);
                 }
             }
         }
 
         public bool IsDeleted
         {
-            get
-            {
-                return FileInformation.IsDeleted;
-            }
+            get { return FileInformation.IsDeleted; }
             set
             {
                 if (FileInformation.IsDeleted != value)
                 {
                     FileInformation.IsDeleted = value;
-                    Funani.Gui.Engine.Funani.Save(FileInformation);
+                    _engine.Save(FileInformation);
                 }
             }
         }
 
         public IList<String> Paths
-		{
-			get
-			{
-				return FileInformation.Paths;
-			}
-		}
-        
-		public Stretch Stretch
-		{
-			get
-			{
-				return Stretch.Uniform;
-			}
-		}
+        {
+            get { return FileInformation.Paths; }
+        }
 
-		public BitmapSource Thumbnail
-		{
-			get
-			{
-				FileInfo thumbPath = Funani.Gui.Engine.Funani.GetThumbnail(
-					FileInformation.Id, FileInformation.MimeType) as FileInfo;
-				object value = thumbPath==null ? null : thumbPath.FullName;
-				var bitmap = converter.Convert(value, typeof(BitmapSource), null, null) as BitmapSource;
+        public Stretch Stretch
+        {
+            get { return Stretch.Uniform; }
+        }
+
+        public BitmapSource Thumbnail
+        {
+            get
+            {
+                FileInfo thumbPath = _engine.GetThumbnail(
+                    FileInformation.Id, FileInformation.MimeType);
+                object value = thumbPath == null ? null : thumbPath.FullName;
+                var bitmap = Converter.Convert(value, typeof (BitmapSource), null, null) as BitmapSource;
                 return bitmap;
-			}
-		}
+            }
+        }
 
         public BitmapSource Picture
         {
@@ -188,8 +186,8 @@ namespace Funani.Gui.Controls
             {
                 if (MimeType.StartsWith("image/"))
                 {
-                    byte[] data = Funani.Gui.Engine.Funani.GetFileData(FileInformation.Id);
-                    BitmapImage bi = new BitmapImage();
+                    byte[] data = _engine.GetFileData(FileInformation.Id);
+                    var bi = new BitmapImage();
                     bi.BeginInit();
                     bi.StreamSource = new MemoryStream(data);
                     bi.EndInit();
@@ -209,26 +207,15 @@ namespace Funani.Gui.Controls
             }
         }
 
+        public override string ToString()
+        {
+            return String.Format("FileInfo: {0}", Hash);
+        }
+
         public void RefreshMetadata()
-		{
-            Funani.Gui.Engine.Funani.RefreshMetadata(FileInformation);
-			TriggerPropertyChanged(null);
-		}
-		
-		private const int MaxThumbnailSize = 256;
-		private static readonly UriToThumbnailConverter converter = new UriToThumbnailConverter(MaxThumbnailSize);
-		
-		#region INotifyPropertyChanged Members
-
-		public event PropertyChangedEventHandler PropertyChanged;
-
-		private void TriggerPropertyChanged(string propertyName)
-		{
-			var handler = this.PropertyChanged;
-			if (handler != null)
-				handler(this, new PropertyChangedEventArgs(propertyName));
-		}
-
-		#endregion
-	}
+        {
+            _engine.RefreshMetadata(FileInformation);
+            TriggerPropertyChanged(null);
+        }
+    }
 }

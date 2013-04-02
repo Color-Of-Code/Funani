@@ -27,41 +27,39 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
-namespace Funani.Gui.Controls
+
+using System;
+using System.ComponentModel;
+using System.Diagnostics;
+using System.Windows;
+using System.Windows.Controls;
+using Funani.Api;
+using Funani.Api.Metadata;
+using Funani.Gui.Model;
+
+namespace Funani.Gui.Controls.DatabaseExplorer
 {
-	using System;
-	using System.Collections.Generic;
-    using System.ComponentModel;
-    using System.Linq;
-    using System.Text;
-	using System.Windows;
-	using System.Windows.Controls;
-	using System.Windows.Data;
-	using System.Windows.Documents;
-	using System.Windows.Input;
-	using System.Windows.Media;
-
-    using Funani.Gui.Model;
-
     /// <summary>
-	/// Interaction logic for DatabaseView.xaml
-	/// </summary>
-	public partial class DatabaseView : UserControl
-	{
-		public DatabaseView()
-		{
-			InitializeComponent();
-			
-			DataContext = this;
-			
-			comboWhere.ItemsSource = DatabaseViewModelProvider.SupportedWhereClauses;
-			comboOrderBy.ItemsSource = DatabaseViewModelProvider.SupportedOrderingClauses;
+    ///     Interaction logic for DatabaseView.xaml
+    /// </summary>
+    public partial class DatabaseView : UserControl
+    {
+        public DatabaseView()
+        {
+            InitializeComponent();
 
-            tokenizerPeople.TokenMatcher = TokenMatcher;
-            tokenizerLocation.TokenMatcher = TokenMatcher;
-            tokenizerEvent.TokenMatcher = TokenMatcher;
-            tokenizerKeywords.TokenMatcher = TokenMatcher;
+            DataContext = this;
+
+            ComboWhere.ItemsSource = DatabaseViewModelProvider.SupportedWhereClauses;
+            ComboOrderBy.ItemsSource = DatabaseViewModelProvider.SupportedOrderingClauses;
+
+            TokenizerPeople.TokenMatcher = TokenMatcher;
+            TokenizerLocation.TokenMatcher = TokenMatcher;
+            TokenizerEvent.TokenMatcher = TokenMatcher;
+            TokenizerKeywords.TokenMatcher = TokenMatcher;
         }
+
+        public IEngine FunaniEngine { get; set; }
 
         private static String TokenMatcher(String text)
         {
@@ -70,58 +68,60 @@ namespace Funani.Gui.Controls
             return null;
         }
 
-		public void ReloadFiles()
-		{
+        public void ReloadFiles()
+        {
             if (!DesignerProperties.GetIsInDesignMode(this))
             {
-                var provider = new DatabaseViewModelProvider(
-                    (bool)checkBoxDeleted.IsChecked,
-                    regexLookFor.Text as String,
-                    comboWhere.SelectedItem as String,
-                    comboOrderBy.SelectedItem as String,
-                    fromDate.SelectedDate, toDate.SelectedDate);
-                var items = new AsyncVirtualizingCollection<FileInformationViewModel>(provider, 40, 10 * 1000);
-                listControl.DataContext = items;
+                var provider = new DatabaseViewModelProvider(FunaniEngine,
+                    CheckBoxDeleted.IsChecked ?? false,
+                    RegexLookFor.Text,
+                    ComboWhere.SelectedItem as String,
+                    ComboOrderBy.SelectedItem as String,
+                    FromDate.SelectedDate, ToDate.SelectedDate);
+                var items = new AsyncVirtualizingCollection<FileInformationViewModel>(provider, 40, 10*1000);
+                ListControl.DataContext = items;
             }
-		}
-		
-		private void UserControl_GotFocus(object sender, RoutedEventArgs e)
-		{
-			ReloadFiles();
-		}
+        }
+
+        private void UserControl_GotFocus(object sender, RoutedEventArgs e)
+        {
+            ReloadFiles();
+        }
 
         private void RefreshMetadataAll_Click(object sender, RoutedEventArgs e)
         {
-            foreach (var fi in Engine.Funani.FileInformation)
-                Funani.Gui.Engine.Funani.RefreshMetadata(fi);
+            foreach (FileInformation fi in FunaniEngine.FileInformation)
+                FunaniEngine.RefreshMetadata(fi);
             ReloadFiles();
         }
 
         private void RefreshMetadata_Click(object sender, RoutedEventArgs e)
-		{
-			var canvas = sender as Control;
-			var viewModel = canvas.DataContext as FileInformationViewModel;
-			if (listControl.SelectedItem == null || !listControl.SelectedItems.Contains(viewModel))
-			{
-				viewModel.RefreshMetadata();
-			}
-			else
-			{
-				foreach (FileInformationViewModel item in listControl.SelectedItems)
-				{
-					viewModel.RefreshMetadata();
-				}
-			}
-		}
-		
-		private void ReloadFiles_Handler(object sender, SelectionChangedEventArgs e)
-		{
-			ReloadFiles();
-		}
+        {
+            var canvas = sender as Control;
+            Debug.Assert(canvas != null, "canvas is null");
+            var viewModel = canvas.DataContext as FileInformationViewModel;
+            Debug.Assert(viewModel != null, "viewModel != null");
+            if (ListControl.SelectedItem == null || !ListControl.SelectedItems.Contains(viewModel))
+            {
+                viewModel.RefreshMetadata();
+            }
+            else
+            {
+                foreach (FileInformationViewModel item in ListControl.SelectedItems)
+                {
+                    item.RefreshMetadata();
+                }
+            }
+        }
 
         private void ReloadFiles_Handler(object sender, RoutedEventArgs e)
         {
             ReloadFiles();
         }
-	}
+
+        private void ReloadFiles_SelectionChanged_Handler(object sender, SelectionChangedEventArgs e)
+        {
+            ReloadFiles();
+        }
+    }
 }

@@ -27,83 +27,81 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
-namespace Funani.Gui.Controls
+
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
+using System.Threading;
+using System.Windows;
+using System.Windows.Controls;
+using Funani.Api;
+using Funani.Gui.Model;
+
+namespace Funani.Gui.Controls.FileExplorer
 {
-	using System;
-	using System.Collections.Generic;
-	using System.Collections.ObjectModel;
-	using System.IO;
-    using System.Linq;
-    using System.Text;
-    using System.Threading;
-	using System.Windows;
-	using System.Windows.Controls;
-	using System.Windows.Data;
-	using System.Windows.Documents;
-	using System.Windows.Input;
-	using System.Windows.Media;
+    /// <summary>
+    ///     Interaction logic for FileView.xaml
+    /// </summary>
+    public partial class FileView : UserControl
+    {
+        public static readonly DependencyProperty SelectedPathProperty =
+            DependencyProperty.Register("SelectedPath", typeof (string), typeof (FileView),
+                                        new PropertyMetadata(string.Empty, OnSelectedPathChanged));
 
-	using Funani.Gui.Model;
+        private const bool FilterAlreadyStored = false;
 
-	/// <summary>
-	/// Interaction logic for FileView.xaml
-	/// </summary>
-	public partial class FileView : UserControl
-	{
-		public FileView()
-		{
-			InitializeComponent();
-			
-			DataContext = this;
-		}
+        public FileView()
+        {
+            InitializeComponent();
 
-		public string SelectedPath
-		{
-			get { return (string)GetValue(SelectedPathProperty); }
-			set { SetValue(SelectedPathProperty, value); }
-		}
+            DataContext = this;
+        }
 
-        private bool _filterAlreadyStored = false;
+        public IEngine FunaniEngine { get; set; }
 
-		public void ReloadFiles()
-		{
-            var provider = new FileViewModelProvider(SelectedPath, _filterAlreadyStored);
-			var items = new AsyncVirtualizingCollection<FileViewModel>(provider, 20, 10 * 1000);
-			listControl.DataContext = items;
-		}
-		
-		private static void OnSelectedPathChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-		{
-			var fileView = d as FileView;
-			fileView.ReloadFiles();
-		}
-		
-		private void CheckBox_Clicked(object sender, RoutedEventArgs e)
-		{
-			var checkBox = sender as CheckBox;
+        public string SelectedPath
+        {
+            get { return (string) GetValue(SelectedPathProperty); }
+            set { SetValue(SelectedPathProperty, value); }
+        }
+
+        public void ReloadFiles()
+        {
+            var provider = new FileViewModelProvider(FunaniEngine, SelectedPath, FilterAlreadyStored);
+            var items = new AsyncVirtualizingCollection<FileViewModel>(provider, 20, 10*1000);
+            ListControl.DataContext = items;
+        }
+
+        private static void OnSelectedPathChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            var fileView = d as FileView;
+            Debug.Assert(fileView != null, "fileView != null");
+            fileView.ReloadFiles();
+        }
+
+        private void CheckBox_Clicked(object sender, RoutedEventArgs e)
+        {
+            var checkBox = sender as CheckBox;
             bool isChecked = false;
+            Debug.Assert(checkBox != null, "checkBox != null");
             if (checkBox.IsChecked.HasValue)
             {
-                isChecked = (bool)(checkBox.IsChecked);
+                isChecked = (bool) (checkBox.IsChecked);
             }
 
             var viewModel = checkBox.DataContext as FileViewModel;
             var viewModels = new List<FileViewModel>();
 
-            if (listControl.SelectedItem == null || !listControl.SelectedItems.Contains(viewModel))
-			{
+            if (ListControl.SelectedItem == null || !ListControl.SelectedItems.Contains(viewModel))
+            {
                 viewModels.Add(viewModel);
-			}
-			else
-			{
-                viewModels.AddRange(listControl.SelectedItems.Cast<FileViewModel>());
-			}
-
-            Thread backgroundThread;
-            if (isChecked)
-                backgroundThread = new Thread(SetInsideFunani);
+            }
             else
-                backgroundThread = new Thread(ResetInsideFunani);
+            {
+                viewModels.AddRange(ListControl.SelectedItems.Cast<FileViewModel>());
+            }
+
+            Thread backgroundThread = isChecked ? new Thread(SetInsideFunani) : new Thread(ResetInsideFunani);
             backgroundThread.IsBackground = true;
             backgroundThread.Start(viewModels);
         }
@@ -111,6 +109,7 @@ namespace Funani.Gui.Controls
         private static void ResetInsideFunani(object parameter)
         {
             var viewModels = parameter as IList<FileViewModel>;
+            Debug.Assert(viewModels != null, "viewModels != null");
             foreach (FileViewModel item in viewModels)
                 item.InsideFunani = null;
             foreach (FileViewModel item in viewModels)
@@ -120,14 +119,11 @@ namespace Funani.Gui.Controls
         private static void SetInsideFunani(object parameter)
         {
             var viewModels = parameter as IList<FileViewModel>;
+            Debug.Assert(viewModels != null, "viewModels != null");
             foreach (FileViewModel item in viewModels)
                 item.InsideFunani = null;
             foreach (FileViewModel item in viewModels)
                 item.InsideFunani = true;
         }
-
-		public static readonly DependencyProperty SelectedPathProperty =
-			DependencyProperty.Register("SelectedPath", typeof(string), typeof(FileView),
-			                            new PropertyMetadata(string.Empty, OnSelectedPathChanged));
-	}
+    }
 }

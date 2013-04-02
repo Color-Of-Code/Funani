@@ -27,65 +27,68 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
+
+using System;
+using System.ComponentModel;
+using System.IO;
+using System.Windows;
+using Funani.Api;
+using Funani.Engine;
+using Funani.Gui.Controls.Progress;
+using Funani.Gui.Properties;
+using Microsoft.Win32;
+
 namespace Funani.Gui
 {
-    using System;
-    using System.Collections.Generic;
-    using System.IO;
-    using System.Linq;
-    using System.Text;
-    using System.Windows;
-    using System.Windows.Controls;
-    using System.Windows.Data;
-    using System.Windows.Documents;
-    using System.Windows.Input;
-    using System.Windows.Media;
-    using System.Windows.Media.Imaging;
-    using System.Windows.Navigation;
-
-    using Microsoft.Win32;
     using SWF = System.Windows.Forms;
 
-    using Funani.Api;
-    using Funani.Engine;
-
     /// <summary>
-    /// Interaction logic for MainWindow.xaml
+    ///     Interaction logic for MainWindow.xaml
     /// </summary>
     public partial class MainWindow : Window
     {
+        private readonly CommandProgressViewModel _commandQueue;
+        private readonly IEngine _funani = new FunaniEngine();
+
         public MainWindow()
         {
             InitializeComponent();
 
-            Properties.Settings.Default.Upgrade();
-            funaniDatabase.DataContext = _funani;
+            Settings.Default.Upgrade();
+            FunaniDatabase.DataContext = _funani;
 
-            _commandQueue = new Controls.CommandProgressViewModel(Engine.Funani.CommandQueue);
-            progress.DataContext = _commandQueue;
+            _commandQueue = new CommandProgressViewModel(_funani.CommandQueue);
+            Progress.DataContext = _commandQueue;
+
+            DatabaseExplorer.FunaniEngine = _funani;
+            FileExplorer.FunaniEngine = _funani;
+            MongoDbView.FunaniEngine = _funani;
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            var settings = Properties.Settings.Default;
+            Settings settings = Settings.Default;
             EnsureMongodbPathIsValid();
             EnsureFunanidbPathIsValid();
-            _funani.OpenDatabase(settings.MongodbPath, settings.LastFunaniDatabase, mongoDbView.MongoDbListener);
+            _funani.OpenDatabase(settings.MongodbPath, settings.LastFunaniDatabase, MongoDbView.MongoDbListener);
             if (!String.IsNullOrWhiteSpace(settings.LastDirectoryExplorerSelectedPath))
-                directoryExplorer.SelectPath(settings.LastDirectoryExplorerSelectedPath);
+            {
+                DirectoryExplorer.FunaniEngine = _funani;
+                DirectoryExplorer.SelectPath(settings.LastDirectoryExplorerSelectedPath);
+            }
         }
 
-        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        private void Window_Closing(object sender, CancelEventArgs e)
         {
             _funani.CloseDatabase();
-            var settings = Properties.Settings.Default;
-            settings.LastDirectoryExplorerSelectedPath = directoryExplorer.SelectedPath;
+            Settings settings = Settings.Default;
+            settings.LastDirectoryExplorerSelectedPath = DirectoryExplorer.SelectedPath;
             settings.Save();
         }
 
         private void EnsureFunanidbPathIsValid()
         {
-            String funanidbPath = Properties.Settings.Default.LastFunaniDatabase;
+            String funanidbPath = Settings.Default.LastFunaniDatabase;
             if (!_funani.IsValidDatabase(funanidbPath))
             {
                 var ofd = new SWF.FolderBrowserDialog();
@@ -94,13 +97,13 @@ namespace Funani.Gui
                 if (ofd.ShowDialog() == SWF.DialogResult.OK)
                 {
                     var di = new DirectoryInfo(ofd.SelectedPath);
-            		var settings = Properties.Settings.Default;
+                    Settings settings = Settings.Default;
                     settings.LastFunaniDatabase = di.FullName;
                     settings.Save();
                     return;
                 }
 
-                this.Close();
+                Close();
             }
         }
 
@@ -115,7 +118,7 @@ namespace Funani.Gui
 
         private void EnsureMongodbPathIsValid()
         {
-            String mongodbPath = Properties.Settings.Default.MongodbPath;
+            String mongodbPath = Settings.Default.MongodbPath;
             if (!IsMongodbPathValid(mongodbPath))
             {
                 var ofd = new OpenFileDialog();
@@ -127,19 +130,15 @@ namespace Funani.Gui
                     var fi = new FileInfo(ofd.FileName);
                     if (IsMongodbPathValid(fi.DirectoryName))
                     {
-            			var settings = Properties.Settings.Default;
+                        Settings settings = Settings.Default;
                         settings.MongodbPath = fi.DirectoryName;
                         settings.Save();
                         return;
                     }
                 }
 
-                this.Close();
+                Close();
             }
         }
-        
-
-        private IEngine _funani = Engine.Funani;
-		private Controls.CommandProgressViewModel _commandQueue; 
     }
 }

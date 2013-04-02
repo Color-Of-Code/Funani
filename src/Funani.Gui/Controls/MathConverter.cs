@@ -1,21 +1,22 @@
-﻿namespace Funani.Gui.Controls
-{
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Globalization;
-    using System.Windows.Data;
+﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Globalization;
+using System.Linq;
+using System.Windows.Data;
 
+namespace Funani.Gui.Controls
+{
     // Does a math equation on the bound value.
     // Use @VALUE in your mathEquation as a substitute for bound value
     // Operator order is parenthesis first, then Left-To-Right (no operator precedence)
     // from http://rachel53461.wordpress.com/2011/08/20/the-math-converter/
     public class MathConverter : IValueConverter
     {
-        private static readonly char[] _allOperators = new[] { '+', '-', '*', '/', '%', '(', ')' };
+        private static readonly char[] AllOperators = new[] {'+', '-', '*', '/', '%', '(', ')'};
 
-        private static readonly List<string> _grouping = new List<string> { "(", ")" };
-        private static readonly List<string> _operators = new List<string> { "+", "-", "*", "/", "%" };
+        private static readonly List<string> Grouping = new List<string> {"(", ")"};
+        private static readonly List<string> Operators = new List<string> {"+", "-", "*", "/", "%"};
 
         #region IValueConverter Members
 
@@ -23,26 +24,24 @@
         {
             // Parse value into equation and remove spaces
             var mathEquation = parameter as string;
+            Debug.Assert(mathEquation != null, "parameter: MathEquation is null");
             mathEquation = mathEquation.Replace(" ", string.Empty);
             mathEquation = mathEquation.Replace("@VALUE", value.ToString());
 
             // Validate values and get list of numbers in equation
             var numbers = new List<double>();
-            double tmp;
 
-            foreach (string s in mathEquation.Split(_allOperators))
+            foreach (var s in mathEquation.Split(AllOperators).Where(s => s != string.Empty))
             {
-                if (s != string.Empty)
+                double tmp;
+                if (double.TryParse(s, out tmp))
                 {
-                    if (double.TryParse(s, out tmp))
-                    {
-                        numbers.Add(tmp);
-                    }
-                    else
-                    {
-                        // Handle Error - Some non-numeric, operator, or grouping character found in string
-                        throw new InvalidCastException();
-                    }
+                    numbers.Add(tmp);
+                }
+                else
+                {
+                    // Handle Error - Some non-numeric, operator, or grouping character found in string
+                    throw new InvalidCastException();
                 }
             }
 
@@ -72,7 +71,7 @@
                 mathEquation = mathEquation.Remove(0, token.Length);
 
                 // If token is a grouping character, it affects program flow
-                if (_grouping.Contains(token))
+                if (Grouping.Contains(token))
                 {
                     switch (token)
                     {
@@ -86,7 +85,7 @@
                 }
 
                 // If token is an operator, do requested operation
-                if (_operators.Contains(token))
+                if (Operators.Contains(token))
                 {
                     // If next token after operator is a parenthesis, call method recursively
                     string nextToken = GetNextToken(mathEquation);
@@ -110,13 +109,13 @@
                                 numbers[index] = numbers[index] - numbers[index + 1];
                                 break;
                             case "*":
-                                numbers[index] = numbers[index] * numbers[index + 1];
+                                numbers[index] = numbers[index]*numbers[index + 1];
                                 break;
                             case "/":
-                                numbers[index] = numbers[index] / numbers[index + 1];
+                                numbers[index] = numbers[index]/numbers[index + 1];
                                 break;
                             case "%":
-                                numbers[index] = numbers[index] % numbers[index + 1];
+                                numbers[index] = numbers[index]%numbers[index + 1];
                                 break;
                         }
                         numbers.RemoveAt(index + 1);
@@ -145,14 +144,11 @@
             string tmp = string.Empty;
             foreach (char c in mathEquation)
             {
-                if (_allOperators.Contains(c))
+                if (AllOperators.Contains(c))
                 {
-                    return (tmp == string.Empty ? c.ToString() : tmp);
+                    return (tmp == string.Empty ? c.ToString(CultureInfo.InvariantCulture) : tmp);
                 }
-                else
-                {
-                    tmp += c;
-                }
+                tmp += c;
             }
 
             return tmp;
