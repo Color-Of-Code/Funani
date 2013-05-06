@@ -36,9 +36,30 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Catel.Core">
+      <HintPath>..\packages\Catel.Core.3.5\lib\NET40\Catel.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Catel.Extensions.Controls">
+      <HintPath>..\packages\Catel.Extensions.Controls.3.5\lib\NET40\Catel.Extensions.Controls.dll</HintPath>
+    </Reference>
+    <Reference Include="Catel.Extensions.FluentValidation">
+      <HintPath>..\packages\Catel.Extensions.FluentValidation.3.5\lib\NET40\Catel.Extensions.FluentValidation.dll</HintPath>
+    </Reference>
+    <Reference Include="Catel.MVVM">
+      <HintPath>..\packages\Catel.MVVM.3.5\lib\net40\Catel.MVVM.dll</HintPath>
+    </Reference>
+    <Reference Include="MongoDB.Bson">
+      <HintPath>..\packages\mongocsharpdriver.1.8.1\lib\net35\MongoDB.Bson.dll</HintPath>
+    </Reference>
+    <Reference Include="MongoDB.Driver">
+      <HintPath>..\packages\mongocsharpdriver.1.8.1\lib\net35\MongoDB.Driver.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Windows.Interactivity">
+      <HintPath>..\packages\Catel.MVVM.3.5\lib\net40\System.Windows.Interactivity.dll</HintPath>
+    </Reference>
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -157,6 +178,9 @@
     <Resource Include="Images\drive-harddisk.png" />
     <Resource Include="Images\drive-optical.png" />
     <Resource Include="Images\folder-open.png" />
+    <None Include="Fody.targets" />
+    <None Include="FodyWeavers.xml" />
+    <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -175,14 +199,6 @@
     <ProjectReference Include="..\Funani.Thumbnailer\Funani.Thumbnailer.csproj">
       <Project>{324A24A9-72C9-4B47-A7B2-B4420717EE53}</Project>
       <Name>Funani.Thumbnailer</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\mongo-csharp-driver\MongoDB.Bson\MongoDB.Bson.csproj">
-      <Project>{0E9A3A2A-49CD-4F6C-847C-DC79B4B65CE6}</Project>
-      <Name>MongoDB.Bson</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\mongo-csharp-driver\MongoDB.Driver\MongoDB.Driver.csproj">
-      <Project>{AE5166CD-76B0-4911-BD80-CED9521F37A1}</Project>
-      <Name>MongoDB.Driver</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

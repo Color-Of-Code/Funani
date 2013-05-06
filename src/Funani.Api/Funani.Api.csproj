@@ -30,6 +30,12 @@
     <DefineConstants>TRACE</DefineConstants>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Catel.Core">
+      <HintPath>..\packages\Catel.Core.3.5\lib\NET40\Catel.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Catel.Extensions.FluentValidation">
+      <HintPath>..\packages\Catel.Extensions.FluentValidation.3.5\lib\NET40\Catel.Extensions.FluentValidation.dll</HintPath>
+    </Reference>
     <Reference Include="PresentationCore">
       <RequiredTargetFramework>3.0</RequiredTargetFramework>
     </Reference>
@@ -63,6 +69,11 @@
       <Project>{C81E3F0E-F9C0-4E13-A1A7-513FDD1BDC38}</Project>
       <Name>Funani.MimeExtractor</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Fody.targets" />
+    <None Include="FodyWeavers.xml" />
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.Targets" />
 </Project>

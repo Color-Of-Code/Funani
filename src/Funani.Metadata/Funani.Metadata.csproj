@@ -36,6 +36,15 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="FluentMongo">
+      <HintPath>..\packages\FluentMongo.1.3.1.1\lib\FluentMongo.dll</HintPath>
+    </Reference>
+    <Reference Include="MongoDB.Bson">
+      <HintPath>..\packages\mongocsharpdriver.1.8.1\lib\net35\MongoDB.Bson.dll</HintPath>
+    </Reference>
+    <Reference Include="MongoDB.Driver">
+      <HintPath>..\packages\mongocsharpdriver.1.8.1\lib\net35\MongoDB.Driver.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
@@ -58,14 +67,9 @@
       <Project>{1FA8961F-CA82-41D2-856A-2F3732BF2E64}</Project>
       <Name>Funani.Api</Name>
     </ProjectReference>
-    <ProjectReference Include="..\mongo-csharp-driver\MongoDB.Bson\MongoDB.Bson.csproj">
-      <Project>{0E9A3A2A-49CD-4F6C-847C-DC79B4B65CE6}</Project>
-      <Name>MongoDB.Bson</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\mongo-csharp-driver\MongoDB.Driver\MongoDB.Driver.csproj">
-      <Project>{AE5166CD-76B0-4911-BD80-CED9521F37A1}</Project>
-      <Name>MongoDB.Driver</Name>
-    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
