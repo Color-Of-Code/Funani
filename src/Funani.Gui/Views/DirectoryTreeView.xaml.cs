@@ -42,7 +42,7 @@ namespace Funani.Gui.Views
     /// <summary>
     ///     Interaction logic for DirectoryTreeView.xaml
     /// </summary>
-    public partial class DirectoryTreeView : UserControl
+    public partial class DirectoryTreeView : Catel.Windows.Controls.UserControl
     {
         public static readonly DependencyProperty SelectedPathProperty =
             DependencyProperty.Register("SelectedPath", typeof (string), typeof (DirectoryTreeView),

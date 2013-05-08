@@ -33,28 +33,16 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Windows.Threading;
+using Catel.MVVM;
 using Funani.Api;
 using MongoDB.Driver;
 
 namespace Funani.Gui.ViewModels
 {
-    public class MongoDbViewModel : IConsoleRedirect, INotifyPropertyChanged
+    public class MongoDbViewModel : ViewModelBase, IConsoleRedirect
     {
         private readonly Dispatcher _dispatcher;
         private readonly IEngine _engine;
-
-        #region INotifyPropertyChanged Members
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        private void TriggerPropertyChanged(string propertyName)
-        {
-            PropertyChangedEventHandler handler = PropertyChanged;
-            if (handler != null)
-                handler(this, new PropertyChangedEventArgs(propertyName));
-        }
-
-        #endregion
 
         public MongoDbViewModel(IEngine engine, Dispatcher dispatcher)
         {
@@ -106,12 +94,12 @@ namespace Funani.Gui.ViewModels
 
         public void RunQuery()
         {
-            TriggerPropertyChanged("QueryResults");
+            RaisePropertyChanged("QueryResults");
         }
 
         public void RefreshStatistics()
         {
-            TriggerPropertyChanged("Statistics");
+            RaisePropertyChanged("Statistics");
         }
 
         public void Backup()

@@ -38,7 +38,7 @@ namespace Funani.Gui.Views
     /// <summary>
     ///     Interaction logic for MongoDbView.xaml
     /// </summary>
-    public partial class MongoDbView : UserControl
+    public partial class MongoDbView : Catel.Windows.Controls.UserControl
     {
         private MongoDbViewModel _viewModel;
 

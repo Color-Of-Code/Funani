@@ -33,96 +33,97 @@ using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Threading;
+using Catel.MVVM;
 using Funani.Api;
 using Funani.Engine.Commands;
 
 namespace Funani.Gui.ViewModels
 {
-    public class DirectoryTreeViewModel
-    {
-        private readonly IEngine _engine;
-        private readonly ObservableCollection<DirectoryViewModel> _firstGeneration;
+	public class DirectoryTreeViewModel : ViewModelBase
+	{
+		private readonly IEngine _engine;
+		private readonly ObservableCollection<DirectoryViewModel> _firstGeneration;
 
-        public DirectoryTreeViewModel(IEngine engine)
-        {
-            _engine = engine;
-            IEnumerable<DirectoryInfo> rootDirectories = Directory.GetLogicalDrives().Select(x => new DirectoryInfo(x));
-            _firstGeneration = new ObservableCollection<DirectoryViewModel>();
-            foreach (DirectoryInfo model in rootDirectories)
-            {
-                try
-                {
-                    _firstGeneration.Add(new DirectoryViewModel(model));
-                }
-                catch
-                {
-                }
-            }
-        }
+		public DirectoryTreeViewModel(IEngine engine)
+		{
+			_engine = engine;
+			IEnumerable<DirectoryInfo> rootDirectories = Directory.GetLogicalDrives().Select(x => new DirectoryInfo(x));
+			_firstGeneration = new ObservableCollection<DirectoryViewModel>();
+			foreach (DirectoryInfo model in rootDirectories)
+			{
+				try
+				{
+					_firstGeneration.Add(new DirectoryViewModel(model));
+				}
+				catch
+				{
+				}
+			}
+		}
 
-        public ObservableCollection<DirectoryViewModel> FirstGeneration
-        {
-            get { return _firstGeneration; }
-        }
+		public ObservableCollection<DirectoryViewModel> FirstGeneration
+		{
+			get { return _firstGeneration; }
+		}
 
-        public void ExpandAndSelect(DirectoryInfo path)
-        {
-            DirectoryViewModel vm = Lookup(path);
-            if (vm != null)
-            {
-                vm.IsExpanded = true;
-                vm.IsSelected = true;
-            }
-        }
+		public void ExpandAndSelect(DirectoryInfo path)
+		{
+			DirectoryViewModel vm = Lookup(path);
+			if (vm != null)
+			{
+				vm.IsExpanded = true;
+				vm.IsSelected = true;
+			}
+		}
 
-        public void UploadAllFilesRecursively(DirectoryViewModel dvm)
-        {
-            if (dvm == null)
-                return;
-            DirectoryInfo di = dvm.DirectoryInfo;
-            var t = new Thread(() =>
-                               AddFilesInDirectory(di, true)
-                );
-            t.Start();
-        }
+		public void UploadAllFilesRecursively(DirectoryViewModel dvm)
+		{
+			if (dvm == null)
+				return;
+			DirectoryInfo di = dvm.DirectoryInfo;
+			var t = new Thread(() =>
+			                   AddFilesInDirectory(di, true)
+			                  );
+			t.Start();
+		}
 
-        public void UploadAllFiles(DirectoryViewModel dvm)
-        {
-            if (dvm == null)
-                return;
-            DirectoryInfo di = dvm.DirectoryInfo;
-            var t = new Thread(() =>
-                               AddFilesInDirectory(di, false)
-                );
-            t.Start();
-        }
+		public void UploadAllFiles(DirectoryViewModel dvm)
+		{
+			if (dvm == null)
+				return;
+			DirectoryInfo di = dvm.DirectoryInfo;
+			var t = new Thread(() =>
+			                   AddFilesInDirectory(di, false)
+			                  );
+			t.Start();
+		}
 
-        private DirectoryViewModel LookupRoot(DirectoryInfo path)
-        {
-            return FirstGeneration.FirstOrDefault(x => x.DirectoryInfo.Name == path.Root.Name);
-        }
+		private DirectoryViewModel LookupRoot(DirectoryInfo path)
+		{
+			return FirstGeneration.FirstOrDefault(x => x.DirectoryInfo.Name == path.Root.Name);
+		}
 
-        private DirectoryViewModel Lookup(DirectoryInfo path)
-        {
-            DirectoryViewModel root = LookupRoot(path);
-            if (root != null)
-                return root.Lookup(path);
-            return null;
-        }
+		private DirectoryViewModel Lookup(DirectoryInfo path)
+		{
+			DirectoryViewModel root = LookupRoot(path);
+			if (root != null)
+				return root.Lookup(path);
+			return null;
+		}
 
-        private void AddFilesInDirectory(DirectoryInfo di, bool recurse)
-        {
-            foreach (FileInfo fi in di.EnumerateFiles())
-            {
-                _engine.CommandQueue.AddCommand(new AddFileCommand(_engine, fi));
-            }
-            if (recurse)
-            {
-                foreach (DirectoryInfo sdi in di.EnumerateDirectories())
-                {
-                    AddFilesInDirectory(sdi, true);
-                }
-            }
-        }
-    }
+		private void AddFilesInDirectory(DirectoryInfo di, bool recurse)
+		{
+			foreach (FileInfo fi in di.EnumerateFiles())
+			{
+				_engine.CommandQueue.AddCommand(new AddFileCommand(_engine, fi));
+			}
+			if (recurse)
+			{
+				foreach (DirectoryInfo sdi in di.EnumerateDirectories())
+				{
+					AddFilesInDirectory(sdi, true);
+				}
+			}
+		}
+	}
 }
