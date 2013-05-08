@@ -8,3 +8,4 @@ bin
 /src/packages/Fody.*
 /src/packages/FluentMongo.*
 /src/packages/mongocsharpdriver.*
+/src/packages/NUnit*
