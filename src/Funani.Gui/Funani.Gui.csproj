@@ -15,6 +15,7 @@
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <WarningLevel>4</WarningLevel>
+    <NoWin32Manifest>False</NoWin32Manifest>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
     <PlatformTarget>x86</PlatformTarget>
@@ -77,14 +78,26 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="ViewModels\DirectoryTreeViewModel.cs" />
+    <Compile Include="ViewModels\DirectoryViewModel.cs" />
+    <Compile Include="ViewModels\FileViewModel.cs" />
+    <Compile Include="ViewModels\MongoDbViewModel.cs" />
+    <Compile Include="Views\DirectoryTreeView.xaml.cs">
+      <DependentUpon>DirectoryTreeView.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Views\FileView.xaml.cs">
+      <DependentUpon>FileView.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Views\FunaniDatabase.xaml.cs">
+      <DependentUpon>FunaniDatabase.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Views\MongoDbView.xaml.cs">
+      <DependentUpon>MongoDbView.xaml</DependentUpon>
+    </Compile>
     <Page Include="Controls\DatabaseExplorer\DatabaseView.xaml" />
-    <Page Include="Controls\FileExplorer\DirectoryExplorer.xaml" />
-    <Page Include="Controls\FileExplorer\FileView.xaml" />
-    <Page Include="Controls\FunaniDatabase.xaml" />
-    <Page Include="Controls\MongoDbView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="Controls\Progress\CommandProgressControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -107,28 +120,9 @@
     </Compile>
     <Compile Include="Controls\DatabaseExplorer\DatabaseViewModelProvider.cs" />
     <Compile Include="Controls\DatabaseExplorer\FileInformationViewModel.cs" />
-    <Compile Include="Controls\FileExplorer\DirectoryExplorer.xaml.cs">
-      <DependentUpon>DirectoryExplorer.xaml</DependentUpon>
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Controls\FileExplorer\DirectoryTreeViewModel.cs" />
-    <Compile Include="Controls\FileExplorer\DirectoryViewModel.cs" />
-    <Compile Include="Controls\FileExplorer\FileView.xaml.cs">
-      <DependentUpon>FileView.xaml</DependentUpon>
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Controls\FileExplorer\FileViewModel.cs" />
     <Compile Include="Controls\FileExplorer\FileViewModelProvider.cs" />
-    <Compile Include="Controls\FunaniDatabase.xaml.cs">
-      <DependentUpon>FunaniDatabase.xaml</DependentUpon>
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="Controls\HeaderToImageConverter.cs" />
     <Compile Include="Controls\MathConverter.cs" />
-    <Compile Include="Controls\MongoDbView.xaml.cs">
-      <DependentUpon>MongoDbView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\MongoDbViewModel.cs" />
     <Compile Include="Controls\PixelBasedScrollingBehaviour.cs" />
     <Compile Include="Controls\Progress\CommandProgressControl.xaml.cs">
       <DependentUpon>CommandProgressControl.xaml</DependentUpon>
@@ -144,11 +138,18 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="Views\DirectoryTreeView.xaml" />
+    <Page Include="Views\FileView.xaml" />
+    <Page Include="Views\FunaniDatabase.xaml" />
+    <Page Include="Views\MongoDbView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Model\AsyncVirtualizingCollection.cs" />
-    <Compile Include="Model\IItemsProvider.cs" />
-    <Compile Include="Model\VirtualizingCollection.cs" />
+    <Compile Include="Models\AsyncVirtualizingCollection.cs" />
+    <Compile Include="Models\IItemsProvider.cs" />
+    <Compile Include="Models\VirtualizingCollection.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -200,6 +201,10 @@
       <Project>{324A24A9-72C9-4B47-A7B2-B4420717EE53}</Project>
       <Name>Funani.Thumbnailer</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Views" />
+    <Folder Include="ViewModels" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -35,7 +35,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 
-namespace Funani.Gui.Controls.FileExplorer
+namespace Funani.Gui.ViewModels
 {
     [DebuggerDisplay("{DirectoryInfo}")]
     public class DirectoryViewModel : INotifyPropertyChanged

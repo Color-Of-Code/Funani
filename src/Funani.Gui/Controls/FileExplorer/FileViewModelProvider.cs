@@ -32,8 +32,10 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+
 using Funani.Api;
 using Funani.Gui.Model;
+using Funani.Gui.ViewModels;
 
 namespace Funani.Gui.Controls.FileExplorer
 {

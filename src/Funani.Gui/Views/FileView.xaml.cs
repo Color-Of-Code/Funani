@@ -34,15 +34,18 @@ using System.Linq;
 using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
-using Funani.Api;
-using Funani.Gui.Model;
 
-namespace Funani.Gui.Controls.FileExplorer
+using Funani.Api;
+using Funani.Gui.Controls.FileExplorer;
+using Funani.Gui.Model;
+using Funani.Gui.ViewModels;
+
+namespace Funani.Gui.Views
 {
     /// <summary>
     ///     Interaction logic for FileView.xaml
     /// </summary>
-    public partial class FileView : UserControl
+    public partial class FileView : Catel.Windows.Controls.UserControl
     {
         public static readonly DependencyProperty SelectedPathProperty =
             DependencyProperty.Register("SelectedPath", typeof (string), typeof (FileView),

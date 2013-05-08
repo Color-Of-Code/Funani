@@ -33,30 +33,20 @@ using System.ComponentModel;
 using System.IO;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using Funani.Api;
 
-namespace Funani.Gui.Controls.FileExplorer
+using Catel.MVVM;
+using Funani.Api;
+using Funani.Gui.Controls;
+
+namespace Funani.Gui.ViewModels
 {
     /// <summary>
     ///     FileViewModel
     /// </summary>
-    public class FileViewModel : INotifyPropertyChanged
+    public class FileViewModel : ViewModelBase
     {
         private const int MaxThumbnailSize = 120;
         private static readonly UriToThumbnailConverter Converter = new UriToThumbnailConverter(MaxThumbnailSize);
-
-        #region INotifyPropertyChanged Members
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        private void TriggerPropertyChanged(string propertyName)
-        {
-            PropertyChangedEventHandler handler = PropertyChanged;
-            if (handler != null)
-                handler(this, new PropertyChangedEventArgs(propertyName));
-        }
-
-        #endregion
 
         private Boolean? _insideFunani;
         private BitmapSource _thumbnail;
@@ -150,7 +140,7 @@ namespace Funani.Gui.Controls.FileExplorer
                 else
                 {
                     _insideFunani = null;
-                    TriggerPropertyChanged("InsideFunani");
+                    RaisePropertyChanged("InsideFunani");
                 }
             }
         }
@@ -179,7 +169,7 @@ namespace Funani.Gui.Controls.FileExplorer
         private void UpdateInsideFunani()
         {
             _insideFunani = _engine.GetFileInformation(FileInfo) != null;
-            TriggerPropertyChanged("InsideFunani");
+            RaisePropertyChanged("InsideFunani");
         }
     }
 }

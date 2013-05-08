@@ -36,7 +36,7 @@ using System.Windows.Threading;
 using Funani.Api;
 using MongoDB.Driver;
 
-namespace Funani.Gui.Controls
+namespace Funani.Gui.ViewModels
 {
     public class MongoDbViewModel : IConsoleRedirect, INotifyPropertyChanged
     {

@@ -32,23 +32,25 @@ using System.IO;
 using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
+
 using Funani.Api;
 using Funani.Engine.Commands;
+using Funani.Gui.ViewModels;
 
-namespace Funani.Gui.Controls.FileExplorer
+namespace Funani.Gui.Views
 {
     /// <summary>
-    ///     Interaction logic for FileExplorer.xaml
+    ///     Interaction logic for DirectoryTreeView.xaml
     /// </summary>
-    public partial class DirectoryExplorer : UserControl
+    public partial class DirectoryTreeView : UserControl
     {
         public static readonly DependencyProperty SelectedPathProperty =
-            DependencyProperty.Register("SelectedPath", typeof (string), typeof (DirectoryExplorer),
+            DependencyProperty.Register("SelectedPath", typeof (string), typeof (DirectoryTreeView),
                                         new PropertyMetadata(string.Empty));
 
         private DirectoryTreeViewModel _viewModel;
 
-        public DirectoryExplorer()
+        public DirectoryTreeView()
         {
             InitializeComponent();
 

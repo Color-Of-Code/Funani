@@ -36,7 +36,7 @@ using System.Threading;
 using Funani.Api;
 using Funani.Engine.Commands;
 
-namespace Funani.Gui.Controls.FileExplorer
+namespace Funani.Gui.ViewModels
 {
     public class DirectoryTreeViewModel
     {

@@ -1,8 +1,11 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Window
-	x:Class="Funani.Gui.MainWindow" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:funani="clr-namespace:Funani.Gui.Controls"
+	x:Class="Funani.Gui.MainWindow"
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
+	xmlns:funani="clr-namespace:Funani.Gui.Views"
+	xmlns:dirExplorer="clr-namespace:Funani.Gui.Controls.FileExplorer"
 	xmlns:databaseExplorer="clr-namespace:Funani.Gui.Controls.DatabaseExplorer"
-	xmlns:fileExplorer="clr-namespace:Funani.Gui.Controls.FileExplorer"
 	xmlns:progress="clr-namespace:Funani.Gui.Controls.Progress"
 	Title="Funani - manage big amount of files easily"
 	Loaded="Window_Loaded"
@@ -78,27 +81,27 @@
 						<ColumnDefinition
 							Width="2*"></ColumnDefinition>
 					</Grid.ColumnDefinitions>
-					<fileExplorer:DirectoryExplorer
+					<funani:DirectoryTreeView
 						Grid.Column="0"
-						x:Name="DirectoryExplorer"></fileExplorer:DirectoryExplorer>
+						x:Name="DirectoryExplorer"></funani:DirectoryTreeView>
 					<GridSplitter
 						Grid.Column="1"
 						HorizontalAlignment="Stretch"
 						VerticalAlignment="Stretch"></GridSplitter>
-					<fileExplorer:FileView
+					<funani:FileView
 						Grid.Column="2"
 						x:Name="FileExplorer"
-						SelectedPath="{Binding ElementName=DirectoryExplorer, Path=SelectedPath}"></fileExplorer:FileView>
+						SelectedPath="{Binding ElementName=DirectoryExplorer, Path=SelectedPath}"></funani:FileView>
 				</Grid>
 			</TabItem>
 			<TabItem>
 				<TabItem.Header>
 					<StackPanel
 						Orientation="Horizontal">
-                        <TextBlock
+						<TextBlock
 							VerticalAlignment="Center"><Run Text="Database explorer"/></TextBlock>
-                    </StackPanel>
-                </TabItem.Header>
+					</StackPanel>
+				</TabItem.Header>
 				<Grid>
 					<databaseExplorer:DatabaseView
 						Grid.Column="0"

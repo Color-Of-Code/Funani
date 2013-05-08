@@ -28,51 +28,18 @@
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-using System.Windows;
 using System.Windows.Controls;
-using Funani.Api;
 
-namespace Funani.Gui.Controls
+namespace Funani.Gui.Views
 {
     /// <summary>
-    ///     Interaction logic for MongoDbView.xaml
+    ///     Interaction logic for FunaniDatabase.xaml
     /// </summary>
-    public partial class MongoDbView : UserControl
+    public partial class FunaniDatabase : UserControl
     {
-        private MongoDbViewModel _viewModel;
-
-        public MongoDbView()
+        public FunaniDatabase()
         {
             InitializeComponent();
-        }
-
-        public IEngine FunaniEngine
-        {
-            set
-            {
-                _viewModel = new MongoDbViewModel(value, Dispatcher);
-                DataContext = _viewModel;
-            }
-        }
-
-        public IConsoleRedirect MongoDbListener
-        {
-            get { return DataContext as MongoDbViewModel; }
-        }
-
-        private void Run_Click(object sender, RoutedEventArgs e)
-        {
-            _viewModel.RunQuery();
-        }
-
-        private void Button_Click(object sender, RoutedEventArgs e)
-        {
-            _viewModel.RefreshStatistics();
-        }
-
-        private void Backup_Click(object sender, RoutedEventArgs e)
-        {
-            _viewModel.Backup();
         }
     }
 }
