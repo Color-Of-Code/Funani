@@ -57,6 +57,9 @@ namespace Funani.Gui.ViewModels
             FileInfo = fileInfo;
             _engine = engine;
             UpdateInsideFunani();
+
+            Store = new Command(OnStoreExecute);
+            Remove = new Command(OnRemoveExecute);
         }
 
         public FileInfo FileInfo { get; private set; }
@@ -111,7 +114,7 @@ namespace Funani.Gui.ViewModels
             get
             {
                 return _thumbnail ??
-                       (_thumbnail = Converter.Convert(FullName, typeof (BitmapSource), null, null) as BitmapSource);
+                       (_thumbnail = Converter.Convert(FullName, typeof(BitmapSource), null, null) as BitmapSource);
             }
         }
 
@@ -134,7 +137,7 @@ namespace Funani.Gui.ViewModels
                 {
                     if (InsideFunani != value)
                     {
-                        AddOrRemoveFile((bool) value);
+                        AddOrRemoveFile((bool)value);
                     }
                 }
                 else
@@ -145,25 +148,52 @@ namespace Funani.Gui.ViewModels
             }
         }
 
-        private void AddOrRemoveFile(bool value)
+        /// <summary>
+        /// Gets the Store command.
+        /// </summary>
+        public Command Store { get; private set; }
+
+        /// <summary>
+        /// Store this file into the Funani database
+        /// </summary>
+        private void OnStoreExecute()
         {
             try
             {
-                if (value)
-                {
-                    // add
-                    _engine.AddFile(FileInfo);
-                }
-                else
-                {
-                    // remove
-                    _engine.RemoveFile(FileInfo);
-                }
+                _engine.AddFile(FileInfo);
             }
             finally
             {
                 UpdateInsideFunani();
             }
+        }
+
+        /// <summary>
+        /// Gets the Remove command.
+        /// </summary>
+        public Command Remove { get; private set; }
+
+        /// <summary>
+        /// Remove the file from the Funani database
+        /// </summary>
+        private void OnRemoveExecute()
+        {
+            try
+            {
+                _engine.RemoveFile(FileInfo);
+            }
+            finally
+            {
+                UpdateInsideFunani();
+            }
+        }
+
+        private void AddOrRemoveFile(bool value)
+        {
+            if (value)
+                OnStoreExecute();
+            else
+                OnRemoveExecute();
         }
 
         private void UpdateInsideFunani()
