@@ -36,6 +36,7 @@ using System.Windows.Threading;
 using Catel.MVVM;
 using Funani.Api;
 using MongoDB.Driver;
+using Catel.Data;
 
 namespace Funani.Gui.ViewModels
 {
@@ -49,6 +50,8 @@ namespace Funani.Gui.ViewModels
             _dispatcher = dispatcher;
             _engine = engine;
             Lines = new ObservableCollection<string>();
+
+            GetStatistics = new Command(OnGetStatisticsExecute);
         }
 
         public ObservableCollection<String> Lines { get; private set; }
@@ -57,15 +60,19 @@ namespace Funani.Gui.ViewModels
 
         public IList<String> QueryResults { get; set; }
 
+        /// <summary>
+        /// Retrieves the statistics.
+        /// </summary>
         public DatabaseStatsResult Statistics
         {
-            get
-            {
-                if (Funani == null)
-                    return null;
-                return Funani.GetStats();
-            }
+            get { return GetValue<DatabaseStatsResult>(StatisticsProperty); }
+            set { SetValue(StatisticsProperty, value); }
         }
+
+        /// <summary>
+        /// Register the Statistics property so it is known in the class.
+        /// </summary>
+        public static readonly PropertyData StatisticsProperty = RegisterProperty("Statistics", typeof(DatabaseStatsResult), null);
 
         private MongoDatabase Funani
         {
@@ -76,7 +83,7 @@ namespace Funani.Gui.ViewModels
         {
             if (data != null)
             {
-                _dispatcher.BeginInvoke((Action) (() =>
+                _dispatcher.BeginInvoke((Action)(() =>
                                                   Lines.Add(data.TrimEnd()))
                     );
             }
@@ -86,7 +93,7 @@ namespace Funani.Gui.ViewModels
         {
             if (data != null)
             {
-                _dispatcher.BeginInvoke((Action) (() =>
+                _dispatcher.BeginInvoke((Action)(() =>
                                                   Lines.Add(data.TrimEnd()))
                     );
             }
@@ -97,9 +104,17 @@ namespace Funani.Gui.ViewModels
             RaisePropertyChanged("QueryResults");
         }
 
-        public void RefreshStatistics()
+        /// <summary>
+        /// Gets the GetStatistics command.
+        /// </summary>
+        public Command GetStatistics { get; private set; }
+
+        /// <summary>
+        /// Method to invoke when the GetStatistics command is executed.
+        /// </summary>
+        private void OnGetStatisticsExecute()
         {
-            RaisePropertyChanged("Statistics");
+            Statistics = Funani.GetStats();
         }
 
         public void Backup()

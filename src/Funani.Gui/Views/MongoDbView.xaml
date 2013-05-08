@@ -28,7 +28,7 @@
 			        </ListView>
 				</Grid>
     		</TabItem>
-    		<TabItem Header="Statistics" DataContext="{Binding Statistics}">
+    		<TabItem Header="Statistics">
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"></RowDefinition>
@@ -40,9 +40,9 @@
                     </GroupBox>
                     <GroupBox FontFamily="Courier New" Grid.Row="1">
     				    <GroupBox.Header>
-	    				    <Button Content="Refresh" Click="Button_Click"></Button>
+                            <Button Command="{Binding GetStatistics}" Content="Refresh"></Button>
     				    </GroupBox.Header>
-	    			    <Grid>
+                        <Grid DataContext="{Binding Statistics}">
 	    				    <Grid.ColumnDefinitions>
 	    					    <ColumnDefinition Width="1*"></ColumnDefinition>
 	    					    <ColumnDefinition Width="1*"></ColumnDefinition>

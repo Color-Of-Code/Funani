@@ -66,11 +66,6 @@ namespace Funani.Gui.Views
             _viewModel.RunQuery();
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
-        {
-            _viewModel.RefreshStatistics();
-        }
-
         private void Backup_Click(object sender, RoutedEventArgs e)
         {
             _viewModel.Backup();
