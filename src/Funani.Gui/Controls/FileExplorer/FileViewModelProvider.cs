@@ -78,7 +78,7 @@ namespace Funani.Gui.Controls.FileExplorer
             if (_filterAlreadyStored)
             {
                 _filteredFiles = _files.Select(x => new FileViewModel(x, _engine))
-                    .Where(x => x.InsideFunani == false);
+                    .Where(x => x.IsStored == false);
                 return _filteredFiles.Count();
             }
             return _files.Count();

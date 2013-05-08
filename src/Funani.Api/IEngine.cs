@@ -146,6 +146,12 @@ namespace Funani.Api
         /// <returns>The file contents as a byte array</returns>
         byte[] GetFileData(String hash);
 
+        /// <summary>
+        ///     Refresh the metadata information from the file into the Funani
+        ///     database. Useful if the algorithms to extract metadata were
+        ///     improved and the database content needs an update.
+        /// </summary>
+        /// <param name="fileinfo">The file to refresh</param>
         void RefreshMetadata(FileInformation fileinfo);
     }
 }

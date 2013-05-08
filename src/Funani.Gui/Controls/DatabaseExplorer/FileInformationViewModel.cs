@@ -34,6 +34,9 @@ using System.ComponentModel;
 using System.IO;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+
+using Catel.Data;
+using Catel.MVVM;
 using Funani.Api;
 using Funani.Api.Metadata;
 
@@ -42,23 +45,10 @@ namespace Funani.Gui.Controls.DatabaseExplorer
     /// <summary>
     ///     FileViewModel
     /// </summary>
-    public class FileInformationViewModel : INotifyPropertyChanged
+    public class FileInformationViewModel : ViewModelBase
     {
         private const int MaxThumbnailSize = 256;
         private static readonly UriToThumbnailConverter Converter = new UriToThumbnailConverter(MaxThumbnailSize);
-
-        #region INotifyPropertyChanged Members
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        private void TriggerPropertyChanged(string propertyName)
-        {
-            PropertyChangedEventHandler handler = PropertyChanged;
-            if (handler != null)
-                handler(this, new PropertyChangedEventArgs(propertyName));
-        }
-
-        #endregion
 
         public FileInformationViewModel(FileInformation fileInformation, IEngine engine)
         {
@@ -67,22 +57,21 @@ namespace Funani.Gui.Controls.DatabaseExplorer
         }
 
         private readonly IEngine _engine;
-        public FileInformation FileInformation { get; private set; }
 
-        public string Hash
+        /// <summary>
+        /// FileInformation model.
+        /// </summary>
+        [Model]
+        public FileInformation FileInformation
         {
-            get { return FileInformation.Id; }
+            get { return GetValue<FileInformation>(FileInformationProperty); }
+            private set { SetValue(FileInformationProperty, value); }
         }
 
-        public string Title
-        {
-            get { return FileInformation.Title; }
-        }
-
-        public long FileSize
-        {
-            get { return FileInformation.FileSize; }
-        }
+        /// <summary>
+        /// Register the FileInformation property so it is known in the class.
+        /// </summary>
+        public static readonly PropertyData FileInformationProperty = RegisterProperty("FileInformation", typeof(FileInformation));
 
         public string DateTaken
         {
@@ -92,31 +81,6 @@ namespace Funani.Gui.Controls.DatabaseExplorer
                            ? FileInformation.DateTaken.Value.ToString("yyyy-MM-dd HH:mm:ss")
                            : null;
             }
-        }
-
-        public Int64 Width
-        {
-            get { return FileInformation.Width; }
-        }
-
-        public Int64 Height
-        {
-            get { return FileInformation.Height; }
-        }
-
-        public string Device
-        {
-            get { return FileInformation.Device; }
-        }
-
-        public string ApplicationName
-        {
-            get { return FileInformation.ApplicationName; }
-        }
-
-        public String MimeType
-        {
-            get { return FileInformation.MimeType; }
         }
 
         public int? Angle
@@ -158,11 +122,6 @@ namespace Funani.Gui.Controls.DatabaseExplorer
             }
         }
 
-        public IList<String> Paths
-        {
-            get { return FileInformation.Paths; }
-        }
-
         public Stretch Stretch
         {
             get { return Stretch.Uniform; }
@@ -184,7 +143,7 @@ namespace Funani.Gui.Controls.DatabaseExplorer
         {
             get
             {
-                if (MimeType.StartsWith("image/"))
+                if (FileInformation.MimeType.StartsWith("image/"))
                 {
                     byte[] data = _engine.GetFileData(FileInformation.Id);
                     var bi = new BitmapImage();
@@ -209,13 +168,13 @@ namespace Funani.Gui.Controls.DatabaseExplorer
 
         public override string ToString()
         {
-            return String.Format("FileInfo: {0}", Hash);
+            return String.Format("FileInfo: {0}", FileInformation.Id);
         }
 
         public void RefreshMetadata()
         {
             _engine.RefreshMetadata(FileInformation);
-            TriggerPropertyChanged(null);
+            RaisePropertyChanged(null);
         }
     }
 }

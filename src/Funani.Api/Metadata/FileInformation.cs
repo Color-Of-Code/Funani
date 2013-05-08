@@ -31,11 +31,13 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+
+using Catel.Data;
 using Funani.Api.Utils;
 
 namespace Funani.Api.Metadata
 {
-    public class FileInformation
+    public class FileInformation : ModelBase
     {
         public FileInformation()
         {
@@ -53,10 +55,36 @@ namespace Funani.Api.Metadata
             AddPath(file);
         }
 
-        public String Id { get; private set; }
-        public Int64 FileSize { get; private set; }
-        public String MimeType { get; private set; }
+        /// <summary>
+        /// Gets or sets the Id value.
+        /// </summary>
+        public String Id
+        {
+            get { return GetValue<String>(IdProperty); }
+            private set { SetValue(IdProperty, value); }
+        }
 
+        /// <summary>
+        /// Register the Id property so it is known in the class.
+        /// </summary>
+        public static readonly PropertyData IdProperty = RegisterProperty("Id", typeof(String), null);
+        
+        public Int64 FileSize { get; private set; }
+
+        /// <summary>
+        /// Gets or sets the MimeType value.
+        /// </summary>
+        public String MimeType
+        {
+            get { return GetValue<String>(MimeTypeProperty); }
+            private set { SetValue(MimeTypeProperty, value); }
+        }
+
+        /// <summary>
+        /// Register the MimeType property so it is known in the class.
+        /// </summary>
+        public static readonly PropertyData MimeTypeProperty = RegisterProperty("MimeType", typeof(String), null);
+        
         public IList<String> Paths { get; private set; }
 
         public Int64 Width { get; private set; }

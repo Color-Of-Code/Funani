@@ -34,6 +34,7 @@ using System.IO;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
+using Catel.Data;
 using Catel.MVVM;
 using Funani.Api;
 using Funani.Gui.Controls;
@@ -48,7 +49,6 @@ namespace Funani.Gui.ViewModels
         private const int MaxThumbnailSize = 120;
         private static readonly UriToThumbnailConverter Converter = new UriToThumbnailConverter(MaxThumbnailSize);
 
-        private Boolean? _insideFunani;
         private BitmapSource _thumbnail;
         private readonly IEngine _engine;
 
@@ -128,25 +128,20 @@ namespace Funani.Gui.ViewModels
             }
         }
 
-        public Boolean? InsideFunani
+        /// <summary>
+        /// Is this file alread inside the storage area.
+        /// </summary>
+        public bool? IsStored
         {
-            get { return _insideFunani; }
-            set
-            {
-                if (value.HasValue)
-                {
-                    if (InsideFunani != value)
-                    {
-                        AddOrRemoveFile((bool)value);
-                    }
-                }
-                else
-                {
-                    _insideFunani = null;
-                    RaisePropertyChanged("InsideFunani");
-                }
-            }
+            get { return GetValue<bool?>(IsStoredProperty); }
+            set { SetValue(IsStoredProperty, value); }
         }
+
+        /// <summary>
+        /// Register the IsStored property so it is known in the class.
+        /// </summary>
+        public static readonly PropertyData IsStoredProperty = RegisterProperty("IsStored", typeof(bool?), null);
+
 
         /// <summary>
         /// Gets the Store command.
@@ -160,6 +155,7 @@ namespace Funani.Gui.ViewModels
         {
             try
             {
+                IsStored = null;
                 _engine.AddFile(FileInfo);
             }
             finally
@@ -180,6 +176,7 @@ namespace Funani.Gui.ViewModels
         {
             try
             {
+                IsStored = null;
                 _engine.RemoveFile(FileInfo);
             }
             finally
@@ -198,8 +195,7 @@ namespace Funani.Gui.ViewModels
 
         private void UpdateInsideFunani()
         {
-            _insideFunani = _engine.GetFileInformation(FileInfo) != null;
-            RaisePropertyChanged("InsideFunani");
+            IsStored = _engine.GetFileInformation(FileInfo) != null;
         }
     }
 }

@@ -85,12 +85,8 @@ namespace Funani.Gui.Views
         private void CheckBox_Clicked(object sender, RoutedEventArgs e)
         {
             var checkBox = sender as CheckBox;
-            bool isChecked = false;
             Debug.Assert(checkBox != null, "checkBox != null");
-            if (checkBox.IsChecked.HasValue)
-            {
-                isChecked = (bool) (checkBox.IsChecked);
-            }
+            bool isChecked = checkBox.IsChecked ?? false;
 
             var viewModel = checkBox.DataContext as FileViewModel;
             var viewModels = new List<FileViewModel>();
@@ -104,29 +100,25 @@ namespace Funani.Gui.Views
                 viewModels.AddRange(ListControl.SelectedItems.Cast<FileViewModel>());
             }
 
-            Thread backgroundThread = isChecked ? new Thread(SetInsideFunani) : new Thread(ResetInsideFunani);
+            Thread backgroundThread = isChecked ? new Thread(Store) : new Thread(Remove);
             backgroundThread.IsBackground = true;
             backgroundThread.Start(viewModels);
         }
 
-        private static void ResetInsideFunani(object parameter)
+        private static void Remove(object parameter)
         {
             var viewModels = parameter as IList<FileViewModel>;
             Debug.Assert(viewModels != null, "viewModels != null");
             foreach (FileViewModel item in viewModels)
-                item.InsideFunani = null;
-            foreach (FileViewModel item in viewModels)
-                item.InsideFunani = false;
+                item.Remove.Execute();
         }
 
-        private static void SetInsideFunani(object parameter)
+        private static void Store(object parameter)
         {
             var viewModels = parameter as IList<FileViewModel>;
             Debug.Assert(viewModels != null, "viewModels != null");
             foreach (FileViewModel item in viewModels)
-                item.InsideFunani = null;
-            foreach (FileViewModel item in viewModels)
-                item.InsideFunani = true;
+                item.Store.Execute();
         }
     }
 }
