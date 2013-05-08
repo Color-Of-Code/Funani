@@ -8,13 +8,16 @@ Wiki
 
 http://color-of-code.de/wiki/index.php?title=Main_Page
 
+Dependencies
+------------
 
-MongoDB
--------
+Build:
 
-Added the C# driver as a git submodule
+ The Build dependencies are solved using NuGet (integrated in both SharpDevelop & Visual Studio)
+ * Catel: The software is based on the MVVM Catel framework.
+ * MongoDB: The C# driver and the fluent extensions
 
-- git submodule add  -- "https://github.com/mongodb/mongo-csharp-driver.git"  "src/mongo-csharp-driver"
+Runtime:
 
 The MongoDB has to be downloaded and unpacked somewhere on your system. MongoDB can be downloaded here:
 
