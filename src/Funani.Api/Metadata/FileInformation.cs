@@ -37,7 +37,18 @@ using Funani.Api.Utils;
 
 namespace Funani.Api.Metadata
 {
-    public class FileInformation : ModelBase
+    /// <summary>
+    /// TODO: There is an issue with using Catel ModelBase together with MongoDB C# Driver
+    /// These attributes are created additionally and make trouble on reading back
+    ///"Mode" : 0,
+    ///"IsDirty" : true,
+    ///"IsReadOnly" : false,
+    ///"Validator" : null,
+    ///"ValidationContext" : {
+    ///  "_t" : "ValidationContext"
+    ///},
+    /// </summary>
+    public class FileInformation //: ModelBase
     {
         public FileInformation()
         {
@@ -60,15 +71,10 @@ namespace Funani.Api.Metadata
         /// </summary>
         public String Id
         {
-            get { return GetValue<String>(IdProperty); }
-            private set { SetValue(IdProperty, value); }
+            get;
+            private set;
         }
 
-        /// <summary>
-        /// Register the Id property so it is known in the class.
-        /// </summary>
-        public static readonly PropertyData IdProperty = RegisterProperty("Id", typeof(String), null);
-        
         public Int64 FileSize { get; private set; }
 
         /// <summary>
@@ -76,15 +82,10 @@ namespace Funani.Api.Metadata
         /// </summary>
         public String MimeType
         {
-            get { return GetValue<String>(MimeTypeProperty); }
-            private set { SetValue(MimeTypeProperty, value); }
+            get;
+            private set;
         }
 
-        /// <summary>
-        /// Register the MimeType property so it is known in the class.
-        /// </summary>
-        public static readonly PropertyData MimeTypeProperty = RegisterProperty("MimeType", typeof(String), null);
-        
         public IList<String> Paths { get; private set; }
 
         public Int64 Width { get; private set; }
