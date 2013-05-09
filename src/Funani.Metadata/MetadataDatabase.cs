@@ -157,7 +157,7 @@ namespace Funani.Metadata
         {
             MongoCollection<BsonDocument> files = Funani.GetCollection("fileinfo");
             string path = file.FullName;
-            var list = new[] {path};
+            var list = new[] { path };
             var queryBuilder = new QueryBuilder<FileInformation>();
             IMongoQuery query = queryBuilder.In(x => x.Paths, list);
             var info = files.FindOneAs<FileInformation>(query);

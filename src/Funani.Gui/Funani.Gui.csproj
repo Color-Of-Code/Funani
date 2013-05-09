@@ -82,6 +82,9 @@
     <Compile Include="ViewModels\DirectoryViewModel.cs" />
     <Compile Include="ViewModels\FileViewModel.cs" />
     <Compile Include="ViewModels\MongoDbViewModel.cs" />
+    <Compile Include="Views\FileInformationView.xaml.cs">
+      <DependentUpon>FileInformationView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\DirectoryTreeView.xaml.cs">
       <DependentUpon>DirectoryTreeView.xaml</DependentUpon>
       <SubType>Code</SubType>
@@ -97,6 +100,9 @@
     <Compile Include="Views\MongoDbView.xaml.cs">
       <DependentUpon>MongoDbView.xaml</DependentUpon>
     </Compile>
+    <Page Include="Views\FileInformationView.xaml">
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Views\DatabaseView.xaml" />
     <Page Include="Controls\Progress\CommandProgressControl.xaml">
       <Generator>MSBuild:Compile</Generator>
