@@ -38,6 +38,7 @@ using Catel.Data;
 using Catel.MVVM;
 using Funani.Api;
 using Funani.Gui.Controls;
+using Funani.Gui.Converters;
 
 namespace Funani.Gui.ViewModels
 {

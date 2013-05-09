@@ -5,7 +5,7 @@ using System.Globalization;
 using System.Linq;
 using System.Windows.Data;
 
-namespace Funani.Gui.Controls
+namespace Funani.Gui.Converters
 {
     // Does a math equation on the bound value.
     // Use @VALUE in your mathEquation as a substitute for bound value

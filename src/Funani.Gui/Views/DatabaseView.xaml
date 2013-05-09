@@ -1,8 +1,9 @@
-<UserControl x:Class="Funani.Gui.Controls.DatabaseExplorer.DatabaseView"
+<catel:UserControl x:Class="Funani.Gui.Views.DatabaseView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:funani="clr-namespace:Funani.Gui.Controls"
-             
+             xmlns:catel="http://catel.codeplex.com"
+             xmlns:funani="clr-namespace:Funani.Gui.Views"
+             xmlns:funaniControls="clr-namespace:Funani.Gui.Controls"
              mc:Ignorable="d" xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              d:DesignHeight="480" d:DesignWidth="640"
@@ -71,7 +72,7 @@
             </ListView.Resources>
             <ListView.ItemsPanel>
                 <ItemsPanelTemplate>
-                    <funani:VirtualizingWrapPanel Background="Black"
+                    <funaniControls:VirtualizingWrapPanel Background="Black"
                         ItemHeight="{Binding ElementName=SliderSize,Path=Value}"
                         ItemWidth="{Binding ElementName=SliderSize,Path=Value}" />
                 </ItemsPanelTemplate>
@@ -106,7 +107,7 @@
                         <Canvas.ToolTip>
                             <StackPanel Orientation="Vertical" Grid.Column="1">
                                 <StackPanel Orientation="Horizontal">
-                                    <funani:RatingControl RatingValue="{Binding Rating}" Height="10"></funani:RatingControl>
+                                    <funaniControls:RatingControl RatingValue="{Binding Rating}" Height="10"></funaniControls:RatingControl>
                                     <TextBlock Text="{Binding Title,Mode=OneWay}" FontWeight="Bold"></TextBlock>
                                 </StackPanel>
                                 <TextBlock>
@@ -181,7 +182,7 @@
                 <GroupBox.Header>
                     <StackPanel Orientation="Horizontal">
                         <CheckBox IsChecked="{Binding IsDeleted}">Deleted</CheckBox>
-                        <funani:RatingControl RatingValue="{Binding Rating}" Height="16" Margin="10,0"></funani:RatingControl>
+                        <funaniControls:RatingControl RatingValue="{Binding Rating}" Height="16" Margin="10,0"></funaniControls:RatingControl>
                         <TextBlock Margin="10,0">
 									<Run>Size: </Run>
 									<Run Text="{Binding FileInformation.FileSize,Mode=OneWay}"></Run>
@@ -247,20 +248,20 @@
                     <TextBlock Grid.Column="0" Grid.Row="1">Location</TextBlock>
                     <TextBlock Grid.Column="0" Grid.Row="2">Event</TextBlock>
                     <TextBlock Grid.Column="0" Grid.Row="3">Keywords</TextBlock>
-                    <funani:TokenizingControl Grid.Column="1" Grid.Row="0"
+                    <funaniControls:TokenizingControl Grid.Column="1" Grid.Row="0"
                                               x:Name="TokenizerPeople" TokenTemplate="{DynamicResource NameTokenTemplate}"
-                                              ></funani:TokenizingControl>
-                    <funani:TokenizingControl Grid.Column="1" Grid.Row="1"
+                                              ></funaniControls:TokenizingControl>
+                    <funaniControls:TokenizingControl Grid.Column="1" Grid.Row="1"
                                               x:Name="TokenizerLocation" TokenTemplate="{DynamicResource NameTokenTemplate}"
-                                              ></funani:TokenizingControl>
-                    <funani:TokenizingControl Grid.Column="1" Grid.Row="2"
+                                              ></funaniControls:TokenizingControl>
+                    <funaniControls:TokenizingControl Grid.Column="1" Grid.Row="2"
                                               x:Name="TokenizerEvent" TokenTemplate="{DynamicResource NameTokenTemplate}"
-                                              ></funani:TokenizingControl>
-                    <funani:TokenizingControl Grid.Column="1" Grid.Row="3"
+                                              ></funaniControls:TokenizingControl>
+                    <funaniControls:TokenizingControl Grid.Column="1" Grid.Row="3"
                                               x:Name="TokenizerKeywords" TokenTemplate="{DynamicResource NameTokenTemplate}"
-                                              ></funani:TokenizingControl>
+                                              ></funaniControls:TokenizingControl>
                 </Grid>
             </GroupBox>
         </Grid>
     </Grid>
-</UserControl>
+</catel:UserControl>

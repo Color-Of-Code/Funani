@@ -5,7 +5,6 @@
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
 	xmlns:funani="clr-namespace:Funani.Gui.Views"
 	xmlns:dirExplorer="clr-namespace:Funani.Gui.Controls.FileExplorer"
-	xmlns:databaseExplorer="clr-namespace:Funani.Gui.Controls.DatabaseExplorer"
 	xmlns:progress="clr-namespace:Funani.Gui.Controls.Progress"
 	Title="Funani - manage big amount of files easily"
 	Loaded="Window_Loaded"
@@ -103,9 +102,9 @@
 					</StackPanel>
 				</TabItem.Header>
 				<Grid>
-					<databaseExplorer:DatabaseView
+					<funani:DatabaseView
 						Grid.Column="0"
-						x:Name="DatabaseExplorer"></databaseExplorer:DatabaseView>
+						x:Name="DatabaseExplorer"></funani:DatabaseView>
 				</Grid>
 			</TabItem>
 			<TabItem>

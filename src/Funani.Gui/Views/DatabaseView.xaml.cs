@@ -33,16 +33,18 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
+
 using Funani.Api;
 using Funani.Api.Metadata;
 using Funani.Gui.Model;
+using Funani.Gui.ViewModels;
 
-namespace Funani.Gui.Controls.DatabaseExplorer
+namespace Funani.Gui.Views
 {
     /// <summary>
     ///     Interaction logic for DatabaseView.xaml
     /// </summary>
-    public partial class DatabaseView : UserControl
+    public partial class DatabaseView : Catel.Windows.Controls.UserControl
     {
         public DatabaseView()
         {
@@ -50,8 +52,8 @@ namespace Funani.Gui.Controls.DatabaseExplorer
 
             DataContext = this;
 
-            ComboWhere.ItemsSource = DatabaseViewModelProvider.SupportedWhereClauses;
-            ComboOrderBy.ItemsSource = DatabaseViewModelProvider.SupportedOrderingClauses;
+            ComboWhere.ItemsSource = DatabaseViewModel.SupportedWhereClauses;
+            ComboOrderBy.ItemsSource = DatabaseViewModel.SupportedOrderingClauses;
 
             TokenizerPeople.TokenMatcher = TokenMatcher;
             TokenizerLocation.TokenMatcher = TokenMatcher;
@@ -72,7 +74,7 @@ namespace Funani.Gui.Controls.DatabaseExplorer
         {
             if (!DesignerProperties.GetIsInDesignMode(this))
             {
-                var provider = new DatabaseViewModelProvider(FunaniEngine,
+                var provider = new DatabaseViewModel(FunaniEngine,
                     CheckBoxDeleted.IsChecked ?? false,
                     RegexLookFor.Text,
                     ComboWhere.SelectedItem as String,

@@ -32,17 +32,19 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
+
+using Catel.MVVM;
 using Funani.Api;
 using Funani.Api.Metadata;
 using Funani.Gui.Controls.FileExplorer;
 using Funani.Gui.Model;
 
-namespace Funani.Gui.Controls.DatabaseExplorer
+namespace Funani.Gui.ViewModels
 {
     /// <summary>
     ///     Implementation of IItemsProvider returning <see cref="FileViewModel" /> items
     /// </summary>
-    public class DatabaseViewModelProvider : IItemsProvider<FileInformationViewModel>
+    public class DatabaseViewModel : ViewModelBase, IItemsProvider<FileInformationViewModel>
     {
         private readonly Boolean _deleted;
         private readonly String _orderByClause;
@@ -54,7 +56,7 @@ namespace Funani.Gui.Controls.DatabaseExplorer
         /// <summary>
         ///     Initializes a new instance of the <see cref="FileViewModelProvider" /> class.
         /// </summary>
-        public DatabaseViewModelProvider(IEngine engine, Boolean deleted, String regexTitle,
+        public DatabaseViewModel(IEngine engine, Boolean deleted, String regexTitle,
                                          String whereClause, String orderByClause, DateTime? fromDate, DateTime? toDate)
         {
             _funaniEngine = engine;
@@ -117,11 +119,11 @@ namespace Funani.Gui.Controls.DatabaseExplorer
         public IList<FileInformationViewModel> FetchRange(int startIndex, int count)
         {
             IQueryable<FileInformation> query = BuildQuery();
-            var list = new List<FileInformationViewModel>();
-            list.AddRange(
-                query.Skip(startIndex).Take(count).Select(x => new FileInformationViewModel(x, _funaniEngine))
-                );
-            return list;
+            return query
+                .Skip(startIndex)
+                .Take(count)
+                .Select(x => new FileInformationViewModel(x, _funaniEngine))
+                .ToList();
         }
 
         private IQueryable<FileInformation> BuildQuery()

@@ -203,7 +203,7 @@ namespace Funani.Gui.Model
         private void LoadPageWork(object args)
         {
             var pageIndex = (int) args;
-            IList<T> page = FetchPage(pageIndex);
+            IEnumerable<T> page = FetchPage(pageIndex);
             SynchronizationContext.Send(LoadPageCompleted, new object[] {pageIndex, page});
         }
 

@@ -97,7 +97,7 @@
     <Compile Include="Views\MongoDbView.xaml.cs">
       <DependentUpon>MongoDbView.xaml</DependentUpon>
     </Compile>
-    <Page Include="Controls\DatabaseExplorer\DatabaseView.xaml" />
+    <Page Include="Views\DatabaseView.xaml" />
     <Page Include="Controls\Progress\CommandProgressControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -114,15 +114,15 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Controls\DatabaseExplorer\DatabaseView.xaml.cs">
+    <Compile Include="Views\DatabaseView.xaml.cs">
       <DependentUpon>DatabaseView.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Controls\DatabaseExplorer\DatabaseViewModelProvider.cs" />
-    <Compile Include="Controls\DatabaseExplorer\FileInformationViewModel.cs" />
+    <Compile Include="ViewModels\DatabaseViewModel.cs" />
+    <Compile Include="ViewModels\FileInformationViewModel.cs" />
     <Compile Include="Controls\FileExplorer\FileViewModelProvider.cs" />
-    <Compile Include="Controls\HeaderToImageConverter.cs" />
-    <Compile Include="Controls\MathConverter.cs" />
+    <Compile Include="Converters\HeaderToImageConverter.cs" />
+    <Compile Include="Converters\MathConverter.cs" />
     <Compile Include="Controls\PixelBasedScrollingBehaviour.cs" />
     <Compile Include="Controls\Progress\CommandProgressControl.xaml.cs">
       <DependentUpon>CommandProgressControl.xaml</DependentUpon>
@@ -132,7 +132,7 @@
       <DependentUpon>RatingControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\TokenizingControl.cs" />
-    <Compile Include="Controls\UriToThumbnailConverter.cs" />
+    <Compile Include="Converters\UriToThumbnailConverter.cs" />
     <Compile Include="Controls\VirtualizingWrapPanel.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
@@ -202,10 +202,7 @@
       <Name>Funani.Thumbnailer</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Views" />
-    <Folder Include="ViewModels" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

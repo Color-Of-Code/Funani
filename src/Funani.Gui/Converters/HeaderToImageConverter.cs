@@ -29,59 +29,31 @@
  */
 
 using System;
-using System.Diagnostics;
 using System.Globalization;
 using System.Windows.Data;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using Funani.Thumbnailer;
 
-namespace Funani.Gui.Controls
+namespace Funani.Gui.Converters
 {
     [ValueConversion(typeof (string), typeof (ImageSource))]
-    public class UriToThumbnailConverter : IValueConverter
+    public class HeaderToImageConverter : IValueConverter
     {
-        private static readonly BitmapSource DefaultThumbnail;
-
-        static UriToThumbnailConverter()
-        {
-            var packUri = new Uri("pack://application:,,,/Images/funani.png");
-            var image = new BitmapImage();
-            image.BeginInit();
-            image.UriSource = packUri;
-            image.CacheOption = BitmapCacheOption.OnLoad;
-            image.CreateOptions = BitmapCreateOptions.None;
-            image.EndInit();
-
-            if (image.CanFreeze)
-                image.Freeze();
-
-            DefaultThumbnail = image;
-        }
-
-        public UriToThumbnailConverter(int thumbnailSize)
-        {
-            ThumbnailSize = thumbnailSize;
-        }
-
-        public int ThumbnailSize { get; private set; }
+        public static HeaderToImageConverter Instance = new HeaderToImageConverter();
 
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if (value == null)
-                return DefaultThumbnail;
-            try
+            if ((value as string).Contains(@"\"))
             {
-                BitmapSource ret = Thumbnail.Extract(new Uri(value.ToString()),
-                                                     "image/", ThumbnailSize
-                    );
-                //TODO: why is this called twice?
-                Trace.TraceInformation("Generating thumbnail for '{0}'", value);
-                return ret;
+                var uri = new Uri("pack://application:,,,/Images/diskdrive.png");
+                var source = new BitmapImage(uri);
+                return source;
             }
-            catch
+            else
             {
-                return DefaultThumbnail;
+                var uri = new Uri("pack://application:,,,/Images/folder.png");
+                var source = new BitmapImage(uri);
+                return source;
             }
         }
 

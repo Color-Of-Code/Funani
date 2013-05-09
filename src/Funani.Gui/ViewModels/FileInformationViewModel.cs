@@ -39,8 +39,10 @@ using Catel.Data;
 using Catel.MVVM;
 using Funani.Api;
 using Funani.Api.Metadata;
+using Funani.Gui.Controls;
+using Funani.Gui.Converters;
 
-namespace Funani.Gui.Controls.DatabaseExplorer
+namespace Funani.Gui.ViewModels
 {
     /// <summary>
     ///     FileViewModel
@@ -61,17 +63,11 @@ namespace Funani.Gui.Controls.DatabaseExplorer
         /// <summary>
         /// FileInformation model.
         /// </summary>
-        [Model]
         public FileInformation FileInformation
         {
-            get { return GetValue<FileInformation>(FileInformationProperty); }
-            private set { SetValue(FileInformationProperty, value); }
+            get;
+            private set;
         }
-
-        /// <summary>
-        /// Register the FileInformation property so it is known in the class.
-        /// </summary>
-        public static readonly PropertyData FileInformationProperty = RegisterProperty("FileInformation", typeof(FileInformation));
 
         public string DateTaken
         {
@@ -134,7 +130,7 @@ namespace Funani.Gui.Controls.DatabaseExplorer
                 FileInfo thumbPath = _engine.GetThumbnail(
                     FileInformation.Id, FileInformation.MimeType);
                 object value = thumbPath == null ? null : thumbPath.FullName;
-                var bitmap = Converter.Convert(value, typeof (BitmapSource), null, null) as BitmapSource;
+                var bitmap = Converter.Convert(value, typeof(BitmapSource), null, null) as BitmapSource;
                 return bitmap;
             }
         }

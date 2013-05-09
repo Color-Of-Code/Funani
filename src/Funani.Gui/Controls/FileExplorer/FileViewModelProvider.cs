@@ -92,16 +92,21 @@ namespace Funani.Gui.Controls.FileExplorer
         /// <returns></returns>
         public IList<FileViewModel> FetchRange(int startIndex, int count)
         {
-            var list = new List<FileViewModel>();
             if (_filterAlreadyStored)
             {
-                list.AddRange(_filteredFiles.Skip(startIndex).Take(count));
+                return _filteredFiles
+                    .Skip(startIndex)
+                    .Take(count)
+                    .ToList();
             }
             else
             {
-                list.AddRange(_files.Skip(startIndex).Take(count).Select(x => new FileViewModel(x, _engine)));
+                return _files
+                    .Skip(startIndex)
+                    .Take(count)
+                    .Select(x => new FileViewModel(x, _engine))
+                    .ToList();
             }
-            return list;
         }
     }
 
