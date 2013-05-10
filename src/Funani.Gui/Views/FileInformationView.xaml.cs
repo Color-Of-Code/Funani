@@ -58,8 +58,6 @@ namespace Funani.Gui.Views
             TokenizerKeywords.TokenMatcher = TokenMatcher;
         }
 
-        public IEngine FunaniEngine { get; set; }
-
         private static String TokenMatcher(String text)
         {
             if (text.EndsWith(";") || text.EndsWith(","))

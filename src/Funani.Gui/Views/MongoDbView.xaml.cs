@@ -30,6 +30,9 @@
 
 using System.Windows;
 using System.Windows.Controls;
+
+using Catel.IoC;
+
 using Funani.Api;
 using Funani.Gui.ViewModels;
 
@@ -45,15 +48,8 @@ namespace Funani.Gui.Views
         public MongoDbView()
         {
             InitializeComponent();
-        }
-
-        public IEngine FunaniEngine
-        {
-            set
-            {
-                _viewModel = new MongoDbViewModel(value, Dispatcher);
-                DataContext = _viewModel;
-            }
+            _viewModel = new MongoDbViewModel(Dispatcher);
+            DataContext = _viewModel;
         }
 
         public IConsoleRedirect MongoDbListener

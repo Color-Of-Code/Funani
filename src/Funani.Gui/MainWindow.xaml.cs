@@ -41,6 +41,7 @@ using Microsoft.Win32;
 namespace Funani.Gui
 {
     using SWF = System.Windows.Forms;
+    using Catel.IoC;
 
     /// <summary>
     ///     Interaction logic for MainWindow.xaml
@@ -48,21 +49,19 @@ namespace Funani.Gui
     public partial class MainWindow : Window
     {
         private readonly CommandProgressViewModel _commandQueue;
-        private readonly IEngine _funani = new FunaniEngine();
+        private readonly IEngine _engine;
 
         public MainWindow()
         {
             InitializeComponent();
 
             Settings.Default.Upgrade();
-            FunaniDatabase.DataContext = _funani;
 
-            _commandQueue = new CommandProgressViewModel(_funani.CommandQueue);
+            _engine = ServiceLocator.Default.ResolveType<IEngine>();
+            FunaniDatabase.DataContext = _engine;
+
+            _commandQueue = new CommandProgressViewModel(_engine.CommandQueue);
             Progress.DataContext = _commandQueue;
-
-            DatabaseExplorer.FunaniEngine = _funani;
-            FileExplorer.FunaniEngine = _funani;
-            MongoDbView.FunaniEngine = _funani;
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
@@ -70,17 +69,16 @@ namespace Funani.Gui
             Settings settings = Settings.Default;
             EnsureMongodbPathIsValid();
             EnsureFunanidbPathIsValid();
-            _funani.OpenDatabase(settings.MongodbPath, settings.LastFunaniDatabase, MongoDbView.MongoDbListener);
+            _engine.OpenDatabase(settings.MongodbPath, settings.LastFunaniDatabase, MongoDbView.MongoDbListener);
             if (!String.IsNullOrWhiteSpace(settings.LastDirectoryExplorerSelectedPath))
             {
-                DirectoryExplorer.FunaniEngine = _funani;
                 DirectoryExplorer.SelectPath(settings.LastDirectoryExplorerSelectedPath);
             }
         }
 
         private void Window_Closing(object sender, CancelEventArgs e)
         {
-            _funani.CloseDatabase();
+            _engine.CloseDatabase();
             Settings settings = Settings.Default;
             settings.LastDirectoryExplorerSelectedPath = DirectoryExplorer.SelectedPath;
             settings.Save();
@@ -89,7 +87,7 @@ namespace Funani.Gui
         private void EnsureFunanidbPathIsValid()
         {
             String funanidbPath = Settings.Default.LastFunaniDatabase;
-            if (!_funani.IsValidDatabase(funanidbPath))
+            if (!_engine.IsValidDatabase(funanidbPath))
             {
                 var ofd = new SWF.FolderBrowserDialog();
                 ofd.Description = "Browse to a valid Funani DB";

@@ -35,6 +35,8 @@ using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 
+using Catel.IoC;
+
 using Funani.Api;
 using Funani.Gui.Controls.FileExplorer;
 using Funani.Gui.Model;
@@ -57,10 +59,11 @@ namespace Funani.Gui.Views
         {
             InitializeComponent();
 
+            _engine = ServiceLocator.Default.ResolveType<IEngine>();
             DataContext = this;
         }
 
-        public IEngine FunaniEngine { get; set; }
+        private readonly IEngine _engine;
 
         public string SelectedPath
         {
@@ -70,7 +73,7 @@ namespace Funani.Gui.Views
 
         public void ReloadFiles()
         {
-            var provider = new FileViewModelProvider(FunaniEngine, SelectedPath, FilterAlreadyStored);
+            var provider = new FileViewModelProvider(_engine, SelectedPath, FilterAlreadyStored);
             var items = new AsyncVirtualizingCollection<FileViewModel>(provider, 20, 10*1000);
             ListControl.DataContext = items;
         }

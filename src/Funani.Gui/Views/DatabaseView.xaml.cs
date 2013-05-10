@@ -34,6 +34,8 @@ using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
 
+using Catel.IoC;
+
 using Funani.Api;
 using Funani.Api.Metadata;
 using Funani.Gui.Model;
@@ -50,6 +52,8 @@ namespace Funani.Gui.Views
         {
             InitializeComponent();
 
+            _engine = ServiceLocator.Default.ResolveType<IEngine>();
+
             DataContext = this;
 
             ComboWhere.ItemsSource = DatabaseViewModel.SupportedWhereClauses;
@@ -61,7 +65,7 @@ namespace Funani.Gui.Views
             TokenizerKeywords.TokenMatcher = TokenMatcher;
         }
 
-        public IEngine FunaniEngine { get; set; }
+        private readonly IEngine _engine;
 
         private static String TokenMatcher(String text)
         {
@@ -74,7 +78,7 @@ namespace Funani.Gui.Views
         {
             if (!DesignerProperties.GetIsInDesignMode(this))
             {
-                var provider = new DatabaseViewModel(FunaniEngine,
+                var provider = new DatabaseViewModel(
                     CheckBoxDeleted.IsChecked ?? false,
                     RegexLookFor.Text,
                     ComboWhere.SelectedItem as String,
@@ -92,8 +96,8 @@ namespace Funani.Gui.Views
 
         private void RefreshMetadataAll_Click(object sender, RoutedEventArgs e)
         {
-            foreach (FileInformation fi in FunaniEngine.FileInformation)
-                FunaniEngine.RefreshMetadata(fi);
+            foreach (FileInformation fi in _engine.FileInformation)
+                _engine.RefreshMetadata(fi);
             ReloadFiles();
         }
 

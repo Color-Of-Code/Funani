@@ -45,10 +45,10 @@ namespace Funani.Gui.ViewModels
         private readonly Dispatcher _dispatcher;
         private readonly IEngine _engine;
 
-        public MongoDbViewModel(IEngine engine, Dispatcher dispatcher)
+        public MongoDbViewModel(Dispatcher dispatcher)
         {
+            _engine = ServiceLocator.ResolveType<IEngine>();
             _dispatcher = dispatcher;
-            _engine = engine;
             Lines = new ObservableCollection<string>();
 
             GetStatistics = new Command(OnGetStatisticsExecute);

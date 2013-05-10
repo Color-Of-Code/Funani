@@ -56,10 +56,10 @@ namespace Funani.Gui.ViewModels
         /// <summary>
         ///     Initializes a new instance of the <see cref="FileViewModelProvider" /> class.
         /// </summary>
-        public DatabaseViewModel(IEngine engine, Boolean deleted, String regexTitle,
-                                         String whereClause, String orderByClause, DateTime? fromDate, DateTime? toDate)
+        public DatabaseViewModel(Boolean deleted, String regexTitle,
+                                 String whereClause, String orderByClause, DateTime? fromDate, DateTime? toDate)
         {
-            _funaniEngine = engine;
+            _engine = ServiceLocator.ResolveType<IEngine>();
             _deleted = deleted;
             _regexTitle = regexTitle;
             _fromDate = fromDate;
@@ -68,7 +68,7 @@ namespace Funani.Gui.ViewModels
             _orderByClause = orderByClause;
         }
 
-        private readonly IEngine _funaniEngine;
+        private readonly IEngine _engine;
 
         public static IEnumerable<String> SupportedOrderingClauses
         {
@@ -122,13 +122,13 @@ namespace Funani.Gui.ViewModels
             return query
                 .Skip(startIndex)
                 .Take(count)
-                .Select(x => new FileInformationViewModel(x, _funaniEngine))
+                .Select(x => new FileInformationViewModel(x, _engine))
                 .ToList();
         }
 
         private IQueryable<FileInformation> BuildQuery()
         {
-            IQueryable<FileInformation> query = _funaniEngine.FileInformation;
+            IQueryable<FileInformation> query = _engine.FileInformation;
             if (_deleted)
                 query = query.Where(x => x.IsDeleted);
             else

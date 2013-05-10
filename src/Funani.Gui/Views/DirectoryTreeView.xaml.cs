@@ -54,15 +54,8 @@ namespace Funani.Gui.Views
         {
             InitializeComponent();
 
-        }
-
-        public IEngine FunaniEngine
-        {
-            set
-            {
-                _viewModel = new DirectoryTreeViewModel(value);
-                Directories.DataContext = _viewModel;
-            }
+            _viewModel = new DirectoryTreeViewModel();
+            Directories.DataContext = _viewModel;
         }
 
         public string SelectedPath

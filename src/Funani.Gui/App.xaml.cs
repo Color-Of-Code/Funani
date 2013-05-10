@@ -30,6 +30,11 @@
 
 using System.Windows;
 
+using Catel.IoC;
+
+using Funani.Api;
+using Funani.Engine;
+
 namespace Funani.Gui
 {
     /// <summary>
@@ -37,5 +42,10 @@ namespace Funani.Gui
     /// </summary>
     public partial class App : Application
     {
+        protected override void OnStartup(StartupEventArgs e)
+        {
+            base.OnStartup(e);
+            ServiceLocator.Default.RegisterType<IEngine, FunaniEngine>();
+        }
     }
 }

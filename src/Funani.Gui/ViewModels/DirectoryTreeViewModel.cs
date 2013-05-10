@@ -44,9 +44,9 @@ namespace Funani.Gui.ViewModels
 		private readonly IEngine _engine;
 		private readonly ObservableCollection<DirectoryViewModel> _firstGeneration;
 
-		public DirectoryTreeViewModel(IEngine engine)
+		public DirectoryTreeViewModel()
 		{
-			_engine = engine;
+			_engine = ServiceLocator.ResolveType<IEngine>();
 			IEnumerable<DirectoryInfo> rootDirectories = Directory.GetLogicalDrives().Select(x => new DirectoryInfo(x));
 			_firstGeneration = new ObservableCollection<DirectoryViewModel>();
 			foreach (DirectoryInfo model in rootDirectories)
