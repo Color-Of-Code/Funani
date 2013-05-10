@@ -30,34 +30,24 @@
 
 using System;
 using System.ComponentModel;
+
+using Catel.MVVM;
+
 using Funani.Api;
 
 namespace Funani.Gui.Controls.Progress
 {
-    public class CommandProgressViewModel : INotifyPropertyChanged
+    public class CommandProgressViewModel : ViewModelBase
     {
-        private readonly ICommandQueue _model;
+        private readonly ICommandQueue _commands;
         private String _eta;
         private String _info;
         private Int32 _performed;
         private Int32 _total;
 
-        #region INotifyPropertyChanged Members
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        protected virtual void OnPropertyChanged(string propertyName)
+        public CommandProgressViewModel()
         {
-            PropertyChangedEventHandler handler = PropertyChanged;
-            if (handler != null)
-                handler(this, new PropertyChangedEventArgs(propertyName));
-        }
-
-        #endregion
-
-        public CommandProgressViewModel(ICommandQueue model)
-        {
-            _model = model;
+            _commands = ServiceLocator.ResolveType<ICommandQueue>();
             BindEvents();
         }
 
@@ -67,7 +57,7 @@ namespace Funani.Gui.Controls.Progress
             set
             {
                 _total = value;
-                OnPropertyChanged("Total");
+                RaisePropertyChanged("Total");
             }
         }
 
@@ -77,7 +67,7 @@ namespace Funani.Gui.Controls.Progress
             set
             {
                 _performed = value;
-                OnPropertyChanged("Performed");
+                RaisePropertyChanged("Performed");
             }
         }
 
@@ -87,7 +77,7 @@ namespace Funani.Gui.Controls.Progress
             set
             {
                 _info = value;
-                OnPropertyChanged("Info");
+                RaisePropertyChanged("Info");
             }
         }
 
@@ -97,7 +87,7 @@ namespace Funani.Gui.Controls.Progress
             set
             {
                 _eta = value;
-                OnPropertyChanged("Eta");
+                RaisePropertyChanged("Eta");
             }
         }
 
@@ -109,14 +99,14 @@ namespace Funani.Gui.Controls.Progress
         private void model_CommandEnded(object sender, CommandProgressEventArgs e)
         {
             Performed++;
-            Total = _model.Count;
+            Total = _commands.Count;
             //TODO: refresh Eta
         }
 
         private void model_ThreadStarted(object sender, EventArgs e)
         {
             Performed = 0;
-            Total = _model.Count;
+            Total = _commands.Count;
             Info = String.Empty;
             Eta = String.Empty;
         }
@@ -129,10 +119,10 @@ namespace Funani.Gui.Controls.Progress
 
         private void BindEvents()
         {
-            _model.ThreadStarted += model_ThreadStarted;
-            _model.ThreadEnded += model_ThreadEnded;
-            _model.CommandStarted += model_CommandStarted;
-            _model.CommandEnded += model_CommandEnded;
+            _commands.ThreadStarted += model_ThreadStarted;
+            _commands.ThreadEnded += model_ThreadEnded;
+            _commands.CommandStarted += model_CommandStarted;
+            _commands.CommandEnded += model_CommandEnded;
         }
     }
 }

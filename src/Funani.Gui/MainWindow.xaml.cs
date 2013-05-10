@@ -60,7 +60,7 @@ namespace Funani.Gui
             _engine = ServiceLocator.Default.ResolveType<IEngine>();
             FunaniDatabase.DataContext = _engine;
 
-            _commandQueue = new CommandProgressViewModel(_engine.CommandQueue);
+            _commandQueue = new CommandProgressViewModel();
             Progress.DataContext = _commandQueue;
         }
 

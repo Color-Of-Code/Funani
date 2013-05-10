@@ -45,7 +45,9 @@ namespace Funani.Gui
         protected override void OnStartup(StartupEventArgs e)
         {
             base.OnStartup(e);
+
             ServiceLocator.Default.RegisterType<IEngine, FunaniEngine>();
+            ServiceLocator.Default.RegisterType<ICommandQueue, FunaniCommandQueue>();
         }
     }
 }

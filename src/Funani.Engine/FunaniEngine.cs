@@ -34,6 +34,9 @@ using System.IO;
 using System.Linq;
 using System.Xml;
 using System.Xml.Serialization;
+
+using Catel.IoC;
+
 using Funani.Api;
 using Funani.Api.Metadata;
 using Funani.FileStorage;
@@ -50,7 +53,7 @@ namespace Funani.Engine
 
         public FunaniEngine()
         {
-            CommandQueue = new FunaniCommandQueue();
+            CommandQueue = ServiceLocator.Default.ResolveType<ICommandQueue>();
         }
 
         private String DatabaseInfoPath

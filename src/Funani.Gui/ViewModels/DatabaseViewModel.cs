@@ -119,12 +119,20 @@ namespace Funani.Gui.ViewModels
         /// <returns></returns>
         public IList<FileInformationViewModel> FetchRange(int startIndex, int count)
         {
-            IQueryable<FileInformation> query = BuildQuery();
-            return query
-                .Skip(startIndex)
-                .Take(count)
-                .Select(x => new FileInformationViewModel(x))
-                .ToList();
+            try
+            {
+                IQueryable<FileInformation> query = BuildQuery();
+                return query
+                    .Skip(startIndex)
+                    .Take(count)
+                    .Select(x => new FileInformationViewModel(x))
+                    .ToList();
+            }
+            catch (Exception ex)
+            {
+                //HACK: log out something...
+                return null;
+            }
         }
 
         private IQueryable<FileInformation> BuildQuery()
