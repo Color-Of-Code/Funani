@@ -43,13 +43,10 @@ namespace Funani.Gui.Views
     /// </summary>
     public partial class MongoDbView : Catel.Windows.Controls.UserControl
     {
-        private MongoDbViewModel _viewModel;
-
         public MongoDbView()
         {
             InitializeComponent();
-            _viewModel = new MongoDbViewModel(Dispatcher);
-            DataContext = _viewModel;
+            DataContext = new MongoDbViewModel(Dispatcher);
         }
 
         public IConsoleRedirect MongoDbListener
@@ -57,14 +54,5 @@ namespace Funani.Gui.Views
             get { return DataContext as MongoDbViewModel; }
         }
 
-        private void Run_Click(object sender, RoutedEventArgs e)
-        {
-            _viewModel.RunQuery();
-        }
-
-        private void Backup_Click(object sender, RoutedEventArgs e)
-        {
-            _viewModel.Backup();
-        }
     }
 }

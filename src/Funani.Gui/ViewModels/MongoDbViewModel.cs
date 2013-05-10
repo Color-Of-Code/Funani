@@ -33,10 +33,13 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Windows.Threading;
-using Catel.MVVM;
-using Funani.Api;
-using MongoDB.Driver;
+
 using Catel.Data;
+using Catel.MVVM;
+
+using Funani.Api;
+
+using MongoDB.Driver;
 
 namespace Funani.Gui.ViewModels
 {
@@ -52,6 +55,8 @@ namespace Funani.Gui.ViewModels
             Lines = new ObservableCollection<string>();
 
             GetStatistics = new Command(OnGetStatisticsExecute);
+            Backup = new Command(OnBackupExecute);
+            RunQuery = new Command(OnRunQueryExecute);
         }
 
         public ObservableCollection<String> Lines { get; private set; }
@@ -99,11 +104,6 @@ namespace Funani.Gui.ViewModels
             }
         }
 
-        public void RunQuery()
-        {
-            RaisePropertyChanged("QueryResults");
-        }
-
         /// <summary>
         /// Gets the GetStatistics command.
         /// </summary>
@@ -117,9 +117,31 @@ namespace Funani.Gui.ViewModels
             Statistics = Funani.GetStats();
         }
 
-        public void Backup()
+        /// <summary>
+        /// Gets the Backup command.
+        /// </summary>
+        public Command Backup { get; private set; }
+
+        /// <summary>
+        /// Method to invoke when the Backup command is executed.
+        /// </summary>
+        private void OnBackupExecute()
         {
             _engine.Backup();
         }
+
+        /// <summary>
+        /// Gets the RunQuery command.
+        /// </summary>
+        public Command RunQuery { get; private set; }
+
+        /// <summary>
+        /// Method to invoke when the RunQuery command is executed.
+        /// </summary>
+        private void OnRunQueryExecute()
+        {
+            RaisePropertyChanged("QueryResults");
+        }
+
     }
 }

@@ -23,7 +23,7 @@
     					<RowDefinition></RowDefinition>
     				</Grid.RowDefinitions>
 	    			<TextBox Name="Query" Text="{Binding Query}" Grid.Column="0" Grid.Row="0"></TextBox>
-	    			<Button Name="Run" Content="Run" Click="Run_Click" Grid.Column="1" Grid.Row="0"></Button>
+	    			<Button Name="Run" Content="Run" Command="{Binding RunQuery}" Grid.Column="1" Grid.Row="0"></Button>
 			        <ListView Name="QueryResult" ItemsSource="{Binding QueryResults}" Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2">
 			        </ListView>
 				</Grid>
@@ -36,7 +36,7 @@
                         <RowDefinition></RowDefinition>
                     </Grid.RowDefinitions>
                     <GroupBox Grid.Row="0" Header="Backup to the mongod directory\dump\Funani\">
-                        <Button Content="Backup" Click="Backup_Click"></Button>
+                        <Button Command="{Binding Backup}" Content="Backup"></Button>
                     </GroupBox>
                     <GroupBox FontFamily="Courier New" Grid.Row="1">
     				    <GroupBox.Header>
