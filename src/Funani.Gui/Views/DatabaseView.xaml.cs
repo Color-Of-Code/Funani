@@ -52,8 +52,6 @@ namespace Funani.Gui.Views
         {
             InitializeComponent();
 
-            _engine = ServiceLocator.Default.ResolveType<IEngine>();
-
             DataContext = this;
 
             ComboWhere.ItemsSource = DatabaseViewModel.SupportedWhereClauses;
@@ -64,8 +62,6 @@ namespace Funani.Gui.Views
             TokenizerEvent.TokenMatcher = TokenMatcher;
             TokenizerKeywords.TokenMatcher = TokenMatcher;
         }
-
-        private readonly IEngine _engine;
 
         private static String TokenMatcher(String text)
         {
@@ -84,7 +80,7 @@ namespace Funani.Gui.Views
                     ComboWhere.SelectedItem as String,
                     ComboOrderBy.SelectedItem as String,
                     FromDate.SelectedDate, ToDate.SelectedDate);
-                var items = new AsyncVirtualizingCollection<FileInformationViewModel>(provider, 40, 10*1000);
+                var items = new AsyncVirtualizingCollection<FileInformationViewModel>(provider, 40, 10 * 1000);
                 ListControl.DataContext = items;
             }
         }
@@ -96,8 +92,9 @@ namespace Funani.Gui.Views
 
         private void RefreshMetadataAll_Click(object sender, RoutedEventArgs e)
         {
-            foreach (FileInformation fi in _engine.FileInformation)
-                _engine.RefreshMetadata(fi);
+            var engine = ServiceLocator.Default.ResolveType<IEngine>();
+            foreach (FileInformation fi in engine.FileInformation)
+                engine.RefreshMetadata(fi);
             ReloadFiles();
         }
 

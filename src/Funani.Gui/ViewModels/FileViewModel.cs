@@ -53,10 +53,10 @@ namespace Funani.Gui.ViewModels
         private BitmapSource _thumbnail;
         private readonly IEngine _engine;
 
-        public FileViewModel(FileInfo fileInfo, IEngine engine)
+        public FileViewModel(FileInfo fileInfo)
         {
             FileInfo = fileInfo;
-            _engine = engine;
+            _engine = ServiceLocator.ResolveType<IEngine>();
             UpdateInsideFunani();
 
             Store = new Command(OnStoreExecute);

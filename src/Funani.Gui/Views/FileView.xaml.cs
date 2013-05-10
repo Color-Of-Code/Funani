@@ -73,7 +73,7 @@ namespace Funani.Gui.Views
 
         public void ReloadFiles()
         {
-            var provider = new FileViewModelProvider(_engine, SelectedPath, FilterAlreadyStored);
+            var provider = new FileViewModelProvider(SelectedPath, FilterAlreadyStored);
             var items = new AsyncVirtualizingCollection<FileViewModel>(provider, 20, 10*1000);
             ListControl.DataContext = items;
         }

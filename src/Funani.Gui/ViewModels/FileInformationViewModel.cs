@@ -37,6 +37,7 @@ using System.Windows.Media.Imaging;
 
 using Catel.Data;
 using Catel.MVVM;
+
 using Funani.Api;
 using Funani.Api.Metadata;
 using Funani.Gui.Controls;
@@ -52,10 +53,10 @@ namespace Funani.Gui.ViewModels
         private const int MaxThumbnailSize = 256;
         private static readonly UriToThumbnailConverter Converter = new UriToThumbnailConverter(MaxThumbnailSize);
 
-        public FileInformationViewModel(FileInformation fileInformation, IEngine engine)
+        public FileInformationViewModel(FileInformation fileInformation)
         {
             FileInformation = fileInformation;
-            _engine = engine;
+            _engine = ServiceLocator.ResolveType<IEngine>();
         }
 
         private readonly IEngine _engine;

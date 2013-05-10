@@ -34,6 +34,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 
 using Catel.MVVM;
+
 using Funani.Api;
 using Funani.Api.Metadata;
 using Funani.Gui.Controls.FileExplorer;
@@ -122,7 +123,7 @@ namespace Funani.Gui.ViewModels
             return query
                 .Skip(startIndex)
                 .Take(count)
-                .Select(x => new FileInformationViewModel(x, _engine))
+                .Select(x => new FileInformationViewModel(x))
                 .ToList();
         }
 

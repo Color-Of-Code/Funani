@@ -48,14 +48,12 @@ namespace Funani.Gui.Controls.FileExplorer
         private readonly IEnumerable<FileInfo> _files;
         private readonly bool _filterAlreadyStored;
         private IEnumerable<FileViewModel> _filteredFiles;
-        private readonly IEngine _engine;
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="FileViewModelProvider" /> class.
         /// </summary>
-        public FileViewModelProvider(IEngine engine, String path, bool filterAlreadyStored)
+        public FileViewModelProvider(String path, bool filterAlreadyStored)
         {
-            _engine = engine;
             _di = new DirectoryInfo(path);
             _filterAlreadyStored = filterAlreadyStored;
             try
@@ -77,7 +75,7 @@ namespace Funani.Gui.Controls.FileExplorer
         {
             if (_filterAlreadyStored)
             {
-                _filteredFiles = _files.Select(x => new FileViewModel(x, _engine))
+                _filteredFiles = _files.Select(x => new FileViewModel(x))
                     .Where(x => x.IsStored == false);
                 return _filteredFiles.Count();
             }
@@ -104,7 +102,7 @@ namespace Funani.Gui.Controls.FileExplorer
                 return _files
                     .Skip(startIndex)
                     .Take(count)
-                    .Select(x => new FileViewModel(x, _engine))
+                    .Select(x => new FileViewModel(x))
                     .ToList();
             }
         }
