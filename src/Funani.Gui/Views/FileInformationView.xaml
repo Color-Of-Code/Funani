@@ -57,7 +57,7 @@
             </ItemsControl>
         </StackPanel>
 
-        <Grid Grid.Row="4" DataContext="{Binding ElementName=ListControl,Path=SelectedItem}">
+        <StackPanel Visibility="Collapsed" DataContext="{Binding ElementName=ListControl,Path=SelectedItem}">
 
             <GroupBox Grid.Column="2" Grid.Row="0">
                 <GroupBox.Header>
@@ -143,6 +143,6 @@
                                               ></funaniControls:TokenizingControl>
                 </Grid>
             </GroupBox>
-        </Grid>
+        </StackPanel>
     </StackPanel>
 </catel:UserControl>

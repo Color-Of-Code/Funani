@@ -171,7 +171,7 @@ namespace Funani.Gui.ViewModels
         public void RefreshMetadata()
         {
             _engine.RefreshMetadata(FileInformation);
-            RaisePropertyChanged(null);
+            RaisePropertyChanged(this, (string)null);
         }
     }
 }

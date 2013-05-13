@@ -29,15 +29,6 @@
  */
 
 using System;
-using System.ComponentModel;
-using System.Diagnostics;
-using System.Windows;
-using System.Windows.Controls;
-
-using Funani.Api;
-using Funani.Api.Metadata;
-using Funani.Gui.Model;
-using Funani.Gui.ViewModels;
 
 namespace Funani.Gui.Views
 {
@@ -49,8 +40,6 @@ namespace Funani.Gui.Views
         public FileInformationView()
         {
             InitializeComponent();
-
-            DataContext = this;
 
             TokenizerPeople.TokenMatcher = TokenMatcher;
             TokenizerLocation.TokenMatcher = TokenMatcher;
@@ -64,6 +53,5 @@ namespace Funani.Gui.Views
                 return text.Substring(0, text.Length - 1).Trim().ToUpper();
             return null;
         }
-
     }
 }
