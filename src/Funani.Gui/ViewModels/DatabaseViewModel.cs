@@ -33,6 +33,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 
+using Catel.Data;
 using Catel.MVVM;
 
 using Funani.Api;
@@ -47,31 +48,47 @@ namespace Funani.Gui.ViewModels
     /// </summary>
     public class DatabaseViewModel : ViewModelBase, IItemsProvider<FileInformationViewModel>
     {
-        private readonly Boolean _deleted;
-        private readonly String _orderByClause;
-        private readonly String _regexTitle;
-        private readonly String _whereClause;
+        private Boolean _deleted;
+        private String _orderByClause;
+        private String _regexTitle;
+        private String _whereClause;
         private DateTime? _fromDate;
         private DateTime? _toDate;
 
-        /// <summary>
-        ///     Initializes a new instance of the <see cref="FileViewModelProvider" /> class.
-        /// </summary>
-        public DatabaseViewModel(Boolean deleted, String regexTitle,
-                                 String whereClause, String orderByClause, DateTime? fromDate, DateTime? toDate)
+        public DatabaseViewModel()
         {
             _engine = ServiceLocator.ResolveType<IEngine>();
+        }
+
+        public void RebuildList(Boolean deleted, String regexTitle,
+                                 String whereClause, String orderByClause, DateTime? fromDate, DateTime? toDate)
+        {
             _deleted = deleted;
             _regexTitle = regexTitle;
             _fromDate = fromDate;
             _toDate = toDate;
             _whereClause = whereClause;
             _orderByClause = orderByClause;
+            FileInformationViewModels = new AsyncVirtualizingCollection<FileInformationViewModel>(this, 40, 10 * 1000);
         }
+
+        /// <summary>
+        /// Gets or sets the property value.
+        /// </summary>
+        public IEnumerable<FileInformationViewModel> FileInformationViewModels
+        {
+            get { return GetValue<IEnumerable<FileInformationViewModel>>(FileInformationViewModelsProperty); }
+            private set { SetValue(FileInformationViewModelsProperty, value); }
+        }
+
+        /// <summary>
+        /// Register the FileInformationViewModels property so it is known in the class.
+        /// </summary>
+        public static readonly PropertyData FileInformationViewModelsProperty = RegisterProperty("FileInformationViewModels", typeof(IEnumerable<FileInformationViewModel>), null);
 
         private readonly IEngine _engine;
 
-        public static IEnumerable<String> SupportedOrderingClauses
+        public IEnumerable<String> SupportedOrderingClauses
         {
             get
             {
@@ -88,7 +105,7 @@ namespace Funani.Gui.ViewModels
             }
         }
 
-        public static IEnumerable<String> SupportedWhereClauses
+        public IEnumerable<String> SupportedWhereClauses
         {
             get
             {
@@ -100,6 +117,18 @@ namespace Funani.Gui.ViewModels
                         "others"
                     };
             }
+        }
+
+        /// <summary>
+        /// Tokenizer used inside the tagging controls
+        /// </summary>
+        /// <param name="text"></param>
+        /// <returns></returns>
+        public static String TokenMatcher(String text)
+        {
+            if (text.EndsWith(";") || text.EndsWith(","))
+                return text.Substring(0, text.Length - 1).Trim().ToUpper();
+            return null;
         }
 
         /// <summary>

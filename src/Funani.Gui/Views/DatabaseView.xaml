@@ -38,9 +38,11 @@
                 <ColumnDefinition Width="100"></ColumnDefinition>
             </Grid.ColumnDefinitions>
             <CheckBox Grid.Column="0" x:Name="CheckBoxDeleted" Click="ReloadFiles_Handler" VerticalAlignment="Center" Margin="2">Show deleted</CheckBox>
-            <ComboBox Grid.Column="1" x:Name="ComboWhere" SelectionChanged="ReloadFiles_Handler">
+            <ComboBox Grid.Column="1" x:Name="ComboWhere" SelectionChanged="ReloadFiles_Handler"
+                      ItemsSource="{Binding SupportedWhereClauses}">
             </ComboBox>
-            <ComboBox Grid.Column="2" x:Name="ComboOrderBy" SelectionChanged="ReloadFiles_Handler">
+            <ComboBox Grid.Column="2" x:Name="ComboOrderBy" SelectionChanged="ReloadFiles_Handler"
+                      ItemsSource="{Binding SupportedOrderingClauses}">
             </ComboBox>
             <Grid Grid.Column="3">
                 <Grid.ColumnDefinitions>
@@ -61,10 +63,11 @@
                 <Run Text="{Binding ElementName=ListControl,Path=Items.Count,Mode=OneWay}"></Run>
             </TextBlock>
         </Grid>
-        <ListView Grid.Row="2" Name="ListControl" ItemsSource="{Binding}"
+        <ListView Grid.Row="2" Name="ListControl"
 		          ScrollViewer.HorizontalScrollBarVisibility="Disabled"
 		          Background="Transparent"
                   SelectionMode="Single"
+                  ItemsSource="{Binding FileInformationViewModels}"
 		          ScrollViewer.IsDeferredScrollingEnabled="True">
             <ListView.Resources>
                 <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}" Color="Salmon" />

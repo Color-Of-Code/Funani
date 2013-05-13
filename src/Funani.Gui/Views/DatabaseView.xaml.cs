@@ -52,36 +52,25 @@ namespace Funani.Gui.Views
         {
             InitializeComponent();
 
-            DataContext = this;
+            DataContext = new DatabaseViewModel();
 
-            ComboWhere.ItemsSource = DatabaseViewModel.SupportedWhereClauses;
-            ComboOrderBy.ItemsSource = DatabaseViewModel.SupportedOrderingClauses;
-
-            TokenizerPeople.TokenMatcher = TokenMatcher;
-            TokenizerLocation.TokenMatcher = TokenMatcher;
-            TokenizerEvent.TokenMatcher = TokenMatcher;
-            TokenizerKeywords.TokenMatcher = TokenMatcher;
-        }
-
-        private static String TokenMatcher(String text)
-        {
-            if (text.EndsWith(";") || text.EndsWith(","))
-                return text.Substring(0, text.Length - 1).Trim().ToUpper();
-            return null;
+            TokenizerPeople.TokenMatcher = DatabaseViewModel.TokenMatcher;
+            TokenizerLocation.TokenMatcher = DatabaseViewModel.TokenMatcher;
+            TokenizerEvent.TokenMatcher = DatabaseViewModel.TokenMatcher;
+            TokenizerKeywords.TokenMatcher = DatabaseViewModel.TokenMatcher;
         }
 
         public void ReloadFiles()
         {
             if (!DesignerProperties.GetIsInDesignMode(this))
             {
-                var provider = new DatabaseViewModel(
+                var viewModel = DataContext as DatabaseViewModel;
+                viewModel.RebuildList(
                     CheckBoxDeleted.IsChecked ?? false,
                     RegexLookFor.Text,
                     ComboWhere.SelectedItem as String,
                     ComboOrderBy.SelectedItem as String,
                     FromDate.SelectedDate, ToDate.SelectedDate);
-                var items = new AsyncVirtualizingCollection<FileInformationViewModel>(provider, 40, 10 * 1000);
-                ListControl.DataContext = items;
             }
         }
 
