@@ -29,7 +29,6 @@
  */
 
 using System;
-using System.ComponentModel;
 using System.IO;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
@@ -37,7 +36,6 @@ using System.Windows.Media.Imaging;
 using Catel.Data;
 using Catel.MVVM;
 using Funani.Api;
-using Funani.Gui.Controls;
 using Funani.Gui.Converters;
 
 namespace Funani.Gui.ViewModels
@@ -56,7 +54,7 @@ namespace Funani.Gui.ViewModels
         public FileViewModel(FileInfo fileInfo)
         {
             FileInfo = fileInfo;
-            _engine = ServiceLocator.ResolveType<IEngine>();
+            _engine = GetService<IEngine>();
             UpdateInsideFunani();
 
             Store = new Command(OnStoreExecute);

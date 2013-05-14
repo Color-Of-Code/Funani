@@ -50,7 +50,7 @@ namespace Funani.Gui.ViewModels
 
         public MongoDbViewModel(Dispatcher dispatcher)
         {
-            _engine = ServiceLocator.ResolveType<IEngine>();
+            _engine = GetService<IEngine>();
             _dispatcher = dispatcher;
             Lines = new ObservableCollection<string>();
 

@@ -30,7 +30,6 @@
 
 using System;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -39,6 +38,9 @@ using Catel.MVVM;
 
 namespace Funani.Gui.ViewModels
 {
+    /// <summary>
+    /// DirectoryViewModel is a recusirve collection of Directories
+    /// </summary>
 	[DebuggerDisplay("{DirectoryInfo}")]
 	public class DirectoryViewModel : ViewModelBase
 	{
@@ -47,17 +49,17 @@ namespace Funani.Gui.ViewModels
 
 		private bool _isExpanded;
 		private bool _isSelected;
-		private ObservableCollection<DirectoryViewModel> _items;
+		private readonly ObservableCollection<DirectoryViewModel> _items;
+        private bool _refresh;
+        private readonly Exception _exception;
 
-		public DirectoryViewModel(DirectoryInfo model)
-			: this(model, null)
-		{
-		}
-
-		public DirectoryViewModel(DirectoryInfo model, DirectoryViewModel parent)
+        public DirectoryViewModel(DirectoryInfo model, DirectoryViewModel parent = null, Exception exception = null)
 		{
 			_model = model;
 			_parent = parent;
+		    _exception = exception;
+            _refresh = true;
+            _items = new ObservableCollection<DirectoryViewModel>();
 		}
 
 		public DirectoryViewModel Lookup(DirectoryInfo path)
@@ -76,9 +78,9 @@ namespace Funani.Gui.ViewModels
 			return child.Lookup(path);
 		}
 
-		private void Fetch()
+		private void Refresh()
 		{
-			_items = new ObservableCollection<DirectoryViewModel>();
+            _items.Clear();
 			foreach (DirectoryInfo d in _model.EnumerateDirectories())
 			{
 				if ((d.Attributes & FileAttributes.Hidden) != 0)
@@ -87,11 +89,22 @@ namespace Funani.Gui.ViewModels
 				{
 					_items.Add(new DirectoryViewModel(d, this));
 				}
-				catch
+				catch(Exception ex)
 				{
+                    _items.Add(new DirectoryViewModel(d, this, ex));
 				}
 			}
+		    _refresh = false;
 		}
+
+        public String ExceptionText
+        {
+            get
+            {
+                if (_exception == null) return null;
+                return _exception.Message;
+            }
+        }
 
 		#region DirectoryViewModel Properties
 
@@ -99,8 +112,8 @@ namespace Funani.Gui.ViewModels
 		{
 			get
 			{
-				if (_items == null)
-					Fetch();
+                if (_refresh)
+                    Refresh();
 				return _items;
 			}
 		}
@@ -114,7 +127,7 @@ namespace Funani.Gui.ViewModels
 		{
 			get
 			{
-				String basePath = "pack://application:,,,/Images/";
+				const string basePath = "pack://application:,,,/Images/";
 				String icon = "folder";
 				if (IsSelected)
 					icon = "folder-open";

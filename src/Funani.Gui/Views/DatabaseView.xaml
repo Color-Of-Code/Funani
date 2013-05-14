@@ -69,6 +69,11 @@
                   SelectionMode="Single"
                   ItemsSource="{Binding FileInformationViewModels}"
 		          ScrollViewer.IsDeferredScrollingEnabled="True">
+            <ListView.ContextMenu>
+                <ContextMenu>
+                    <MenuItem Header="Update metadata for all files" Command="{Binding RefreshAllMetadata}"></MenuItem>
+                </ContextMenu>
+            </ListView.ContextMenu>
             <ListView.Resources>
                 <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}" Color="Salmon" />
                 <SolidColorBrush x:Key="{x:Static SystemColors.ControlBrushKey}" Color="Salmon" />
@@ -89,8 +94,7 @@
                             >
                         <Canvas.ContextMenu>
                             <ContextMenu>
-                                <MenuItem Header="Update metadata" Click="RefreshMetadata_Click" DataContext="{Binding}"></MenuItem>
-                                <MenuItem Header="Update metadata for all files" Click="RefreshMetadataAll_Click"  DataContext="{Binding}"></MenuItem>
+                                <MenuItem Header="Update metadata" Command="{Binding RefreshMetadata}"></MenuItem>
                             </ContextMenu>
                         </Canvas.ContextMenu>
                         <Border Background="Black" BorderBrush="Gray" BorderThickness="4"

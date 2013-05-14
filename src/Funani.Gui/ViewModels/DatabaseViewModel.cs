@@ -38,7 +38,6 @@ using Catel.MVVM;
 
 using Funani.Api;
 using Funani.Api.Metadata;
-using Funani.Gui.Controls.FileExplorer;
 using Funani.Gui.Model;
 
 namespace Funani.Gui.ViewModels
@@ -57,7 +56,9 @@ namespace Funani.Gui.ViewModels
 
         public DatabaseViewModel()
         {
-            _engine = ServiceLocator.ResolveType<IEngine>();
+            _engine = GetService<IEngine>();
+
+            RefreshAllMetadata = new Command(OnRefreshAllMetadataExecute);
         }
 
         public void RebuildList(Boolean deleted, String regexTitle,
@@ -69,7 +70,12 @@ namespace Funani.Gui.ViewModels
             _toDate = toDate;
             _whereClause = whereClause;
             _orderByClause = orderByClause;
-            FileInformationViewModels = new AsyncVirtualizingCollection<FileInformationViewModel>(this, 40, 10 * 1000);
+            RefreshFiles();
+        }
+
+        private void RefreshFiles()
+        {
+            FileInformationViewModels = new AsyncVirtualizingCollection<FileInformationViewModel>(this, 40, 10*1000);
         }
 
         /// <summary>
@@ -215,5 +221,56 @@ namespace Funani.Gui.ViewModels
 
             return query;
         }
+
+        #region Command: RefreshAllMetadata
+        /// <summary>
+        /// Gets the RefreshAllMetadata command.
+        /// </summary>
+        public Command RefreshAllMetadata { get; private set; }
+
+        /// <summary>
+        /// Refresh Metadata for each entry in the database
+        /// </summary>
+        private void OnRefreshAllMetadataExecute()
+        {
+            var engine = GetService<IEngine>();
+            foreach (FileInformation fi in engine.FileInformation)
+                engine.RefreshMetadata(fi);
+            RefreshFiles();
+        }
+
+        #endregion
+
+        #region Command: RefreshSelectedMetadata
+        /// <summary>
+        /// Gets the RefreshSelectedMetadata command.
+        /// </summary>
+        public Command RefreshSelectedMetadata { get; private set; }
+
+        /// <summary>
+        /// Refresh Metadata for the selected entries in the database
+        /// </summary>
+        private void OnRefreshSelectedMetadataExecute()
+        {
+            throw new NotImplementedException();
+            var engine = GetService<IEngine>();
+            foreach (FileInformation fi in engine.FileInformation)
+                engine.RefreshMetadata(fi);
+            RefreshFiles();
+            //if (ListControl.SelectedItem == null || !ListControl.SelectedItems.Contains(viewModel))
+            //{
+            //    viewModel.RefreshMetadata();
+            //}
+            //else
+            //{
+            //    foreach (FileInformationViewModel item in ListControl.SelectedItems)
+            //    {
+            //        item.RefreshMetadata();
+            //    }
+            //}
+        }
+
+        #endregion
+
     }
 }

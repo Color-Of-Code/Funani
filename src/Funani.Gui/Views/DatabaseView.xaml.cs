@@ -79,33 +79,6 @@ namespace Funani.Gui.Views
             ReloadFiles();
         }
 
-        private void RefreshMetadataAll_Click(object sender, RoutedEventArgs e)
-        {
-            var engine = ServiceLocator.Default.ResolveType<IEngine>();
-            foreach (FileInformation fi in engine.FileInformation)
-                engine.RefreshMetadata(fi);
-            ReloadFiles();
-        }
-
-        private void RefreshMetadata_Click(object sender, RoutedEventArgs e)
-        {
-            var canvas = sender as Control;
-            Debug.Assert(canvas != null, "canvas is null");
-            var viewModel = canvas.DataContext as FileInformationViewModel;
-            Debug.Assert(viewModel != null, "viewModel != null");
-            if (ListControl.SelectedItem == null || !ListControl.SelectedItems.Contains(viewModel))
-            {
-                viewModel.RefreshMetadata();
-            }
-            else
-            {
-                foreach (FileInformationViewModel item in ListControl.SelectedItems)
-                {
-                    item.RefreshMetadata();
-                }
-            }
-        }
-
         private void ReloadFiles_Handler(object sender, RoutedEventArgs e)
         {
             ReloadFiles();

@@ -47,7 +47,7 @@ namespace Funani.Gui.Controls.Progress
 
         public CommandProgressViewModel()
         {
-            _commands = ServiceLocator.ResolveType<ICommandQueue>();
+            _commands = GetService<ICommandQueue>();
             BindEvents();
         }
 

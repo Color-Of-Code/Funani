@@ -29,18 +29,14 @@
  */
 
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.IO;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
-using Catel.Data;
 using Catel.MVVM;
 
 using Funani.Api;
 using Funani.Api.Metadata;
-using Funani.Gui.Controls;
 using Funani.Gui.Converters;
 
 namespace Funani.Gui.ViewModels
@@ -56,7 +52,8 @@ namespace Funani.Gui.ViewModels
         public FileInformationViewModel(FileInformation fileInformation)
         {
             FileInformation = fileInformation;
-            _engine = ServiceLocator.ResolveType<IEngine>();
+            _engine = GetService<IEngine>();
+            RefreshMetadata = new Command(OnRefreshMetadataExecute);
         }
 
         private readonly IEngine _engine;
@@ -168,10 +165,22 @@ namespace Funani.Gui.ViewModels
             return String.Format("FileInfo: {0}", FileInformation.Id);
         }
 
-        public void RefreshMetadata()
+        #region Command: RefreshMetadata
+        /// <summary>
+        /// Gets the RefreshMetadata command.
+        /// </summary>
+        public Command RefreshMetadata { get; private set; }
+
+        /// <summary>
+        /// Refresh Metadata for this entry in the database
+        /// </summary>
+        private void OnRefreshMetadataExecute()
         {
             _engine.RefreshMetadata(FileInformation);
-            RaisePropertyChanged(this, (string)null);
+            RaisePropertyChanged(this, string.Empty);
         }
+
+        #endregion
+
     }
 }

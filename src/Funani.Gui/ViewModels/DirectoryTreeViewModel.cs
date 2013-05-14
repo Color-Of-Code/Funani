@@ -28,12 +28,15 @@
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Threading;
+
 using Catel.MVVM;
+
 using Funani.Api;
 using Funani.Engine.Commands;
 
@@ -46,7 +49,7 @@ namespace Funani.Gui.ViewModels
 
 		public DirectoryTreeViewModel()
 		{
-			_engine = ServiceLocator.ResolveType<IEngine>();
+			_engine = GetService<IEngine>();
 			IEnumerable<DirectoryInfo> rootDirectories = Directory.GetLogicalDrives().Select(x => new DirectoryInfo(x));
 			_firstGeneration = new ObservableCollection<DirectoryViewModel>();
 			foreach (DirectoryInfo model in rootDirectories)
@@ -55,9 +58,10 @@ namespace Funani.Gui.ViewModels
 				{
 					_firstGeneration.Add(new DirectoryViewModel(model));
 				}
-				catch
+				catch (Exception ex)
 				{
-				}
+                    _firstGeneration.Add(new DirectoryViewModel(model, null, ex));
+                }
 			}
 		}
 

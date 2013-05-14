@@ -29,12 +29,8 @@
  */
 
 using System.IO;
-using System.Threading;
 using System.Windows;
-using System.Windows.Controls;
 
-using Funani.Api;
-using Funani.Engine.Commands;
 using Funani.Gui.ViewModels;
 
 namespace Funani.Gui.Views
@@ -48,7 +44,7 @@ namespace Funani.Gui.Views
             DependencyProperty.Register("SelectedPath", typeof (string), typeof (DirectoryTreeView),
                                         new PropertyMetadata(string.Empty));
 
-        private DirectoryTreeViewModel _viewModel;
+        private readonly DirectoryTreeViewModel _viewModel;
 
         public DirectoryTreeView()
         {

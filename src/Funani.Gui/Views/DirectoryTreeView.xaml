@@ -4,8 +4,7 @@
              mc:Ignorable="d" xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:catel="http://catel.codeplex.com"
-             xmlns:funani="clr-namespace:Funani.Gui.Views"
-             xmlns:funaniVM="clr-namespace:Funani.Gui.ViewModels"
+             xmlns:funani="clr-namespace:Funani.Gui.ViewModels"
              d:DesignHeight="200" d:DesignWidth="640">
 	<Grid>
 		<TreeView x:Name="Directories" SelectedItemChanged="directories_SelectedItemChanged"
@@ -30,11 +29,12 @@
 				</Style>
 			</TreeView.ItemContainerStyle>
 			<TreeView.ItemTemplate>
-				<HierarchicalDataTemplate ItemsSource="{Binding Directories}" DataType="{x:Type funaniVM:DirectoryViewModel}">
+				<HierarchicalDataTemplate ItemsSource="{Binding Directories}" DataType="{x:Type funani:DirectoryViewModel}">
 					<StackPanel Orientation="Horizontal">
 						<Image Width="16" Height="16" Margin="3,0" Source="{Binding Icon}" />
 						<TextBlock Text="{Binding Name}" />
-					</StackPanel>
+                        <TextBlock Foreground="Red" Text="{Binding ExceptionText}" />
+                    </StackPanel>
 				</HierarchicalDataTemplate>
 			</TreeView.ItemTemplate>
 		</TreeView>
