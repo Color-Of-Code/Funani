@@ -210,8 +210,7 @@ namespace Funani.Gui.ViewModels
             }
         }
 
-        //TODO: turn private
-        public void ExpandAndSelect(DirectoryInfo path)
+        private void ExpandAndSelect(DirectoryInfo path)
         {
             DirectoryViewModel vm = Lookup(path);
             if (vm != null)

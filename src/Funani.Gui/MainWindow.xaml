@@ -78,15 +78,12 @@
 						<ColumnDefinition
 							Width="2*"></ColumnDefinition>
 					</Grid.ColumnDefinitions>
-					<!--funani:DirectoryTreeView Grid.Column="0"></funani:DirectoryTreeView-->
+					<funani:DirectoryTreeView x:Name="DirectoryTree" Grid.Column="0"></funani:DirectoryTreeView>
 					<GridSplitter
 						Grid.Column="1"
 						HorizontalAlignment="Stretch"
 						VerticalAlignment="Stretch"></GridSplitter>
-					<!--funani:FileView
-						Grid.Column="2"
-						x:Name="FileExplorer"
-						SelectedPath="{Binding Path=SelectedDirectory}"></funani:FileView-->
+                    <funani:FileView Grid.Column="2" SelectedPath="{Binding ElementName=DirectoryTree,Path=SelectedDirectory}"></funani:FileView>
 				</Grid>
 			</TabItem>
 			<TabItem>

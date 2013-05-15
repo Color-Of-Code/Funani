@@ -28,8 +28,11 @@
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-using Funani.Gui.ViewModels;
 using System.IO;
+using System.Windows.Controls;
+using System.Windows;
+
+using Funani.Gui.ViewModels;
 
 namespace Funani.Gui.Views
 {
@@ -43,11 +46,27 @@ namespace Funani.Gui.Views
             InitializeComponent();
         }
 
-        public void SelectPath(string path)
+        public DirectoryViewModel SelectedDirectory
         {
-            var vm = DataContext as DirectoryTreeViewModel;
+            get { return (DirectoryViewModel)GetValue(SelectedDirectoryProperty); }
+            set { SetValue(SelectedDirectoryProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for SelectedDirectory.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty SelectedDirectoryProperty =
+            DependencyProperty.Register("SelectedDirectory", typeof(DirectoryViewModel), typeof(DirectoryTreeView), new PropertyMetadata(null));
+
+
+        private void TreeView_SelectedItemChanged(object sender, System.Windows.RoutedPropertyChangedEventArgs<object> e)
+        {
+            var v = sender as TreeView;
+            var item = v.SelectedItem as DirectoryViewModel;
+            var vm = ViewModel as DirectoryTreeViewModel;
             if (vm != null)
-                vm.ExpandAndSelect(new DirectoryInfo(path));
+            {
+                SelectedDirectory = item;
+                vm.SelectedDirectory = item;
+            }
         }
     }
 }

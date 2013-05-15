@@ -43,7 +43,7 @@ using Funani.Gui.Model;
 namespace Funani.Gui.ViewModels
 {
     /// <summary>
-    ///     Implementation of IItemsProvider returning <see cref="FileViewModel" /> items
+    ///     Implementation of IItemsProvider returning <see cref="FileInformationViewModel" /> items
     /// </summary>
     public class DatabaseViewModel : ViewModelBase, IItemsProvider<FileInformationViewModel>
     {

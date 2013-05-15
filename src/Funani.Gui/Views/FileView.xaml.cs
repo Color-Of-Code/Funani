@@ -50,8 +50,8 @@ namespace Funani.Gui.Views
     public partial class FileView : Catel.Windows.Controls.UserControl
     {
         public static readonly DependencyProperty SelectedPathProperty =
-            DependencyProperty.Register("SelectedPath", typeof (string), typeof (FileView),
-                                        new PropertyMetadata(string.Empty, OnSelectedPathChanged));
+            DependencyProperty.Register("SelectedPath", typeof(DirectoryViewModel), typeof(FileView),
+                                        new PropertyMetadata(null, OnSelectedPathChanged));
 
         private const bool FilterAlreadyStored = false;
 
@@ -59,21 +59,18 @@ namespace Funani.Gui.Views
         {
             InitializeComponent();
 
-            _engine = ServiceLocator.Default.ResolveType<IEngine>();
-            DataContext = this;
+            //DataContext = this;
         }
 
-        private readonly IEngine _engine;
-
-        public string SelectedPath
+        public DirectoryViewModel SelectedPath
         {
-            get { return (string) GetValue(SelectedPathProperty); }
+            get { return (DirectoryViewModel)GetValue(SelectedPathProperty); }
             set { SetValue(SelectedPathProperty, value); }
         }
 
         public void ReloadFiles()
         {
-            var provider = new FileViewModelProvider(SelectedPath, FilterAlreadyStored);
+            var provider = new FileViewModelProvider(SelectedPath.DirectoryInfo.FullName, FilterAlreadyStored);
             var items = new AsyncVirtualizingCollection<FileViewModel>(provider, 20, 10*1000);
             ListControl.DataContext = items;
         }
