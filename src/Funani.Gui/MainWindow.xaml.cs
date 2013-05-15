@@ -58,7 +58,6 @@ namespace Funani.Gui
             Settings.Default.Upgrade();
 
             _engine = ServiceLocator.Default.ResolveType<IEngine>();
-            FunaniDatabase.DataContext = _engine;
 
             _commandQueue = new CommandProgressViewModel();
             Progress.DataContext = _commandQueue;
@@ -70,18 +69,11 @@ namespace Funani.Gui
             EnsureMongodbPathIsValid();
             EnsureFunanidbPathIsValid();
             _engine.OpenDatabase(settings.MongodbPath, settings.LastFunaniDatabase, MongoDbView.MongoDbListener);
-            if (!String.IsNullOrWhiteSpace(settings.LastDirectoryExplorerSelectedPath))
-            {
-                DirectoryExplorer.SelectPath(settings.LastDirectoryExplorerSelectedPath);
-            }
         }
 
         private void Window_Closing(object sender, CancelEventArgs e)
         {
             _engine.CloseDatabase();
-            Settings settings = Settings.Default;
-            settings.LastDirectoryExplorerSelectedPath = DirectoryExplorer.SelectedPath;
-            settings.Save();
         }
 
         private void EnsureFunanidbPathIsValid()

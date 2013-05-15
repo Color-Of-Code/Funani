@@ -52,9 +52,7 @@ namespace Funani.Gui.Views
         {
             InitializeComponent();
 
-            DataContext = new DatabaseViewModel();
-
-            TokenizerPeople.TokenMatcher = DatabaseViewModel.TokenMatcher;
+            DataContext = new DatabaseViewModel();            TokenizerPeople.TokenMatcher = DatabaseViewModel.TokenMatcher;
             TokenizerLocation.TokenMatcher = DatabaseViewModel.TokenMatcher;
             TokenizerEvent.TokenMatcher = DatabaseViewModel.TokenMatcher;
             TokenizerKeywords.TokenMatcher = DatabaseViewModel.TokenMatcher;
@@ -65,6 +63,8 @@ namespace Funani.Gui.Views
             if (!DesignerProperties.GetIsInDesignMode(this))
             {
                 var viewModel = DataContext as DatabaseViewModel;
+                if (viewModel == null)
+                    return;
                 viewModel.RebuildList(
                     CheckBoxDeleted.IsChecked ?? false,
                     RegexLookFor.Text,

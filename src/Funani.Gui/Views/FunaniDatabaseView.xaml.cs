@@ -28,16 +28,16 @@
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-using System.Windows.Controls;
+using Catel.Windows.Controls;
 
 namespace Funani.Gui.Views
 {
     /// <summary>
-    ///     Interaction logic for FunaniDatabase.xaml
+    ///     Interaction logic for FunaniDatabaseView.xaml
     /// </summary>
-    public partial class FunaniDatabase : UserControl
+    public partial class FunaniDatabaseView : UserControl
     {
-        public FunaniDatabase()
+        public FunaniDatabaseView()
         {
             InitializeComponent();
         }

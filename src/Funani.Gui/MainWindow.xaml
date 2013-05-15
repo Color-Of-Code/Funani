@@ -28,9 +28,7 @@
 					</StackPanel>
 				</TabItem.Header>
 				<Grid>
-					<funani:FunaniDatabase
-						Grid.Column="0"
-						x:Name="FunaniDatabase"></funani:FunaniDatabase>
+					<funani:FunaniDatabaseView Grid.Column="0"></funani:FunaniDatabaseView>
 				</Grid>
 			</TabItem>
 			<TabItem>
@@ -80,17 +78,15 @@
 						<ColumnDefinition
 							Width="2*"></ColumnDefinition>
 					</Grid.ColumnDefinitions>
-					<funani:DirectoryTreeView
-						Grid.Column="0"
-						x:Name="DirectoryExplorer"></funani:DirectoryTreeView>
+					<!--funani:DirectoryTreeView Grid.Column="0"></funani:DirectoryTreeView-->
 					<GridSplitter
 						Grid.Column="1"
 						HorizontalAlignment="Stretch"
 						VerticalAlignment="Stretch"></GridSplitter>
-					<funani:FileView
+					<!--funani:FileView
 						Grid.Column="2"
 						x:Name="FileExplorer"
-						SelectedPath="{Binding ElementName=DirectoryExplorer, Path=SelectedPath}"></funani:FileView>
+						SelectedPath="{Binding Path=SelectedDirectory}"></funani:FileView-->
 				</Grid>
 			</TabItem>
 			<TabItem>

@@ -7,13 +7,13 @@
              xmlns:funani="clr-namespace:Funani.Gui.ViewModels"
              d:DesignHeight="200" d:DesignWidth="640">
 	<Grid>
-		<TreeView x:Name="Directories" SelectedItemChanged="directories_SelectedItemChanged"
+		<TreeView
 		          ItemsSource="{Binding FirstGeneration}"
 		          Background="#FFFFFFFF" BorderBrush="#FFFFFFFF" Foreground="#FFFFFFFF">
 			<TreeView.ContextMenu>
 				<ContextMenu>
-					<MenuItem Header="Upload all files" Click="UploadAllFiles_Click"></MenuItem>
-					<MenuItem Header="Upload all files (recursively)" Click="UploadAllFilesRecursively_Click"></MenuItem>
+					<MenuItem Header="Upload all files (here)" Click="{Binding UploadAllInThisDirectory}"></MenuItem>
+                    <MenuItem Header="Upload all files (recursively)" Click="{Binding UploadAllRecursively}"></MenuItem>
 				</ContextMenu>
 			</TreeView.ContextMenu>
 			<TreeView.ItemContainerStyle>

@@ -27,27 +27,63 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 
-using Funani.Gui.ViewModels;
-using System.IO;
+using Catel.MVVM;
 
-namespace Funani.Gui.Views
+using Funani.Api;
+
+namespace Funani.Gui.ViewModels
 {
     /// <summary>
-    ///     Interaction logic for DirectoryTreeView.xaml
+    /// FunaniDatabase view model.
     /// </summary>
-    public partial class DirectoryTreeView : Catel.Windows.Controls.UserControl
+    public class FunaniDatabaseViewModel : ViewModelBase
     {
-        public DirectoryTreeView()
+        #region Fields
+        private readonly IEngine _engine;
+        #endregion
+
+        #region Constructors
+        /// <summary>
+        /// Initializes a new instance of the <see cref="FunaniDatabaseViewModel"/> class.
+        /// </summary>
+        public FunaniDatabaseViewModel()
         {
-            InitializeComponent();
+            _engine = GetService<IEngine>();
+        }
+        #endregion
+
+        #region Properties
+        /// <summary>
+        /// Gets the title of the view model.
+        /// </summary>
+        /// <value>The title.</value>
+        public override string Title { get { return "Funani Database View model"; } }
+
+        public DatabaseInfo DatabaseInfo
+        {
+            get { return _engine.DatabaseInfo; }
         }
 
-        public void SelectPath(string path)
+        public String DatabasePath
         {
-            var vm = DataContext as DirectoryTreeViewModel;
-            if (vm != null)
-                vm.ExpandAndSelect(new DirectoryInfo(path));
+            get { return _engine.DatabasePath; }
         }
+
+        public long TotalFileCount
+        {
+            get { return _engine.TotalFileCount; }
+        }
+        #endregion
+
+        #region Commands
+        #endregion
+
+        #region Methods
+        #endregion
     }
 }
