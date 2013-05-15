@@ -7,16 +7,16 @@
              xmlns:funani="clr-namespace:Funani.Gui.ViewModels"
              d:DesignHeight="200" d:DesignWidth="640">
 	<Grid>
-        <!--Grid.ContextMenu>
-            <ContextMenu>
-                <MenuItem Header="Upload all files (here)" Click="{Binding UploadAllInThisDirectory}"></MenuItem>
-                <MenuItem Header="Upload all files (recursively)" Click="{Binding UploadAllRecursively}"></MenuItem>
-            </ContextMenu>
-        </Grid.ContextMenu-->
         <TreeView ItemsSource="{Binding FirstGeneration}"
                   SelectedItemChanged="TreeView_SelectedItemChanged"
 		          Background="#FFFFFFFF" BorderBrush="#FFFFFFFF" Foreground="#FFFFFFFF">
-			<TreeView.ItemContainerStyle>
+            <TreeView.ContextMenu>
+                <ContextMenu>
+                    <MenuItem Header="Upload all files (here)" Command="{Binding UploadAllInThisDirectory}"></MenuItem>
+                    <MenuItem Header="Upload all files (recursively)" Command="{Binding UploadAllRecursively}"></MenuItem>
+                </ContextMenu>
+            </TreeView.ContextMenu>
+            <TreeView.ItemContainerStyle>
 				<Style TargetType="{x:Type TreeViewItem}">
 					<Setter Property="IsExpanded" Value="{Binding IsExpanded, Mode=TwoWay}" />
 					<Setter Property="IsSelected" Value="{Binding IsSelected, Mode=TwoWay}" />
