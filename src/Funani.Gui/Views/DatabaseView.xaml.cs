@@ -45,43 +45,11 @@ namespace Funani.Gui.Views
         {
             InitializeComponent();
 
-            DataContext = new DatabaseViewModel();
-            
             TokenizerPeople.TokenMatcher = DatabaseViewModel.TokenMatcher;
             TokenizerLocation.TokenMatcher = DatabaseViewModel.TokenMatcher;
             TokenizerEvent.TokenMatcher = DatabaseViewModel.TokenMatcher;
             TokenizerKeywords.TokenMatcher = DatabaseViewModel.TokenMatcher;
         }
 
-        public void ReloadFiles()
-        {
-            if (!DesignerProperties.GetIsInDesignMode(this))
-            {
-                var viewModel = DataContext as DatabaseViewModel;
-                if (viewModel == null)
-                    return;
-                viewModel.RebuildList(
-                    CheckBoxDeleted.IsChecked ?? false,
-                    RegexLookFor.Text,
-                    ComboWhere.SelectedItem as String,
-                    ComboOrderBy.SelectedItem as String,
-                    FromDate.SelectedDate, ToDate.SelectedDate);
-            }
-        }
-
-        private void UserControl_GotFocus(object sender, RoutedEventArgs e)
-        {
-            ReloadFiles();
-        }
-
-        private void ReloadFiles_Handler(object sender, RoutedEventArgs e)
-        {
-            ReloadFiles();
-        }
-
-        private void ReloadFiles_SelectionChanged_Handler(object sender, SelectionChangedEventArgs e)
-        {
-            ReloadFiles();
-        }
     }
 }

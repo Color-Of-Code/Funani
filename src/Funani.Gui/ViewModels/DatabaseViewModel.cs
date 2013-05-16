@@ -47,36 +47,117 @@ namespace Funani.Gui.ViewModels
     /// </summary>
     public class DatabaseViewModel : ViewModelBase, IItemsProvider<FileInformationViewModel>
     {
-        private Boolean _deleted;
         private String _orderByClause;
-        private String _regexTitle;
         private String _whereClause;
-        private DateTime? _fromDate;
-        private DateTime? _toDate;
 
         public DatabaseViewModel()
         {
             _engine = GetService<IEngine>();
 
+            Refresh = new Command(OnRefreshExecute);
             RefreshAllMetadata = new Command(OnRefreshAllMetadataExecute);
+            RefreshSelectedMetadata = new Command(OnRefreshSelectedMetadataExecute);
         }
 
-        public void RebuildList(Boolean deleted, String regexTitle,
-                                 String whereClause, String orderByClause, DateTime? fromDate, DateTime? toDate)
+        #region Property: RegularExpression
+        /// <summary>
+        /// Gets or sets the property value.
+        /// </summary>
+        public String RegularExpression
         {
-            _deleted = deleted;
-            _regexTitle = regexTitle;
-            _fromDate = fromDate;
-            _toDate = toDate;
-            _whereClause = whereClause;
-            _orderByClause = orderByClause;
-            RefreshFiles();
+            get { return GetValue<String>(RegularExpressionProperty); }
+            set { SetValue(RegularExpressionProperty, value); }
         }
 
-        private void RefreshFiles()
+        /// <summary>
+        /// Register the RegularExpression property so it is known in the class.
+        /// </summary>
+        public static readonly PropertyData RegularExpressionProperty = RegisterProperty("RegularExpression",
+            typeof(String), null, (sender, e) => ((DatabaseViewModel)sender).OnRegularExpressionChanged());
+
+        /// <summary>
+        /// Called when the RegularExpression property has changed.
+        /// </summary>
+        private void OnRegularExpressionChanged()
         {
-            FileInformationViewModels = new AsyncVirtualizingCollection<FileInformationViewModel>(this, 40, 10*1000);
+            OnRefreshExecute();
         }
+        #endregion
+
+        #region Property: QueryDeletedFiles
+        /// <summary>
+        /// Gets or sets the property value.
+        /// </summary>
+        public Boolean QueryDeletedFiles
+        {
+            get { return GetValue<Boolean>(QueryDeletedFilesProperty); }
+            set { SetValue(QueryDeletedFilesProperty, value); }
+        }
+
+        /// <summary>
+        /// Register the QueryDeletedFiles property so it is known in the class.
+        /// </summary>
+        public static readonly PropertyData QueryDeletedFilesProperty = RegisterProperty("QueryDeletedFiles",
+            typeof(Boolean), false, (sender, e) => ((DatabaseViewModel)sender).OnQueryDeletedFilesChanged());
+
+        /// <summary>
+        /// Called when the QueryDeletedFiles property has changed.
+        /// </summary>
+        private void OnQueryDeletedFilesChanged()
+        {
+            OnRefreshExecute();
+        }
+        #endregion
+
+        #region Property: StartDate
+        /// <summary>
+        /// Gets or sets the property value.
+        /// </summary>
+        public DateTime? StartDate
+        {
+            get { return GetValue<DateTime?>(StartDateProperty); }
+            set { SetValue(StartDateProperty, value); }
+        }
+
+        /// <summary>
+        /// Register the StartDate property so it is known in the class.
+        /// </summary>
+        public static readonly PropertyData StartDateProperty = RegisterProperty("StartDate",
+            typeof(DateTime?), null, (sender, e) => ((DatabaseViewModel)sender).OnStartDateChanged());
+
+        /// <summary>
+        /// Called when the StartDate property has changed.
+        /// </summary>
+        private void OnStartDateChanged()
+        {
+            OnRefreshExecute();
+        }
+        #endregion
+
+        #region Property: EndDate
+        /// <summary>
+        /// Gets or sets the property value.
+        /// </summary>
+        public DateTime? EndDate
+        {
+            get { return GetValue<DateTime?>(EndDateProperty); }
+            set { SetValue(EndDateProperty, value); }
+        }
+
+        /// <summary>
+        /// Register the EndDate property so it is known in the class.
+        /// </summary>
+        public static readonly PropertyData EndDateProperty = RegisterProperty("EndDate",
+            typeof(DateTime?), null, (sender, e) => ((DatabaseViewModel)sender).OnEndDateChanged());
+
+        /// <summary>
+        /// Called when the EndDate property has changed.
+        /// </summary>
+        private void OnEndDateChanged()
+        {
+            OnRefreshExecute();
+        }
+        #endregion
 
         /// <summary>
         /// Gets or sets the property value.
@@ -170,32 +251,33 @@ namespace Funani.Gui.ViewModels
             }
         }
 
+        #region Helpers
         private IQueryable<FileInformation> BuildQuery()
         {
             IQueryable<FileInformation> query = _engine.FileInformation;
-            if (_deleted)
+            if (QueryDeletedFiles)
                 query = query.Where(x => x.IsDeleted);
             else
                 query = query.Where(x => !x.IsDeleted);
 
-            if (!String.IsNullOrWhiteSpace(_regexTitle))
+            if (!String.IsNullOrWhiteSpace(RegularExpression))
             {
                 try
                 {
-                    var regex = new Regex(_regexTitle);
+                    var regex = new Regex(RegularExpression, RegexOptions.IgnoreCase);
                     query = query.Where(x => regex.IsMatch(x.Title));
                 }
                 catch
                 {
                 }
             }
-            if (_fromDate.HasValue)
+            if (StartDate.HasValue)
             {
-                query = query.Where(x => x.DateTaken >= _fromDate.Value);
+                query = query.Where(x => x.DateTaken >= StartDate.Value);
             }
-            if (_toDate.HasValue)
+            if (EndDate.HasValue)
             {
-                DateTime toDate = _toDate.Value.AddDays(1);
+                DateTime toDate = EndDate.Value.AddDays(1);
                 query = query.Where(x => x.DateTaken <= toDate);
             }
 
@@ -221,6 +303,22 @@ namespace Funani.Gui.ViewModels
 
             return query;
         }
+        #endregion
+
+        #region Command: Refresh
+        /// <summary>
+        /// Gets the Refresh command.
+        /// </summary>
+        public Command Refresh { get; private set; }
+
+        /// <summary>
+        /// Method to invoke when the Refresh command is executed.
+        /// </summary>
+        private void OnRefreshExecute()
+        {
+            FileInformationViewModels = new AsyncVirtualizingCollection<FileInformationViewModel>(this, 40, 10 * 1000);
+        }
+        #endregion
 
         #region Command: RefreshAllMetadata
         /// <summary>
@@ -236,7 +334,7 @@ namespace Funani.Gui.ViewModels
             var engine = GetService<IEngine>();
             foreach (FileInformation fi in engine.FileInformation)
                 engine.RefreshMetadata(fi);
-            RefreshFiles();
+            OnRefreshExecute();
         }
 
         #endregion
@@ -256,7 +354,7 @@ namespace Funani.Gui.ViewModels
             var engine = GetService<IEngine>();
             foreach (FileInformation fi in engine.FileInformation)
                 engine.RefreshMetadata(fi);
-            RefreshFiles();
+            OnRefreshExecute();
             //if (ListControl.SelectedItem == null || !ListControl.SelectedItems.Contains(viewModel))
             //{
             //    viewModel.RefreshMetadata();

@@ -7,7 +7,6 @@
              mc:Ignorable="d" xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              d:DesignHeight="480" d:DesignWidth="640"
-			Loaded="UserControl_GotFocus"
 			>
     <Grid>
         <Grid.RowDefinitions>
@@ -37,11 +36,11 @@
                 <ColumnDefinition Width="100"></ColumnDefinition>
                 <ColumnDefinition Width="100"></ColumnDefinition>
             </Grid.ColumnDefinitions>
-            <CheckBox Grid.Column="0" x:Name="CheckBoxDeleted" Click="ReloadFiles_Handler" VerticalAlignment="Center" Margin="2">Show deleted</CheckBox>
-            <ComboBox Grid.Column="1" x:Name="ComboWhere" SelectionChanged="ReloadFiles_Handler"
+            <CheckBox Grid.Column="0" IsChecked="{Binding QueryDeletedFiles}" VerticalAlignment="Center" Margin="2">Show deleted</CheckBox>
+            <ComboBox Grid.Column="1" x:Name="ComboWhere" 
                       ItemsSource="{Binding SupportedWhereClauses}">
             </ComboBox>
-            <ComboBox Grid.Column="2" x:Name="ComboOrderBy" SelectionChanged="ReloadFiles_Handler"
+            <ComboBox Grid.Column="2" x:Name="ComboOrderBy"
                       ItemsSource="{Binding SupportedOrderingClauses}">
             </ComboBox>
             <Grid Grid.Column="3">
@@ -49,11 +48,11 @@
                     <ColumnDefinition></ColumnDefinition>
                     <ColumnDefinition Width="Auto"></ColumnDefinition>
                 </Grid.ColumnDefinitions>
-                <TextBox Grid.Column="0" x:Name="RegexLookFor" ToolTip="Regular expression for the query on the title"></TextBox>
-                <Button Grid.Column="1" Click="ReloadFiles_Handler">Run Query</Button>
+                <TextBox Grid.Column="0" x:Name="RegexLookFor" Text="{Binding RegularExpression}" ToolTip="Regular expression for the query on the title"></TextBox>
+                <Button Grid.Column="1" Command="{Binding Refresh}">Run Query</Button>
             </Grid>
-            <DatePicker Grid.Column="4" x:Name="FromDate" SelectedDateChanged="ReloadFiles_SelectionChanged_Handler" />
-            <DatePicker Grid.Column="5" x:Name="ToDate" SelectedDateChanged="ReloadFiles_SelectionChanged_Handler" />
+            <DatePicker Grid.Column="4" SelectedDate="{Binding StartDate}" />
+            <DatePicker Grid.Column="5" SelectedDate="{Binding EndDate}" />
             <TextBlock Grid.Column="6" HorizontalAlignment="Center" VerticalAlignment="Center">
                 <Run Text="Selected:"></Run>
                 <Run Text="{Binding ElementName=ListControl,Path=SelectedItems.Count,Mode=OneWay}"></Run>
