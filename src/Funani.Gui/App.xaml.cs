@@ -31,6 +31,7 @@
 using System.Windows;
 
 using Catel.IoC;
+using Catel.Windows;
 
 using Funani.Api;
 using Funani.Engine;
@@ -44,6 +45,8 @@ namespace Funani.Gui
     {
         protected override void OnStartup(StartupEventArgs e)
         {
+            StyleHelper.CreateStyleForwardersForDefaultStyles(); 
+            
             base.OnStartup(e);
 
             ServiceLocator.Default.RegisterType<IEngine, FunaniEngine>();
