@@ -28,7 +28,6 @@
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-
 namespace Funani.Gui.Views
 {
     /// <summary>

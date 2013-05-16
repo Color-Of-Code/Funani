@@ -4,110 +4,104 @@
 	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
 	xmlns:funani="clr-namespace:Funani.Gui.Views"
+    xmlns:catel="http://catel.codeplex.com"
 	Title="Funani - manage big amount of files easily"
 	Loaded="Window_Loaded"
 	Closing="Window_Closing"
 	Icon="pack://application:,,,/Images/logo2.png"
 	Height="640"
 	Width="1024">
-	<Grid>
-		<Grid.RowDefinitions>
-			<RowDefinition></RowDefinition>
-			<RowDefinition Height="16"></RowDefinition>
-		</Grid.RowDefinitions>
-		
-		<TabControl>
-			<TabItem>
-				<TabItem.Header>
-					<StackPanel
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition></RowDefinition>
+            <RowDefinition Height="16"></RowDefinition>
+        </Grid.RowDefinitions>
+
+        <TabControl>
+            <TabItem>
+                <TabItem.Header>
+                    <StackPanel
 						Orientation="Horizontal">
-						<TextBlock
+                        <TextBlock
 							VerticalAlignment="Center">Funani database</TextBlock>
-					</StackPanel>
-				</TabItem.Header>
-				<Grid>
-					<funani:FunaniDatabaseView Grid.Column="0"></funani:FunaniDatabaseView>
-				</Grid>
-			</TabItem>
-			<TabItem>
-				<TabItem.Header>
-					<StackPanel
+                    </StackPanel>
+                </TabItem.Header>
+                <Grid>
+                    <funani:FunaniDatabaseView />
+                </Grid>
+            </TabItem>
+            <TabItem>
+                <TabItem.Header>
+                    <StackPanel
 						Orientation="Horizontal">
-						<TextBlock
+                        <TextBlock
 							VerticalAlignment="Center">File explorer</TextBlock>
-						<Rectangle
+                        <Rectangle
 							Name="Rectangle"
 							Width="16"
 							Height="16"
 							Fill="Blue"
 							Margin="8,0"
 							VerticalAlignment="Center">
-							<Rectangle.RenderTransform>
-								<RotateTransform
+                            <Rectangle.RenderTransform>
+                                <RotateTransform
 									Angle="0"
 									CenterX="8"
 									CenterY="8" />
-							</Rectangle.RenderTransform>
-							<Rectangle.Triggers>
-								<EventTrigger
+                            </Rectangle.RenderTransform>
+                            <Rectangle.Triggers>
+                                <EventTrigger
 									RoutedEvent="Rectangle.Loaded">
-									<BeginStoryboard>
-										<Storyboard>
-											<DoubleAnimation
+                                    <BeginStoryboard>
+                                        <Storyboard>
+                                            <DoubleAnimation
 												Storyboard.TargetName="Rectangle"
 												Storyboard.TargetProperty="(TextBlock.RenderTransform).(RotateTransform.Angle)"
 												From="0"
 												To="360"
 												Duration="0:0:5"
 												RepeatBehavior="Forever" />
-										</Storyboard>
-									</BeginStoryboard>
-								</EventTrigger>
-							</Rectangle.Triggers>
-						</Rectangle>
-					</StackPanel>
-				</TabItem.Header>
-				<Grid>
-					<Grid.ColumnDefinitions>
-						<ColumnDefinition
-							Width="1*"></ColumnDefinition>
-						<ColumnDefinition
-							Width="10"></ColumnDefinition>
-						<ColumnDefinition
-							Width="2*"></ColumnDefinition>
-					</Grid.ColumnDefinitions>
-					<funani:DirectoryTreeView x:Name="DirectoryTree" Grid.Column="0"></funani:DirectoryTreeView>
-					<GridSplitter
-						Grid.Column="1"
-						HorizontalAlignment="Stretch"
-						VerticalAlignment="Stretch"></GridSplitter>
-                    <funani:FileView Grid.Column="2" SelectedPath="{Binding ElementName=DirectoryTree,Path=SelectedDirectory}"></funani:FileView>
-				</Grid>
-			</TabItem>
-			<TabItem>
-				<TabItem.Header>
-					<StackPanel
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </EventTrigger>
+                            </Rectangle.Triggers>
+                        </Rectangle>
+                    </StackPanel>
+                </TabItem.Header>
+                <catel:StackGrid>
+                    <catel:StackGrid.ColumnDefinitions>
+                        <ColumnDefinition Width="1*" />
+                        <ColumnDefinition Width="10" />
+                        <ColumnDefinition Width="2*" />
+                    </catel:StackGrid.ColumnDefinitions>
+                    <funani:DirectoryTreeView x:Name="DirectoryTree" Grid.Column="0"></funani:DirectoryTreeView>
+                    <GridSplitter Grid.Column="1" 
+                                  HorizontalAlignment="Stretch" 
+                                  VerticalAlignment="Stretch"></GridSplitter>
+                    <funani:FileView Grid.Column="2"
+                                     SelectedPath="{Binding ElementName=DirectoryTree,Path=SelectedDirectory}" />
+                </catel:StackGrid>
+            </TabItem>
+            <TabItem>
+                <TabItem.Header>
+                    <StackPanel
 						Orientation="Horizontal">
-						<TextBlock
+                        <TextBlock
 							VerticalAlignment="Center"><Run Text="Database explorer"/></TextBlock>
-					</StackPanel>
-				</TabItem.Header>
-				<Grid>
-					<funani:DatabaseView
-						Grid.Column="0"
-						x:Name="DatabaseExplorer"></funani:DatabaseView>
-				</Grid>
-			</TabItem>
-			<TabItem>
-				<TabItem.Header>MongoDB output</TabItem.Header>
-				<Grid>
-					<funani:MongoDbView
-						x:Name="MongoDbView"></funani:MongoDbView>
-				</Grid>
-			</TabItem>
-		</TabControl>
-		
-		<funani:CommandProgressControl Grid.Row="1" x:Name="Progress">
-		</funani:CommandProgressControl>
-	</Grid>
+                    </StackPanel>
+                </TabItem.Header>
+                <Grid>
+                    <funani:DatabaseView Grid.Column="0"/>
+                </Grid>
+            </TabItem>
+            <TabItem>
+                <TabItem.Header>MongoDB output</TabItem.Header>
+                <Grid>
+                    <funani:MongoDbView x:Name="MongoDbView" />
+                </Grid>
+            </TabItem>
+        </TabControl>
+
+        <funani:CommandProgressControl Grid.Row="1" />
+    </Grid>
 </Window>

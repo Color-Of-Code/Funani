@@ -58,8 +58,6 @@ namespace Funani.Gui.Views
         public FileView()
         {
             InitializeComponent();
-
-            //DataContext = this;
         }
 
         public DirectoryViewModel SelectedPath

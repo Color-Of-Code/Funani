@@ -54,6 +54,7 @@ namespace Funani.Gui.ViewModels
             _dispatcher = dispatcher;
             Lines = new ObservableCollection<string>();
 
+            // commands
             GetStatistics = new Command(OnGetStatisticsExecute);
             Backup = new Command(OnBackupExecute);
             RunQuery = new Command(OnRunQueryExecute);
@@ -104,6 +105,7 @@ namespace Funani.Gui.ViewModels
             }
         }
 
+        #region Command: GetStatistics
         /// <summary>
         /// Gets the GetStatistics command.
         /// </summary>
@@ -116,7 +118,9 @@ namespace Funani.Gui.ViewModels
         {
             Statistics = Funani.GetStats();
         }
+        #endregion
 
+        #region Command: Backup
         /// <summary>
         /// Gets the Backup command.
         /// </summary>
@@ -129,7 +133,9 @@ namespace Funani.Gui.ViewModels
         {
             _engine.Backup();
         }
+        #endregion
 
+        #region Command: RunQuery
         /// <summary>
         /// Gets the RunQuery command.
         /// </summary>
@@ -142,6 +148,7 @@ namespace Funani.Gui.ViewModels
         {
             RaisePropertyChanged("QueryResults");
         }
+        #endregion
 
     }
 }
