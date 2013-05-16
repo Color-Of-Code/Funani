@@ -35,7 +35,7 @@ using Catel.MVVM;
 
 using Funani.Api;
 
-namespace Funani.Gui.Controls.Progress
+namespace Funani.Gui.ViewModels
 {
     public class CommandProgressViewModel : ViewModelBase
     {

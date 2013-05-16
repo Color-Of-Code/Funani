@@ -28,60 +28,17 @@
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-using Funani.Gui.ViewModels;
-using System;
-using System.ComponentModel;
-using System.Windows;
-using System.Windows.Controls;
 
 namespace Funani.Gui.Views
 {
     /// <summary>
-    ///     Interaction logic for DatabaseView.xaml
+    ///     Interaction logic for CommandProgressControl.xaml
     /// </summary>
-    public partial class DatabaseView : Catel.Windows.Controls.UserControl
+    public partial class CommandProgressControl : Catel.Windows.Controls.UserControl
     {
-        public DatabaseView()
+        public CommandProgressControl()
         {
             InitializeComponent();
-
-            DataContext = new DatabaseViewModel();
-            
-            TokenizerPeople.TokenMatcher = DatabaseViewModel.TokenMatcher;
-            TokenizerLocation.TokenMatcher = DatabaseViewModel.TokenMatcher;
-            TokenizerEvent.TokenMatcher = DatabaseViewModel.TokenMatcher;
-            TokenizerKeywords.TokenMatcher = DatabaseViewModel.TokenMatcher;
-        }
-
-        public void ReloadFiles()
-        {
-            if (!DesignerProperties.GetIsInDesignMode(this))
-            {
-                var viewModel = DataContext as DatabaseViewModel;
-                if (viewModel == null)
-                    return;
-                viewModel.RebuildList(
-                    CheckBoxDeleted.IsChecked ?? false,
-                    RegexLookFor.Text,
-                    ComboWhere.SelectedItem as String,
-                    ComboOrderBy.SelectedItem as String,
-                    FromDate.SelectedDate, ToDate.SelectedDate);
-            }
-        }
-
-        private void UserControl_GotFocus(object sender, RoutedEventArgs e)
-        {
-            ReloadFiles();
-        }
-
-        private void ReloadFiles_Handler(object sender, RoutedEventArgs e)
-        {
-            ReloadFiles();
-        }
-
-        private void ReloadFiles_SelectionChanged_Handler(object sender, SelectionChangedEventArgs e)
-        {
-            ReloadFiles();
         }
     }
 }

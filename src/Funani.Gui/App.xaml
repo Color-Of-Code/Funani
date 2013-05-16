@@ -5,6 +5,7 @@
              xmlns:funaniConverters="clr-namespace:Funani.Gui.Converters"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
+        <!--ResourceDictionary Source="/Catel.Windows;component/themes/generic.xaml" /-->
         <funaniConverters:MathConverter x:Key="MathConverter"></funaniConverters:MathConverter>
         <Style x:Key="CheckBoxStyle" TargetType="{x:Type CheckBox}">
             <Style.Triggers>

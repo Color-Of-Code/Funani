@@ -34,7 +34,6 @@ using System.IO;
 using System.Windows;
 using Funani.Api;
 using Funani.Engine;
-using Funani.Gui.Controls.Progress;
 using Funani.Gui.Properties;
 using Microsoft.Win32;
 
@@ -48,7 +47,6 @@ namespace Funani.Gui
     /// </summary>
     public partial class MainWindow : Window
     {
-        private readonly CommandProgressViewModel _commandQueue;
         private readonly IEngine _engine;
 
         public MainWindow()
@@ -58,9 +56,6 @@ namespace Funani.Gui
             Settings.Default.Upgrade();
 
             _engine = ServiceLocator.Default.ResolveType<IEngine>();
-
-            _commandQueue = new CommandProgressViewModel();
-            Progress.DataContext = _commandQueue;
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)

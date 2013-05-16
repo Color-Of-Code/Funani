@@ -107,7 +107,7 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Views\DatabaseView.xaml" />
-    <Page Include="Controls\Progress\CommandProgressControl.xaml">
+    <Page Include="Views\CommandProgressControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -133,10 +133,10 @@
     <Compile Include="Converters\HeaderToImageConverter.cs" />
     <Compile Include="Converters\MathConverter.cs" />
     <Compile Include="Controls\PixelBasedScrollingBehaviour.cs" />
-    <Compile Include="Controls\Progress\CommandProgressControl.xaml.cs">
+    <Compile Include="Views\CommandProgressControl.xaml.cs">
       <DependentUpon>CommandProgressControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Progress\CommandProgressViewModel.cs" />
+    <Compile Include="ViewModels\CommandProgressViewModel.cs" />
     <Compile Include="Controls\RatingControl.xaml.cs">
       <DependentUpon>RatingControl.xaml</DependentUpon>
     </Compile>
