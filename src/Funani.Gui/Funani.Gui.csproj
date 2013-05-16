@@ -129,7 +129,7 @@
     </Compile>
     <Compile Include="ViewModels\DatabaseViewModel.cs" />
     <Compile Include="ViewModels\FileInformationViewModel.cs" />
-    <Compile Include="Controls\FileExplorer\FileViewModelProvider.cs" />
+    <Compile Include="Controls\FileViewModelProvider.cs" />
     <Compile Include="Converters\HeaderToImageConverter.cs" />
     <Compile Include="Converters\MathConverter.cs" />
     <Compile Include="Controls\PixelBasedScrollingBehaviour.cs" />

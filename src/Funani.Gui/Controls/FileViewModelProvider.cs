@@ -37,7 +37,7 @@ using Funani.Api;
 using Funani.Gui.Model;
 using Funani.Gui.ViewModels;
 
-namespace Funani.Gui.Controls.FileExplorer
+namespace Funani.Gui.Controls
 {
     /// <summary>
     ///     Implementation of IItemsProvider returning <see cref="FileViewModel" /> items

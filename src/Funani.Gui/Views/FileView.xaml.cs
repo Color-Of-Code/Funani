@@ -38,7 +38,7 @@ using System.Windows.Controls;
 using Catel.IoC;
 
 using Funani.Api;
-using Funani.Gui.Controls.FileExplorer;
+using Funani.Gui.Controls;
 using Funani.Gui.Model;
 using Funani.Gui.ViewModels;
 

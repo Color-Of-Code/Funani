@@ -4,7 +4,6 @@
 	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
 	xmlns:funani="clr-namespace:Funani.Gui.Views"
-	xmlns:dirExplorer="clr-namespace:Funani.Gui.Controls.FileExplorer"
 	Title="Funani - manage big amount of files easily"
 	Loaded="Window_Loaded"
 	Closing="Window_Closing"
