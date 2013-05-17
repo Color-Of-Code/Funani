@@ -27,42 +27,46 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
+
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
 using Catel.MVVM;
-
 using Funani.Api;
 
 namespace Funani.Gui.ViewModels
 {
     /// <summary>
-    /// FunaniDatabase view model.
+    ///     FunaniDatabase view model.
     /// </summary>
     public class FunaniDatabaseViewModel : ViewModelBase
     {
         #region Fields
+
         private readonly IEngine _engine;
+
         #endregion
 
         #region Constructors
+
         /// <summary>
-        /// Initializes a new instance of the <see cref="FunaniDatabaseViewModel"/> class.
+        ///     Initializes a new instance of the <see cref="FunaniDatabaseViewModel" /> class.
         /// </summary>
         public FunaniDatabaseViewModel()
         {
             _engine = GetService<IEngine>();
         }
+
         #endregion
 
         #region Properties
+
         /// <summary>
-        /// Gets the title of the view model.
+        ///     Gets the title of the view model.
         /// </summary>
         /// <value>The title.</value>
-        public override string Title { get { return "Funani Database View model"; } }
+        public override string Title
+        {
+            get { return "Funani Database View model"; }
+        }
 
         public DatabaseInfo DatabaseInfo
         {
@@ -78,12 +82,15 @@ namespace Funani.Gui.ViewModels
         {
             get { return _engine.TotalFileCount; }
         }
+
         #endregion
 
         #region Commands
+
         #endregion
 
         #region Methods
+
         #endregion
     }
 }

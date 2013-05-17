@@ -28,11 +28,7 @@
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-using System.Windows;
-using System.Windows.Controls;
-
-using Catel.IoC;
-
+using Catel.Windows.Controls;
 using Funani.Api;
 using Funani.Gui.ViewModels;
 
@@ -41,7 +37,7 @@ namespace Funani.Gui.Views
     /// <summary>
     ///     Interaction logic for MongoDbView.xaml
     /// </summary>
-    public partial class MongoDbView : Catel.Windows.Controls.UserControl
+    public partial class MongoDbView : UserControl
     {
         public MongoDbView()
         {
@@ -53,6 +49,5 @@ namespace Funani.Gui.Views
         {
             get { return DataContext as MongoDbViewModel; }
         }
-
     }
 }

@@ -29,8 +29,8 @@
  */
 
 using System;
-using System.ComponentModel;
 
+using Catel.Data;
 using Catel.MVVM;
 
 using Funani.Api;
@@ -40,10 +40,6 @@ namespace Funani.Gui.ViewModels
     public class CommandProgressViewModel : ViewModelBase
     {
         private readonly ICommandQueue _commands;
-        private String _eta;
-        private String _info;
-        private Int32 _performed;
-        private Int32 _total;
 
         public CommandProgressViewModel()
         {
@@ -51,45 +47,69 @@ namespace Funani.Gui.ViewModels
             BindEvents();
         }
 
+        #region Property: Total
+        /// <summary>
+        /// Count of operations.
+        /// </summary>
         public Int32 Total
         {
-            get { return _total; }
-            set
-            {
-                _total = value;
-                RaisePropertyChanged("Total");
-            }
+            get { return GetValue<Int32>(TotalProperty); }
+            set { SetValue(TotalProperty, value); }
         }
 
+        /// <summary>
+        /// Register the Total property so it is known in the class.
+        /// </summary>
+        public static readonly PropertyData TotalProperty = RegisterProperty("Total", typeof(Int32), 0);
+        #endregion
+
+        #region Property: Performed
+        /// <summary>
+        /// Count of already performed operations.
+        /// </summary>
         public Int32 Performed
         {
-            get { return _performed; }
-            set
-            {
-                _performed = value;
-                RaisePropertyChanged("Performed");
-            }
+            get { return GetValue<Int32>(PerformedProperty); }
+            set { SetValue(PerformedProperty, value); }
         }
 
+        /// <summary>
+        /// Register the Performed property so it is known in the class.
+        /// </summary>
+        public static readonly PropertyData PerformedProperty = RegisterProperty("Performed", typeof(Int32), 0);
+        #endregion
+
+        #region Property: Info
+        /// <summary>
+        /// Information String.
+        /// </summary>
         public String Info
         {
-            get { return _info; }
-            set
-            {
-                _info = value;
-                RaisePropertyChanged("Info");
-            }
+            get { return GetValue<String>(InfoProperty); }
+            set { SetValue(InfoProperty, value); }
         }
 
+        /// <summary>
+        /// Register the Info property so it is known in the class.
+        /// </summary>
+        public static readonly PropertyData InfoProperty = RegisterProperty("Info", typeof(String), null);
+        #endregion
+
+        #region Property: Info
+        /// <summary>
+        /// Estimated time of arrival, when the current batch of operations will roughly be finished.
+        /// </summary>
         public String Eta
         {
-            get { return _eta; }
-            set
-            {
-                _eta = value;
-                RaisePropertyChanged("Eta");
-            }
+            get { return GetValue<String>(EtaProperty); }
+            set { SetValue(EtaProperty, value); }
         }
+
+        /// <summary>
+        /// Register the Eta property so it is known in the class.
+        /// </summary>
+        public static readonly PropertyData EtaProperty = RegisterProperty("Eta", typeof(String), null);
+        #endregion
 
         private void model_CommandStarted(object sender, CommandProgressEventArgs e)
         {

@@ -28,19 +28,22 @@
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-using System.IO;
-using System.Windows.Controls;
 using System.Windows;
-
+using System.Windows.Controls;
 using Funani.Gui.ViewModels;
+using UserControl = Catel.Windows.Controls.UserControl;
 
 namespace Funani.Gui.Views
 {
     /// <summary>
     ///     Interaction logic for DirectoryTreeView.xaml
     /// </summary>
-    public partial class DirectoryTreeView : Catel.Windows.Controls.UserControl
+    public partial class DirectoryTreeView : UserControl
     {
+        public static readonly DependencyProperty SelectedDirectoryProperty =
+            DependencyProperty.Register("SelectedDirectory", typeof (DirectoryViewModel), typeof (DirectoryTreeView),
+                                        new PropertyMetadata(null));
+
         public DirectoryTreeView()
         {
             InitializeComponent();
@@ -48,16 +51,11 @@ namespace Funani.Gui.Views
 
         public DirectoryViewModel SelectedDirectory
         {
-            get { return (DirectoryViewModel)GetValue(SelectedDirectoryProperty); }
+            get { return (DirectoryViewModel) GetValue(SelectedDirectoryProperty); }
             set { SetValue(SelectedDirectoryProperty, value); }
         }
 
-        // Using a DependencyProperty as the backing store for SelectedDirectory.  This enables animation, styling, binding, etc...
-        public static readonly DependencyProperty SelectedDirectoryProperty =
-            DependencyProperty.Register("SelectedDirectory", typeof(DirectoryViewModel), typeof(DirectoryTreeView), new PropertyMetadata(null));
-
-
-        private void TreeView_SelectedItemChanged(object sender, System.Windows.RoutedPropertyChangedEventArgs<object> e)
+        private void TreeView_SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
         {
             var v = sender as TreeView;
             var item = v.SelectedItem as DirectoryViewModel;

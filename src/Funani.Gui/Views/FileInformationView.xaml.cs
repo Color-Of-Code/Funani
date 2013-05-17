@@ -29,13 +29,14 @@
  */
 
 using System;
+using Catel.Windows.Controls;
 
 namespace Funani.Gui.Views
 {
     /// <summary>
     ///     Interaction logic for FileInformationView.xaml
     /// </summary>
-    public partial class FileInformationView : Catel.Windows.Controls.UserControl
+    public partial class FileInformationView : UserControl
     {
         public FileInformationView()
         {
