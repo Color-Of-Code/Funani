@@ -32,9 +32,8 @@ using System;
 using System.IO;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-
+using Catel.Data;
 using Catel.MVVM;
-
 using Funani.Api;
 using Funani.Api.Metadata;
 using Funani.Gui.Converters;
@@ -49,6 +48,8 @@ namespace Funani.Gui.ViewModels
         private const int MaxThumbnailSize = 256;
         private static readonly UriToThumbnailConverter Converter = new UriToThumbnailConverter(MaxThumbnailSize);
 
+        private readonly IEngine _engine;
+
         public FileInformationViewModel(FileInformation fileInformation)
         {
             FileInformation = fileInformation;
@@ -56,26 +57,25 @@ namespace Funani.Gui.ViewModels
             RefreshMetadata = new Command(OnRefreshMetadataExecute);
         }
 
-        private readonly IEngine _engine;
+        #region Model: FileInformation
 
         /// <summary>
-        /// FileInformation model.
+        ///     Register the FileInformation property so it is known in the class.
         /// </summary>
+        public static readonly PropertyData FileInformationProperty
+            = RegisterProperty("FileInformation", typeof (FileInformation));
+
+        /// <summary>
+        ///     FileInformation model.
+        /// </summary>
+        [Model]
         public FileInformation FileInformation
         {
-            get;
-            private set;
+            get { return GetValue<FileInformation>(FileInformationProperty); }
+            private set { SetValue(FileInformationProperty, value); }
         }
 
-        public string DateTaken
-        {
-            get
-            {
-                return FileInformation.DateTaken.HasValue
-                           ? FileInformation.DateTaken.Value.ToString("yyyy-MM-dd HH:mm:ss")
-                           : null;
-            }
-        }
+        #endregion
 
         public int? Angle
         {
@@ -128,7 +128,7 @@ namespace Funani.Gui.ViewModels
                 FileInfo thumbPath = _engine.GetThumbnail(
                     FileInformation.Id, FileInformation.MimeType);
                 object value = thumbPath == null ? null : thumbPath.FullName;
-                var bitmap = Converter.Convert(value, typeof(BitmapSource), null, null) as BitmapSource;
+                var bitmap = Converter.Convert(value, typeof (BitmapSource), null, null) as BitmapSource;
                 return bitmap;
             }
         }
@@ -166,13 +166,14 @@ namespace Funani.Gui.ViewModels
         }
 
         #region Command: RefreshMetadata
+
         /// <summary>
-        /// Gets the RefreshMetadata command.
+        ///     Gets the RefreshMetadata command.
         /// </summary>
         public Command RefreshMetadata { get; private set; }
 
         /// <summary>
-        /// Refresh Metadata for this entry in the database
+        ///     Refresh Metadata for this entry in the database
         /// </summary>
         private void OnRefreshMetadataExecute()
         {
@@ -181,6 +182,5 @@ namespace Funani.Gui.ViewModels
         }
 
         #endregion
-
     }
 }

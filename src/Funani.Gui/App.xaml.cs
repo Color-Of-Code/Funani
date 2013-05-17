@@ -28,7 +28,9 @@
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+using System.Globalization;
 using System.Windows;
+using System.Windows.Markup;
 
 using Catel.IoC;
 using Catel.Windows;
@@ -45,8 +47,15 @@ namespace Funani.Gui
     {
         protected override void OnStartup(StartupEventArgs e)
         {
-            StyleHelper.CreateStyleForwardersForDefaultStyles(); 
+            StyleHelper.CreateStyleForwardersForDefaultStyles();
             
+            // ensure the UI elements are drawn using the current UI culture
+            FrameworkElement.LanguageProperty.OverrideMetadata(
+                typeof (FrameworkElement),
+                new FrameworkPropertyMetadata(
+                    XmlLanguage.GetLanguage(
+                        CultureInfo.CurrentCulture.IetfLanguageTag)));
+
             base.OnStartup(e);
 
             ServiceLocator.Default.RegisterType<IEngine, FunaniEngine>();
