@@ -47,9 +47,6 @@ namespace Funani.Gui.ViewModels
     /// </summary>
     public class DatabaseViewModel : ViewModelBase, IItemsProvider<FileInformationViewModel>
     {
-        private String _orderByClause;
-        private String _whereClause;
-
         public DatabaseViewModel()
         {
             _engine = GetService<IEngine>();
@@ -58,6 +55,56 @@ namespace Funani.Gui.ViewModels
             RefreshAllMetadata = new Command(OnRefreshAllMetadataExecute);
             RefreshSelectedMetadata = new Command(OnRefreshSelectedMetadataExecute);
         }
+
+        #region Property: WhereClause
+        /// <summary>
+        /// Gets or sets the property value.
+        /// </summary>
+        public String WhereClause
+        {
+            get { return GetValue<String>(WhereClauseProperty); }
+            set { SetValue(WhereClauseProperty, value); }
+        }
+
+        /// <summary>
+        /// Register the WhereClause property so it is known in the class.
+        /// </summary>
+        public static readonly PropertyData WhereClauseProperty = RegisterProperty("WhereClause", typeof(String),
+            null, (sender, e) => ((DatabaseViewModel)sender).OnWhereClauseChanged());
+
+        /// <summary>
+        /// Called when the WhereClause property has changed.
+        /// </summary>
+        private void OnWhereClauseChanged()
+        {
+            OnRefreshExecute();
+        }
+        #endregion
+
+        #region Property: OrderByClause
+        /// <summary>
+        /// Gets or sets the property value.
+        /// </summary>
+        public String OrderByClause
+        {
+            get { return GetValue<String>(OrderByClauseProperty); }
+            set { SetValue(OrderByClauseProperty, value); }
+        }
+
+        /// <summary>
+        /// Register the OrderByClause property so it is known in the class.
+        /// </summary>
+        public static readonly PropertyData OrderByClauseProperty = RegisterProperty("OrderByClause", typeof(String),
+            null, (sender, e) => ((DatabaseViewModel)sender).OnOrderByClauseChanged());
+
+        /// <summary>
+        /// Called when the OrderByClause property has changed.
+        /// </summary>
+        private void OnOrderByClauseChanged()
+        {
+            OnRefreshExecute();
+        }
+        #endregion
 
         #region Property: RegularExpression
         /// <summary>
@@ -175,7 +222,7 @@ namespace Funani.Gui.ViewModels
 
         private readonly IEngine _engine;
 
-        public IEnumerable<String> SupportedOrderingClauses
+        public IEnumerable<String> SupportedOrderByClauses
         {
             get
             {
@@ -281,24 +328,26 @@ namespace Funani.Gui.ViewModels
                 query = query.Where(x => x.DateTaken <= toDate);
             }
 
-            if (_whereClause == "images")
+            string whereClause = WhereClause;
+            if (whereClause == "images")
                 query = query.Where(x => x.MimeType.StartsWith("image/"));
-            else if (_whereClause == "videos")
+            else if (whereClause == "videos")
                 query = query.Where(x => x.MimeType.StartsWith("video/"));
-            else if (_whereClause == "others")
+            else if (whereClause == "others")
                 query = query.Where(x => !x.MimeType.StartsWith("image/") && !x.MimeType.StartsWith("video/"));
 
-            if (_orderByClause == "DateTaken descending")
+            string orderByClause = OrderByClause;
+            if (orderByClause == "DateTaken descending")
                 query = query.OrderByDescending(x => x.DateTaken);
-            else if (_orderByClause == "DateTaken ascending")
+            else if (orderByClause == "DateTaken ascending")
                 query = query.OrderBy(x => x.DateTaken);
-            else if (_orderByClause == "Size descending")
+            else if (orderByClause == "Size descending")
                 query = query.OrderByDescending(x => x.FileSize);
-            else if (_orderByClause == "Size ascending")
+            else if (orderByClause == "Size ascending")
                 query = query.OrderBy(x => x.FileSize);
-            else if (_orderByClause == "Rating descending")
+            else if (orderByClause == "Rating descending")
                 query = query.OrderByDescending(x => x.Rating);
-            else if (_orderByClause == "Rating ascending")
+            else if (orderByClause == "Rating ascending")
                 query = query.OrderBy(x => x.Rating);
 
             return query;

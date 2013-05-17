@@ -1,13 +1,12 @@
 <catel:UserControl x:Class="Funani.Gui.Views.DatabaseView"
-             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:catel="http://catel.codeplex.com"
-             xmlns:funani="clr-namespace:Funani.Gui.Views"
-             xmlns:funaniControls="clr-namespace:Funani.Gui.Controls"
-             mc:Ignorable="d" xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             d:DesignHeight="480" d:DesignWidth="640"
-			>
+                   xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                   xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                   xmlns:catel="http://catel.codeplex.com"
+                   xmlns:funani="clr-namespace:Funani.Gui.Views"
+                   xmlns:funaniControls="clr-namespace:Funani.Gui.Controls"
+                   mc:Ignorable="d" xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                   xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                   d:DesignHeight="480" d:DesignWidth="640">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"></RowDefinition>
@@ -23,36 +22,39 @@
             </Grid.ColumnDefinitions>
             <Slider Grid.Column="0" Name="SliderSize" Minimum="64" Maximum="256" Value="184"></Slider>
             <TextBlock Grid.Column="1" Text="{Binding ElementName=SliderSize,Path=Value,StringFormat='{}{0:0}'}"
-                       TextAlignment="Center" VerticalAlignment="Center"></TextBlock>
+                       TextAlignment="Center" VerticalAlignment="Center">
+            </TextBlock>
         </Grid>
         <Grid Grid.Row="1">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto"></ColumnDefinition>
-                <ColumnDefinition></ColumnDefinition>
-                <ColumnDefinition></ColumnDefinition>
-                <ColumnDefinition></ColumnDefinition>
                 <ColumnDefinition Width="Auto"></ColumnDefinition>
                 <ColumnDefinition Width="Auto"></ColumnDefinition>
+                <ColumnDefinition Width="Auto"></ColumnDefinition>
+                <ColumnDefinition Width="Auto"></ColumnDefinition>
+                <ColumnDefinition></ColumnDefinition>
                 <ColumnDefinition Width="100"></ColumnDefinition>
                 <ColumnDefinition Width="100"></ColumnDefinition>
             </Grid.ColumnDefinitions>
             <CheckBox Grid.Column="0" IsChecked="{Binding QueryDeletedFiles}" VerticalAlignment="Center" Margin="2">Show deleted</CheckBox>
-            <ComboBox Grid.Column="1" x:Name="ComboWhere" 
+            <ComboBox Grid.Column="1" SelectedValue="{Binding WhereClause}"
                       ItemsSource="{Binding SupportedWhereClauses}">
             </ComboBox>
-            <ComboBox Grid.Column="2" x:Name="ComboOrderBy"
-                      ItemsSource="{Binding SupportedOrderingClauses}">
+            <ComboBox Grid.Column="2" SelectedValue="{Binding OrderByClause}"
+                      ItemsSource="{Binding SupportedOrderByClauses}">
             </ComboBox>
-            <Grid Grid.Column="3">
+            <DatePicker Grid.Column="3" SelectedDate="{Binding StartDate}" />
+            <DatePicker Grid.Column="4" SelectedDate="{Binding EndDate}" />
+            <Grid Grid.Column="5">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition></ColumnDefinition>
                     <ColumnDefinition Width="Auto"></ColumnDefinition>
                 </Grid.ColumnDefinitions>
-                <TextBox Grid.Column="0" x:Name="RegexLookFor" Text="{Binding RegularExpression}" ToolTip="Regular expression for the query on the title"></TextBox>
-                <Button Grid.Column="1" Command="{Binding Refresh}">Run Query</Button>
+                <TextBox Grid.Column="0" x:Name="RegexLookFor" Text="{Binding RegularExpression}"
+                         ToolTip="Regular expression for the query on the title">
+                </TextBox>
+                <Button Grid.Column="1" Command="{Binding Refresh}">Refresh</Button>
             </Grid>
-            <DatePicker Grid.Column="4" SelectedDate="{Binding StartDate}" />
-            <DatePicker Grid.Column="5" SelectedDate="{Binding EndDate}" />
             <TextBlock Grid.Column="6" HorizontalAlignment="Center" VerticalAlignment="Center">
                 <Run Text="Selected:"></Run>
                 <Run Text="{Binding ElementName=ListControl,Path=SelectedItems.Count,Mode=OneWay}"></Run>
@@ -63,11 +65,11 @@
             </TextBlock>
         </Grid>
         <ListView Grid.Row="2" Name="ListControl"
-		          ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-		          Background="Transparent"
+                  ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                  Background="Transparent"
                   SelectionMode="Single"
                   ItemsSource="{Binding FileInformationViewModels}"
-		          ScrollViewer.IsDeferredScrollingEnabled="True">
+                  ScrollViewer.IsDeferredScrollingEnabled="True">
             <ListView.ContextMenu>
                 <ContextMenu>
                     <MenuItem Header="Update metadata for all files" Command="{Binding RefreshAllMetadata}"></MenuItem>
@@ -80,8 +82,8 @@
             <ListView.ItemsPanel>
                 <ItemsPanelTemplate>
                     <funaniControls:VirtualizingWrapPanel Background="Black"
-                        ItemHeight="{Binding ElementName=SliderSize,Path=Value}"
-                        ItemWidth="{Binding ElementName=SliderSize,Path=Value}" />
+                                                          ItemHeight="{Binding ElementName=SliderSize,Path=Value}"
+                                                          ItemWidth="{Binding ElementName=SliderSize,Path=Value}" />
                 </ItemsPanelTemplate>
             </ListView.ItemsPanel>
             <ListView.ItemTemplate>
@@ -89,8 +91,7 @@
                     <Canvas Background="Transparent"
                             Width="{Binding ElementName=SliderSize,Path=Value}"
                             Height="{Binding ElementName=SliderSize,Path=Value}"
-                            DataContext="{Binding}"
-                            >
+                            DataContext="{Binding}">
                         <Canvas.ContextMenu>
                             <ContextMenu>
                                 <MenuItem Header="Update metadata" Command="{Binding RefreshMetadata}"></MenuItem>
@@ -102,14 +103,12 @@
                                 Height="{Binding ElementName=SliderSize,Path=Value,
                                     Converter={StaticResource MathConverter},ConverterParameter=(@VALUE-8)}"
                                 Canvas.Left="2"
-                                Canvas.Top="2"
-                                >
-                            <Image  RenderOptions.BitmapScalingMode="HighQuality"
-								    Source="{Binding Thumbnail}"
-								    Stretch="Uniform"
-                                    HorizontalAlignment="Center"
-                                    VerticalAlignment="Center"
-							/>
+                                Canvas.Top="2">
+                            <Image RenderOptions.BitmapScalingMode="HighQuality"
+                                   Source="{Binding Thumbnail}"
+                                   Stretch="Uniform"
+                                   HorizontalAlignment="Center"
+                                   VerticalAlignment="Center" />
                         </Border>
                         <Canvas.ToolTip>
                             <funani:FileInformationView></funani:FileInformationView>
@@ -132,13 +131,12 @@
                 <RowDefinition Height="*"></RowDefinition>
             </Grid.RowDefinitions>
 
-            <Image  Grid.Column="0" Grid.RowSpan="4"
-                    RenderOptions.BitmapScalingMode="HighQuality"
-					Source="{Binding Picture}"
-					Stretch="{Binding Stretch}"
-                    HorizontalAlignment="Center"
-                    VerticalAlignment="Center"
-							/>
+            <Image Grid.Column="0" Grid.RowSpan="4"
+                   RenderOptions.BitmapScalingMode="HighQuality"
+                   Source="{Binding Picture}"
+                   Stretch="{Binding Stretch}"
+                   HorizontalAlignment="Center"
+                   VerticalAlignment="Center" />
             <GroupBox Grid.Column="2" Grid.Row="0">
                 <funani:FileInformationView DataContext="{Binding}"></funani:FileInformationView>
             </GroupBox>
@@ -160,17 +158,21 @@
                     <TextBlock Grid.Column="0" Grid.Row="2">Event</TextBlock>
                     <TextBlock Grid.Column="0" Grid.Row="3">Keywords</TextBlock>
                     <funaniControls:TokenizingControl Grid.Column="1" Grid.Row="0"
-                                              x:Name="TokenizerPeople" TokenTemplate="{DynamicResource NameTokenTemplate}"
-                                              ></funaniControls:TokenizingControl>
+                                                      x:Name="TokenizerPeople"
+                                                      TokenTemplate="{DynamicResource NameTokenTemplate}">
+                    </funaniControls:TokenizingControl>
                     <funaniControls:TokenizingControl Grid.Column="1" Grid.Row="1"
-                                              x:Name="TokenizerLocation" TokenTemplate="{DynamicResource NameTokenTemplate}"
-                                              ></funaniControls:TokenizingControl>
+                                                      x:Name="TokenizerLocation"
+                                                      TokenTemplate="{DynamicResource NameTokenTemplate}">
+                    </funaniControls:TokenizingControl>
                     <funaniControls:TokenizingControl Grid.Column="1" Grid.Row="2"
-                                              x:Name="TokenizerEvent" TokenTemplate="{DynamicResource NameTokenTemplate}"
-                                              ></funaniControls:TokenizingControl>
+                                                      x:Name="TokenizerEvent"
+                                                      TokenTemplate="{DynamicResource NameTokenTemplate}">
+                    </funaniControls:TokenizingControl>
                     <funaniControls:TokenizingControl Grid.Column="1" Grid.Row="3"
-                                              x:Name="TokenizerKeywords" TokenTemplate="{DynamicResource NameTokenTemplate}"
-                                              ></funaniControls:TokenizingControl>
+                                                      x:Name="TokenizerKeywords"
+                                                      TokenTemplate="{DynamicResource NameTokenTemplate}">
+                    </funaniControls:TokenizingControl>
                 </Grid>
             </GroupBox>
         </Grid>

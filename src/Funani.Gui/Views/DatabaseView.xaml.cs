@@ -28,18 +28,15 @@
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+using Catel.Windows.Controls;
 using Funani.Gui.ViewModels;
-using System;
-using System.ComponentModel;
-using System.Windows;
-using System.Windows.Controls;
 
 namespace Funani.Gui.Views
 {
     /// <summary>
     ///     Interaction logic for DatabaseView.xaml
     /// </summary>
-    public partial class DatabaseView : Catel.Windows.Controls.UserControl
+    public partial class DatabaseView : UserControl
     {
         public DatabaseView()
         {
@@ -50,6 +47,5 @@ namespace Funani.Gui.Views
             TokenizerEvent.TokenMatcher = DatabaseViewModel.TokenMatcher;
             TokenizerKeywords.TokenMatcher = DatabaseViewModel.TokenMatcher;
         }
-
     }
 }
