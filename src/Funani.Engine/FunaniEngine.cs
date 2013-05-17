@@ -43,7 +43,7 @@ using Funani.Metadata;
 
 namespace Funani.Engine
 {
-    public class FunaniEngine : IEngine
+    public class FunaniEngine : ObservableObject, IEngine
     {
         private IFileStorage _fileStorage;
         private DatabaseInfo _info;
@@ -109,7 +109,7 @@ namespace Funani.Engine
             _rootPath = null;
             _info = null;
 
-            TriggerPropertyChanged(null);
+            RaisePropertyChanged(string.Empty);
         }
 
         public void Backup()
@@ -121,7 +121,7 @@ namespace Funani.Engine
         {
             string hash = _fileStorage.StoreFile(file);
             FileInformation fileInformation = _metadata.Retrieve(hash, file);
-            TriggerPropertyChanged("TotalFileCount");
+            RaisePropertyChanged("TotalFileCount");
             return fileInformation;
         }
 
@@ -191,19 +191,6 @@ namespace Funani.Engine
             get { return _rootPath; }
         }
 
-        #region INotifyPropertyChanged Members
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        private void TriggerPropertyChanged(string propertyName)
-        {
-            PropertyChangedEventHandler handler = PropertyChanged;
-            if (handler != null)
-                handler(this, new PropertyChangedEventArgs(propertyName));
-        }
-
-        #endregion
-
         private void CreateDatabase(String path)
         {
             _rootPath = path;
@@ -227,7 +214,7 @@ namespace Funani.Engine
             _metadata = new MetadataDatabase(pathToMongod, path);
             _metadata.Start();
 
-            TriggerPropertyChanged(null);
+            RaisePropertyChanged(String.Empty);
         }
     }
 }
