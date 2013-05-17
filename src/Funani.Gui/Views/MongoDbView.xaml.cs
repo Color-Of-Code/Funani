@@ -28,7 +28,9 @@
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+using Catel.IoC;
 using Catel.Windows.Controls;
+
 using Funani.Api;
 using Funani.Gui.ViewModels;
 
@@ -42,12 +44,9 @@ namespace Funani.Gui.Views
         public MongoDbView()
         {
             InitializeComponent();
-            DataContext = new MongoDbViewModel(Dispatcher);
-        }
 
-        public IConsoleRedirect MongoDbListener
-        {
-            get { return DataContext as MongoDbViewModel; }
+            //HACK: this is not clean...
+            DataContext = ServiceLocator.Default.ResolveType<IConsoleRedirect>() as MongoDbViewModel;
         }
     }
 }

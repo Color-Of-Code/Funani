@@ -9,21 +9,21 @@
 	Loaded="Window_Loaded"
 	Closing="Window_Closing"
 	Icon="pack://application:,,,/Images/logo2.png"
-	Height="640"
-	Width="1024">
-    <Grid>
-        <Grid.RowDefinitions>
+	Height="640" Width="1024">
+    <catel:StackGrid>
+        <catel:StackGrid.RowDefinitions>
             <RowDefinition></RowDefinition>
             <RowDefinition Height="16"></RowDefinition>
-        </Grid.RowDefinitions>
-
-        <TabControl>
+        </catel:StackGrid.RowDefinitions>
+        <catel:StackGrid.ColumnDefinitions>
+            <ColumnDefinition />
+            <ColumnDefinition Width="Auto" />
+        </catel:StackGrid.ColumnDefinitions>
+        <TabControl catel:StackGrid.ColumnSpan="2">
             <TabItem>
                 <TabItem.Header>
-                    <StackPanel
-						Orientation="Horizontal">
-                        <TextBlock
-							VerticalAlignment="Center">Funani database</TextBlock>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock VerticalAlignment="Center">Funani database</TextBlock>
                     </StackPanel>
                 </TabItem.Header>
                 <Grid>
@@ -32,40 +32,8 @@
             </TabItem>
             <TabItem>
                 <TabItem.Header>
-                    <StackPanel
-						Orientation="Horizontal">
-                        <TextBlock
-							VerticalAlignment="Center">File explorer</TextBlock>
-                        <Rectangle
-							Name="Rectangle"
-							Width="16"
-							Height="16"
-							Fill="Blue"
-							Margin="8,0"
-							VerticalAlignment="Center">
-                            <Rectangle.RenderTransform>
-                                <RotateTransform
-									Angle="0"
-									CenterX="8"
-									CenterY="8" />
-                            </Rectangle.RenderTransform>
-                            <Rectangle.Triggers>
-                                <EventTrigger
-									RoutedEvent="Rectangle.Loaded">
-                                    <BeginStoryboard>
-                                        <Storyboard>
-                                            <DoubleAnimation
-												Storyboard.TargetName="Rectangle"
-												Storyboard.TargetProperty="(TextBlock.RenderTransform).(RotateTransform.Angle)"
-												From="0"
-												To="360"
-												Duration="0:0:5"
-												RepeatBehavior="Forever" />
-                                        </Storyboard>
-                                    </BeginStoryboard>
-                                </EventTrigger>
-                            </Rectangle.Triggers>
-                        </Rectangle>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock VerticalAlignment="Center">File explorer</TextBlock>
                     </StackPanel>
                 </TabItem.Header>
                 <catel:StackGrid>
@@ -75,9 +43,7 @@
                         <ColumnDefinition Width="2*" />
                     </catel:StackGrid.ColumnDefinitions>
                     <funani:DirectoryTreeView x:Name="DirectoryTree" Grid.Column="0"></funani:DirectoryTreeView>
-                    <GridSplitter Grid.Column="1" 
-                                  HorizontalAlignment="Stretch" 
-                                  VerticalAlignment="Stretch"></GridSplitter>
+                    <GridSplitter Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
                     <funani:FileView Grid.Column="2"
                                      SelectedPath="{Binding ElementName=DirectoryTree,Path=SelectedDirectory}" />
                 </catel:StackGrid>
@@ -102,6 +68,29 @@
             </TabItem>
         </TabControl>
 
-        <funani:CommandProgressControl Grid.Row="1" />
-    </Grid>
+        <funani:CommandProgressControl />
+        <!-- Rotating rectangle to make issues with smoothness of GUI reactivity visible -->
+        <Rectangle Name="Rectangle"
+                   Width="12" Height="12"
+                   Fill="CornflowerBlue" 
+                   Margin="8,0"
+                   VerticalAlignment="Center">
+            <Rectangle.RenderTransform>
+                <RotateTransform Angle="0" CenterX="6" CenterY="6" />
+            </Rectangle.RenderTransform>
+            <Rectangle.Triggers>
+                <EventTrigger RoutedEvent="Rectangle.Loaded">
+                    <BeginStoryboard>
+                        <Storyboard>
+                            <DoubleAnimation    Storyboard.TargetName="Rectangle"
+												Storyboard.TargetProperty="(TextBlock.RenderTransform).(RotateTransform.Angle)"
+												From="0" To="360"
+												Duration="0:0:5"
+												RepeatBehavior="Forever" />
+                        </Storyboard>
+                    </BeginStoryboard>
+                </EventTrigger>
+            </Rectangle.Triggers>
+        </Rectangle>
+    </catel:StackGrid>
 </Window>

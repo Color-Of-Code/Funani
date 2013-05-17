@@ -81,19 +81,19 @@ namespace Funani.Engine
             get { return _info; }
         }
 
-        public void OpenDatabase(String pathToMongod, String path, IConsoleRedirect listener)
+        public void OpenDatabase(String pathToMongod, String path)
         {
             if (Directory.EnumerateFileSystemEntries(path).Any())
             {
                 if (!IsValidDatabase(path))
                     throw new Exception("Invalid Funani Database");
                 _rootPath = path;
-                CommonCreationOpening(pathToMongod, path, listener);
+                CommonCreationOpening(pathToMongod, path);
             }
             else
             {
                 CreateDatabase(path);
-                CommonCreationOpening(pathToMongod, path, listener);
+                CommonCreationOpening(pathToMongod, path);
             }
             if (!IsValidDatabase(path))
                 throw new Exception("Invalid Funani Database");
@@ -216,7 +216,7 @@ namespace Funani.Engine
             SaveDatabaseInfo();
         }
 
-        private void CommonCreationOpening(String pathToMongod, String path, IConsoleRedirect listener)
+        private void CommonCreationOpening(String pathToMongod, String path)
         {
             var s = new XmlSerializer(typeof (DatabaseInfo));
             using (XmlReader reader = XmlReader.Create(DatabaseInfoPath))
@@ -230,7 +230,7 @@ namespace Funani.Engine
 
             // create the mongodb
             _metadata = new MetadataDatabase(pathToMongod, path);
-            _metadata.Start(listener);
+            _metadata.Start();
 
             TriggerPropertyChanged(null);
         }

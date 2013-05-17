@@ -33,8 +33,12 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+
+using Catel.IoC;
+
 using Funani.Api;
 using Funani.Api.Metadata;
+
 using MongoDB.Bson;
 using MongoDB.Driver;
 using MongoDB.Driver.Builders;
@@ -48,6 +52,7 @@ namespace Funani.Metadata
         {
             _pathToMongod = pathToMongod;
             _pathToDatabase = path;
+            _listener = ServiceLocator.Default.ResolveType<IConsoleRedirect>();
         }
 
         public MongoDatabase Funani
@@ -101,7 +106,7 @@ namespace Funani.Metadata
 
         #region Console I/O to listener redirection
 
-        private IConsoleRedirect _listener;
+        private readonly IConsoleRedirect _listener;
 
         private void _process_ErrorDataReceived(object sender, DataReceivedEventArgs e)
         {
@@ -201,7 +206,7 @@ namespace Funani.Metadata
             Process.Start(psi).WaitForExit();
         }
 
-        public void Start(IConsoleRedirect listener)
+        public void Start()
         {
             Stop();
 
@@ -210,7 +215,6 @@ namespace Funani.Metadata
             if (!Directory.Exists(JournalPath))
                 Directory.CreateDirectory(JournalPath);
 
-            _listener = listener;
             var psi = new ProcessStartInfo();
             psi.FileName = Path.Combine(_pathToMongod, "mongod");
             psi.Arguments = String.Format(" --journal --dbpath \"{0}\" --port {1}",
@@ -266,7 +270,6 @@ namespace Funani.Metadata
                     Console.WriteLine(ex.Message);
                 }
                 _process = null;
-                _listener = null;
             }
         }
     }

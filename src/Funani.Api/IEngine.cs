@@ -87,8 +87,7 @@ namespace Funani.Api
         /// </summary>
         /// <param name="pathToMongod">Path to the directory containing the mongo server executable</param>
         /// <param name="path">Path to the directory containing the funani data</param>
-        /// <param name="listener">Callback interface</param>
-        void OpenDatabase(String pathToMongod, String path, IConsoleRedirect listener);
+        void OpenDatabase(String pathToMongod, String path);
 
         /// <summary>
         ///     Closes the funani database and flushes any pending operation to disk

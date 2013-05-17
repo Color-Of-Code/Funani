@@ -9,8 +9,7 @@
     <Grid>
         <TabControl>
             <TabItem Header="Console">
-                <ListView Name="Console" ItemsSource="{Binding Lines}">
-                </ListView>
+                <ListView Name="Console" ItemsSource="{Binding Lines}" />
             </TabItem>
             <TabItem Header="Query">
                 <Grid>

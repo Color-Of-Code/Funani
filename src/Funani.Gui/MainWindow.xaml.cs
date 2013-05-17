@@ -63,7 +63,7 @@ namespace Funani.Gui
             Settings settings = Settings.Default;
             EnsureMongodbPathIsValid();
             EnsureFunanidbPathIsValid();
-            _engine.OpenDatabase(settings.MongodbPath, settings.LastFunaniDatabase, MongoDbView.MongoDbListener);
+            _engine.OpenDatabase(settings.MongodbPath, settings.LastFunaniDatabase);
         }
 
         private void Window_Closing(object sender, CancelEventArgs e)

@@ -37,6 +37,7 @@ using Catel.Windows;
 
 using Funani.Api;
 using Funani.Engine;
+using Funani.Gui.ViewModels;
 
 namespace Funani.Gui
 {
@@ -56,10 +57,13 @@ namespace Funani.Gui
                     XmlLanguage.GetLanguage(
                         CultureInfo.CurrentCulture.IetfLanguageTag)));
 
-            base.OnStartup(e);
-
             ServiceLocator.Default.RegisterType<IEngine, FunaniEngine>();
             ServiceLocator.Default.RegisterType<ICommandQueue, FunaniCommandQueue>();
+            
+            var modelView = new MongoDbViewModel(Dispatcher);
+            ServiceLocator.Default.RegisterInstance<IConsoleRedirect>(modelView);
+
+            base.OnStartup(e);
         }
     }
 }
