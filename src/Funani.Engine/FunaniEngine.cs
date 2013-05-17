@@ -32,10 +32,9 @@ using System;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
-using System.Xml;
-using System.Xml.Serialization;
 
 using Catel.IoC;
+using Catel.Data;
 
 using Funani.Api;
 using Funani.Api.Metadata;
@@ -101,7 +100,7 @@ namespace Funani.Engine
 
         public void CloseDatabase()
         {
-            SaveDatabaseInfo();
+            DatabaseInfo.Save(DatabaseInfoPath, SerializationMode.Xml);
 
             _fileStorage.Stop();
             _metadata.Stop();
@@ -213,16 +212,12 @@ namespace Funani.Engine
                     Title = "<Give a title here>",
                     Description = "<Write a description here>"
                 };
-            SaveDatabaseInfo();
+            DatabaseInfo.Save(DatabaseInfoPath, SerializationMode.Xml);
         }
 
         private void CommonCreationOpening(String pathToMongod, String path)
         {
-            var s = new XmlSerializer(typeof (DatabaseInfo));
-            using (XmlReader reader = XmlReader.Create(DatabaseInfoPath))
-            {
-                _info = s.Deserialize(reader) as DatabaseInfo;
-            }
+            _info = DatabaseInfo.Load(DatabaseInfoPath, SerializationMode.Xml);
 
             // create the file database
             _fileStorage = new FileDatabase(path);
@@ -233,15 +228,6 @@ namespace Funani.Engine
             _metadata.Start();
 
             TriggerPropertyChanged(null);
-        }
-
-        private void SaveDatabaseInfo()
-        {
-            var s = new XmlSerializer(typeof (DatabaseInfo));
-            using (XmlWriter writer = XmlWriter.Create(DatabaseInfoPath))
-            {
-                s.Serialize(writer, _info);
-            }
         }
     }
 }

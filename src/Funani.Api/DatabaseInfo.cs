@@ -1,44 +1,91 @@
-﻿using System;
-using System.Xml;
-using System.Xml.Schema;
-using System.Xml.Serialization;
+﻿/*
+ * Copyright (c) 2012-2013, Jaap de Haan <jaap.dehaan@color-of-code.de>
+ * All rights reserved.
+ * 
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ * 
+ *   * Redistributions of source code must retain the above copyright notice,
+ *     this list of conditions and the following disclaimer.
+ *   * Redistributions in binary form must reproduce the above copyright
+ *     notice, this list of conditions and the following disclaimer in the
+ *     documentation and/or other materials provided with the distribution.
+ *   * Neither the name of the "Color-Of-Code" nor the names of its
+ *     contributors may be used to endorse or promote products derived from
+ *     this software without specific prior written permission.
+ * 
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+ * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+ * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+ * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+ * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
+ * THE POSSIBILITY OF SUCH DAMAGE.
+ */
+
+using System;
+using Catel.Data;
 
 namespace Funani.Api
 {
-    public class DatabaseInfo : IXmlSerializable
+    public class DatabaseInfo : SavableModelBase<DatabaseInfo>
     {
         public DatabaseInfo()
         {
             Guid = Guid.NewGuid();
         }
 
-        public Guid Guid { get; private set; }
-        public String Title { get; set; }
-        public String Description { get; set; }
-
-        #region IXmlSerializable
-
-        public XmlSchema GetSchema()
+        #region Property: Guid
+        /// <summary>
+        /// Guid.
+        /// </summary>
+        public Guid Guid
         {
-            return null;
+            get { return GetValue<Guid>(GuidProperty); }
+            private set { SetValue(GuidProperty, value); }
         }
 
-        public void ReadXml(XmlReader reader)
+        /// <summary>
+        /// Register the Guid property so it is known in the class.
+        /// </summary>
+        public static readonly PropertyData GuidProperty = RegisterProperty("Guid", typeof(Guid), null);
+        #endregion
+
+        #region Property: Title
+        /// <summary>
+        /// Title.
+        /// </summary>
+        public String Title
         {
-            reader.ReadStartElement();
-            Guid = Guid.Parse(reader.ReadElementString("Guid"));
-            Title = reader.ReadElementString("Title");
-            Description = reader.ReadElementString("Description");
-            reader.ReadEndElement();
+            get { return GetValue<String>(TitleProperty); }
+            set { SetValue(TitleProperty, value); }
         }
 
-        public void WriteXml(XmlWriter writer)
+        /// <summary>
+        /// Register the Title property so it is known in the class.
+        /// </summary>
+        public static readonly PropertyData TitleProperty = RegisterProperty("Title", typeof(String), null);
+        #endregion
+
+        #region Property: Description
+        /// <summary>
+        /// Description.
+        /// </summary>
+        public String Description
         {
-            writer.WriteElementString("Guid", Guid.ToString());
-            writer.WriteElementString("Title", Title);
-            writer.WriteElementString("Description", Description);
+            get { return GetValue<String>(DescriptionProperty); }
+            set { SetValue(DescriptionProperty, value); }
         }
 
+        /// <summary>
+        /// Register the Description property so it is known in the class.
+        /// </summary>
+        public static readonly PropertyData DescriptionProperty = RegisterProperty("Description", typeof(String), null);
         #endregion
     }
 }
