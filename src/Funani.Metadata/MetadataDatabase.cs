@@ -162,15 +162,11 @@ namespace Funani.Metadata
         {
             MongoCollection<BsonDocument> files = Funani.GetCollection("fileinfo");
             string path = file.FullName;
-            var list = new[] { path };
-            var queryBuilder = new QueryBuilder<FileInformation>();
-            IMongoQuery query = queryBuilder.In(x => x.Paths, list);
-            var info = files.FindOneAs<FileInformation>(query);
-            // check if the provided file is of the same length
-            // than the one stored
-            if (info != null && info.FileSize != file.Length)
-                info = null;
-            return info;
+            var result = files.AsQueryable<FileInformation>()
+                .Where(x => (x.FileSize == file.Length) && (x.Paths.Contains(path)));
+            //TODO: Check why some have more than one!
+            //return result.SingleOrDefault();
+            return result.FirstOrDefault();
         }
 
         public void RemovePath(FileInfo file)
