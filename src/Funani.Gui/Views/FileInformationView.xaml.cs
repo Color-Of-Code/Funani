@@ -28,8 +28,8 @@
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-using System;
 using Catel.Windows.Controls;
+using Funani.Gui.ViewModels;
 
 namespace Funani.Gui.Views
 {
@@ -42,17 +42,10 @@ namespace Funani.Gui.Views
         {
             InitializeComponent();
 
-            TokenizerPeople.TokenMatcher = TokenMatcher;
-            TokenizerLocation.TokenMatcher = TokenMatcher;
-            TokenizerEvent.TokenMatcher = TokenMatcher;
-            TokenizerKeywords.TokenMatcher = TokenMatcher;
-        }
-
-        private static String TokenMatcher(String text)
-        {
-            if (text.EndsWith(";") || text.EndsWith(","))
-                return text.Substring(0, text.Length - 1).Trim().ToUpper();
-            return null;
+            TokenizerPeople.TokenMatcher = DatabaseViewModel.TokenMatcher;
+            TokenizerLocation.TokenMatcher = DatabaseViewModel.TokenMatcher;
+            TokenizerEvent.TokenMatcher = DatabaseViewModel.TokenMatcher;
+            TokenizerKeywords.TokenMatcher = DatabaseViewModel.TokenMatcher;
         }
     }
 }
