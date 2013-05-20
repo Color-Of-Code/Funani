@@ -46,7 +46,7 @@ using MongoDB.Driver.Linq;
 
 namespace Funani.Metadata
 {
-    public class MetadataDatabase
+    public class MetadataDatabase : IDisposable
     {
         public MetadataDatabase(String pathToMongod, String path)
         {
@@ -268,5 +268,14 @@ namespace Funani.Metadata
                 _process = null;
             }
         }
+
+        #region IDisposable
+
+        public void Dispose()
+        {
+            Stop();
+        }
+
+        #endregion
     }
 }
