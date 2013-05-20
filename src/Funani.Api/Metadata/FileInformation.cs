@@ -33,6 +33,8 @@ using System.Collections.Generic;
 using System.IO;
 
 using Catel.Data;
+using Catel.IoC;
+
 using Funani.Api.Utils;
 
 namespace Funani.Api.Metadata
@@ -48,11 +50,14 @@ namespace Funani.Api.Metadata
     ///  "_t" : "ValidationContext"
     ///},
     /// </summary>
-    public class FileInformation //: ModelBase
+    public class FileInformation : ObservableObject
     {
+        private readonly IEngine _engine;
+
         public FileInformation()
         {
             Paths = new List<String>();
+            _engine = ServiceLocator.Default.ResolveType<IEngine>();
         }
 
         public FileInformation(FileInfo file)
@@ -104,11 +109,43 @@ namespace Funani.Api.Metadata
         public String Device { get; set; } // digitalizing device
         public String ApplicationName { get; set; } // application used to process the data
 
-        public int? Angle { get; set; } // orientation for view
-        public Boolean IsDeleted { get; set; }
+        // orientation for view
+        private int? _angle = null;
+        public int? Angle
+        {
+            get { return _angle; }
+            set
+            {
+                _angle = value;
+                _engine.Save(this);
+                RaisePropertyChanged("Angle");
+            }
+        }
+
+        private bool _isDeleted = false;
+        public Boolean IsDeleted
+        {
+            get { return _isDeleted; }
+            set
+            {
+                _isDeleted = value;
+                _engine.Save(this);
+                RaisePropertyChanged("IsDeleted");
+            }
+        }
 
         // 0 -> 5
-        public int? Rating { get; set; }
+        private int? _rating = null;
+        public int? Rating
+        {
+            get { return _rating; }
+            set
+            {
+                _rating = value;
+                _engine.Save(this);
+                RaisePropertyChanged("Rating");
+            }
+        }
 
         public IList<Tag> Tags { get; private set; }
 
@@ -116,6 +153,12 @@ namespace Funani.Api.Metadata
         {
             if (!Paths.Contains(file.FullName))
                 Paths.Add(file.FullName);
+        }
+
+        public void RefreshMetadata()
+        {
+            _engine.RefreshMetadata(this);
+            RaisePropertyChanged(string.Empty);
         }
 
         public void RefreshMetadata(FileInfo file)

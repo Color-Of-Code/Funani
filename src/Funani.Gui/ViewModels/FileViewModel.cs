@@ -41,7 +41,7 @@ using Funani.Gui.Converters;
 namespace Funani.Gui.ViewModels
 {
     /// <summary>
-    ///     FileViewModel
+    ///     View model for a file on the filesystem
     /// </summary>
     public class FileViewModel : ViewModelBase
     {
@@ -127,6 +127,8 @@ namespace Funani.Gui.ViewModels
             }
         }
 
+        #region Property: IsStored
+
         /// <summary>
         /// Is this file alread inside the storage area.
         /// </summary>
@@ -141,6 +143,9 @@ namespace Funani.Gui.ViewModels
         /// </summary>
         public static readonly PropertyData IsStoredProperty = RegisterProperty("IsStored", typeof(bool?), null);
 
+        #endregion
+
+        #region Command: Store
 
         /// <summary>
         /// Gets the Store command.
@@ -163,6 +168,10 @@ namespace Funani.Gui.ViewModels
             }
         }
 
+        #endregion
+
+        #region Command: Remove
+
         /// <summary>
         /// Gets the Remove command.
         /// </summary>
@@ -184,6 +193,10 @@ namespace Funani.Gui.ViewModels
             }
         }
 
+        #endregion
+
+        #region Helpers
+
         private void AddOrRemoveFile(bool value)
         {
             if (value)
@@ -196,5 +209,7 @@ namespace Funani.Gui.ViewModels
         {
             IsStored = _engine.GetFileInformation(FileInfo) != null;
         }
+
+        #endregion
     }
 }

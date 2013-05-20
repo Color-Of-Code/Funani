@@ -41,7 +41,7 @@ using Funani.Gui.Converters;
 namespace Funani.Gui.ViewModels
 {
     /// <summary>
-    ///     FileViewModel
+    ///     ViewModel of a file stored inside the database
     /// </summary>
     public class FileInformationViewModel : ViewModelBase
     {
@@ -77,44 +77,58 @@ namespace Funani.Gui.ViewModels
 
         #endregion
 
-        public int? Angle
-        {
-            get { return FileInformation.Angle; }
-            set
-            {
-                if (FileInformation.Angle != value)
-                {
-                    FileInformation.Angle = value;
-                    _engine.Save(FileInformation);
-                }
-            }
-        }
+        #region Property: Rating
 
+        /// <summary>
+        /// Rating
+        /// </summary>
+        [ViewModelToModel("FileInformation")]
         public int? Rating
         {
-            get { return FileInformation.Rating; }
-            set
-            {
-                if (FileInformation.Rating != value)
-                {
-                    FileInformation.Rating = value;
-                    _engine.Save(FileInformation);
-                }
-            }
+            get { return GetValue<int?>(RatingProperty); }
+            set { SetValue(RatingProperty, value); }
         }
 
+        /// <summary>
+        /// Register the Rating property so it is known in the class.
+        /// </summary>
+        public static readonly PropertyData RatingProperty = RegisterProperty("Rating", typeof(int?));
+
+        #endregion
+
+        #region Property: Angle
+        /// <summary>
+        /// Angle of rotation.
+        /// </summary>
+        [ViewModelToModel("FileInformation")]
+        public int? Angle
+        {
+            get { return GetValue<int?>(AngleProperty); }
+            set { SetValue(AngleProperty, value); }
+        }
+
+        /// <summary>
+        /// Register the Angle property so it is known in the class.
+        /// </summary>
+        public static readonly PropertyData AngleProperty = RegisterProperty("Angle", typeof(int?));
+        #endregion
+
+        #region Property: IsDeleted
+        /// <summary>
+        /// Is deleted.
+        /// </summary>
+        [ViewModelToModel("FileInformation")]
         public bool IsDeleted
         {
-            get { return FileInformation.IsDeleted; }
-            set
-            {
-                if (FileInformation.IsDeleted != value)
-                {
-                    FileInformation.IsDeleted = value;
-                    _engine.Save(FileInformation);
-                }
-            }
+            get { return GetValue<bool>(IsDeletedProperty); }
+            set { SetValue(IsDeletedProperty, value); }
         }
+
+        /// <summary>
+        /// Register the IsDeleted property so it is known in the class.
+        /// </summary>
+        public static readonly PropertyData IsDeletedProperty = RegisterProperty("IsDeleted", typeof(bool));
+        #endregion
 
         public Stretch Stretch
         {
@@ -177,8 +191,7 @@ namespace Funani.Gui.ViewModels
         /// </summary>
         private void OnRefreshMetadataExecute()
         {
-            _engine.RefreshMetadata(FileInformation);
-            RaisePropertyChanged(this, string.Empty);
+            FileInformation.RefreshMetadata();
         }
 
         #endregion

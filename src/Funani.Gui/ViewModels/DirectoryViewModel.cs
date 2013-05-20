@@ -39,7 +39,7 @@ using Catel.MVVM;
 namespace Funani.Gui.ViewModels
 {
     /// <summary>
-    /// DirectoryViewModel is a recusirve collection of Directories
+    /// DirectoryViewModel is a recusirve collection of DirectoryViewModel's
     /// </summary>
 	[DebuggerDisplay("{DirectoryInfo}")]
 	public class DirectoryViewModel : ViewModelBase

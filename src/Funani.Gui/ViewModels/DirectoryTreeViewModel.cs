@@ -44,6 +44,9 @@ using Funani.Gui.Properties;
 
 namespace Funani.Gui.ViewModels
 {
+    /// <summary>
+    /// The top level filesystem drives
+    /// </summary>
     public class DirectoryTreeViewModel : ViewModelBase
     {
         private readonly IEngine _engine;
