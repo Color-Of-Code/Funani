@@ -55,6 +55,10 @@ namespace Funani.Gui.ViewModels
             FileInformation = fileInformation;
             _engine = GetService<IEngine>();
             RefreshMetadata = new Command(OnRefreshMetadataExecute);
+            Save = new Command(OnSaveExecute);
+            Delete = new Command(OnDeleteExecute);
+            RotateLeft = new Command(OnRotateLeftExecute);
+            RotateRight = new Command(OnRotateRightExecute);
         }
 
         #region Model: FileInformation
@@ -63,7 +67,7 @@ namespace Funani.Gui.ViewModels
         ///     Register the FileInformation property so it is known in the class.
         /// </summary>
         public static readonly PropertyData FileInformationProperty
-            = RegisterProperty("FileInformation", typeof (FileInformation));
+            = RegisterProperty("FileInformation", typeof(FileInformation));
 
         /// <summary>
         ///     FileInformation model.
@@ -130,6 +134,24 @@ namespace Funani.Gui.ViewModels
         public static readonly PropertyData IsDeletedProperty = RegisterProperty("IsDeleted", typeof(bool));
         #endregion
 
+        #region Property: Title
+        /// <summary>
+        /// Title.
+        /// </summary>
+        [ViewModelToModel("FileInformation")]
+        public String Title
+        {
+            get { return GetValue<String>(TitleProperty); }
+            set { SetValue(TitleProperty, value); }
+        }
+
+        /// <summary>
+        /// Register the Title property so it is known in the class.
+        /// </summary>
+        public static readonly PropertyData TitleProperty = RegisterProperty("Title", typeof(String));
+
+        #endregion
+
         public Stretch Stretch
         {
             get { return Stretch.Uniform; }
@@ -142,7 +164,7 @@ namespace Funani.Gui.ViewModels
                 FileInfo thumbPath = _engine.GetThumbnail(
                     FileInformation.Id, FileInformation.MimeType);
                 object value = thumbPath == null ? null : thumbPath.FullName;
-                var bitmap = Converter.Convert(value, typeof (BitmapSource), null, null) as BitmapSource;
+                var bitmap = Converter.Convert(value, typeof(BitmapSource), null, null) as BitmapSource;
                 return bitmap;
             }
         }
@@ -194,6 +216,68 @@ namespace Funani.Gui.ViewModels
             FileInformation.RefreshMetadata();
         }
 
+        #endregion
+
+        #region Command: Save
+        /// <summary>
+        /// Gets the Save command.
+        /// </summary>
+        public Command Save { get; private set; }
+
+        /// <summary>
+        /// Method to invoke when the Save command is executed.
+        /// </summary>
+        private void OnSaveExecute()
+        {
+            FileInformation.Save();
+        }
+        #endregion
+
+        #region Command: Delete
+        /// <summary>
+        /// Gets the Delete command.
+        /// </summary>
+        public Command Delete { get; private set; }
+
+        /// <summary>
+        /// Method to invoke when the Delete command is executed.
+        /// </summary>
+        private void OnDeleteExecute()
+        {
+            IsDeleted = true;
+        }
+        #endregion
+
+        #region Command: RotateLeft
+        /// <summary>
+        /// Gets the RotateLeft command.
+        /// </summary>
+        public Command RotateLeft { get; private set; }
+
+        /// <summary>
+        /// Method to invoke when the RotateLeft command is executed.
+        /// </summary>
+        private void OnRotateLeftExecute()
+        {
+            int angle = Angle ?? 0;
+            Angle = angle - 90;
+        }
+        #endregion
+
+        #region Command: RotateRight
+        /// <summary>
+        /// Gets the RotateRight command.
+        /// </summary>
+        public Command RotateRight { get; private set; }
+
+        /// <summary>
+        /// Method to invoke when the RotateRight command is executed.
+        /// </summary>
+        private void OnRotateRightExecute()
+        {
+            int angle = Angle ?? 0;
+            Angle = angle + 90;
+        }
         #endregion
     }
 }

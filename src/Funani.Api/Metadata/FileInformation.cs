@@ -72,6 +72,14 @@ namespace Funani.Api.Metadata
         }
 
         /// <summary>
+        /// Persist to the mongo db
+        /// </summary>
+        public void Save()
+        {
+            _engine.Save(this);
+        }
+
+        /// <summary>
         /// Gets or sets the Id value.
         /// </summary>
         public String Id
@@ -99,7 +107,16 @@ namespace Funani.Api.Metadata
         public Double Latitude { get; set; }
         public Double Longitude { get; set; }
 
-        public String Title { get; set; }
+        private String _title;
+        public String Title 
+        {
+            get { return _title; }
+            set
+            {
+                _title = value;
+                RaisePropertyChanged("Title");
+            }
+        }
 
         public DateTime? DateTaken { get; set; } // start date for video
         public Int64 Duration { get; set; } // for videos, sound
@@ -117,7 +134,6 @@ namespace Funani.Api.Metadata
             set
             {
                 _angle = value;
-                _engine.Save(this);
                 RaisePropertyChanged("Angle");
             }
         }
@@ -129,7 +145,6 @@ namespace Funani.Api.Metadata
             set
             {
                 _isDeleted = value;
-                _engine.Save(this);
                 RaisePropertyChanged("IsDeleted");
             }
         }
@@ -142,7 +157,6 @@ namespace Funani.Api.Metadata
             set
             {
                 _rating = value;
-                _engine.Save(this);
                 RaisePropertyChanged("Rating");
             }
         }
