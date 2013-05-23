@@ -28,105 +28,19 @@
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-using System;
-using System.ComponentModel;
-using System.IO;
-using System.Windows;
-
-using Catel.IoC;
 using Catel.Windows;
-
-using Funani.Api;
-using Funani.Engine;
-using Funani.Gui.Properties;
 
 namespace Funani.Gui.Views
 {
-    using SWF = System.Windows.Forms;
-
     /// <summary>
     ///     Interaction logic for MainWindow.xaml
     /// </summary>
     public partial class MainWindow : DataWindow
     {
-        private readonly IEngine _engine;
-
         public MainWindow()
             : base(DataWindowMode.Custom)
         {
             InitializeComponent();
-
-            Settings.Default.Upgrade();
-
-            _engine = ServiceLocator.Default.ResolveType<IEngine>();
-        }
-
-        private void Window_Loaded(object sender, RoutedEventArgs e)
-        {
-            Settings settings = Settings.Default;
-            EnsureMongodbPathIsValid();
-            EnsureFunanidbPathIsValid();
-            _engine.OpenDatabase(settings.MongodbPath, settings.LastFunaniDatabase);
-        }
-
-        private void Window_Closing(object sender, CancelEventArgs e)
-        {
-            _engine.CloseDatabase();
-        }
-
-        private void EnsureFunanidbPathIsValid()
-        {
-            String funanidbPath = Settings.Default.LastFunaniDatabase;
-            if (!_engine.IsValidDatabase(funanidbPath))
-            {
-                var ofd = new SWF.FolderBrowserDialog();
-                ofd.Description = "Browse to a valid Funani DB";
-                ofd.ShowNewFolderButton = true;
-                if (ofd.ShowDialog() == SWF.DialogResult.OK)
-                {
-                    var di = new DirectoryInfo(ofd.SelectedPath);
-                    Settings settings = Settings.Default;
-                    settings.LastFunaniDatabase = di.FullName;
-                    settings.Save();
-                    return;
-                }
-
-                Close();
-            }
-        }
-
-        private static Boolean IsMongodbPathValid(String path)
-        {
-            if (String.IsNullOrWhiteSpace(path) ||
-                !Directory.Exists(path) ||
-                !File.Exists(Path.Combine(path, "mongod.exe")))
-                return false;
-            return true;
-        }
-
-        private void EnsureMongodbPathIsValid()
-        {
-            String mongodbPath = Settings.Default.MongodbPath;
-            if (!IsMongodbPathValid(mongodbPath))
-            {
-                var ofd = new Microsoft.Win32.OpenFileDialog();
-                ofd.Title = "Browse to the mongoDB executable";
-                ofd.CheckFileExists = true;
-                ofd.Filter = "Looking for mongod.exe|mongod.exe";
-                if (ofd.ShowDialog() == true)
-                {
-                    var fi = new FileInfo(ofd.FileName);
-                    if (IsMongodbPathValid(fi.DirectoryName))
-                    {
-                        Settings settings = Settings.Default;
-                        settings.MongodbPath = fi.DirectoryName;
-                        settings.Save();
-                        return;
-                    }
-                }
-
-                Close();
-            }
         }
     }
 }
