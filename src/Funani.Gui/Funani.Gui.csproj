@@ -80,6 +80,9 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Controls\StalledGuiIndicatorControl.xaml.cs">
+      <DependentUpon>StalledGuiIndicatorControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="ViewModels\DirectoryTreeViewModel.cs" />
     <Compile Include="ViewModels\DirectoryViewModel.cs" />
     <Compile Include="ViewModels\FileViewModel.cs" />
@@ -104,6 +107,10 @@
     <Compile Include="Views\MongoDbView.xaml.cs">
       <DependentUpon>MongoDbView.xaml</DependentUpon>
     </Compile>
+    <Page Include="Controls\StalledGuiIndicatorControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\FileInformationView.xaml">
       <SubType>Designer</SubType>
     </Page>
