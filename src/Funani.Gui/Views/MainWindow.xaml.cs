@@ -37,7 +37,7 @@ using Funani.Engine;
 using Funani.Gui.Properties;
 using Microsoft.Win32;
 
-namespace Funani.Gui
+namespace Funani.Gui.Views
 {
     using SWF = System.Windows.Forms;
     using Catel.IoC;
