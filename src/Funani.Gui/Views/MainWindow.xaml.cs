@@ -32,24 +32,27 @@ using System;
 using System.ComponentModel;
 using System.IO;
 using System.Windows;
+
+using Catel.IoC;
+using Catel.Windows;
+
 using Funani.Api;
 using Funani.Engine;
 using Funani.Gui.Properties;
-using Microsoft.Win32;
 
 namespace Funani.Gui.Views
 {
     using SWF = System.Windows.Forms;
-    using Catel.IoC;
 
     /// <summary>
     ///     Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class MainWindow : DataWindow
     {
         private readonly IEngine _engine;
 
         public MainWindow()
+            : base(DataWindowMode.Custom)
         {
             InitializeComponent();
 
@@ -106,7 +109,7 @@ namespace Funani.Gui.Views
             String mongodbPath = Settings.Default.MongodbPath;
             if (!IsMongodbPathValid(mongodbPath))
             {
-                var ofd = new OpenFileDialog();
+                var ofd = new Microsoft.Win32.OpenFileDialog();
                 ofd.Title = "Browse to the mongoDB executable";
                 ofd.CheckFileExists = true;
                 ofd.Filter = "Looking for mongod.exe|mongod.exe";
