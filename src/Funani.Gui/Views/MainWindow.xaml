@@ -22,7 +22,7 @@
             <ColumnDefinition />
             <ColumnDefinition Width="Auto" />
         </catel:StackGrid.ColumnDefinitions>
-        <TabControl catel:StackGrid.ColumnSpan="2">
+        <catel:TabControl catel:StackGrid.ColumnSpan="2">
             <TabItem>
                 <TabItem.Header>
                     <StackPanel Orientation="Horizontal">
@@ -69,7 +69,7 @@
                     <funani:MongoDbView x:Name="MongoDbView" />
                 </Grid>
             </TabItem>
-        </TabControl>
+        </catel:TabControl>
 
         <funani:CommandProgressControl />
         <controls:StalledGuiIndicatorControl/>
