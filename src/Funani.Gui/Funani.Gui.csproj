@@ -95,6 +95,10 @@
     <Compile Include="Controls\StalledGuiIndicatorControl.xaml.cs">
       <DependentUpon>StalledGuiIndicatorControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Helpers\TraceOutputViewModel.cs" />
+    <Compile Include="Helpers\TraceOutputWindow.xaml.cs">
+      <DependentUpon>TraceOutputWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="ViewModels\DirectoryTreeViewModel.cs" />
     <Compile Include="ViewModels\DirectoryViewModel.cs" />
     <Compile Include="ViewModels\FileViewModel.cs" />
@@ -122,6 +126,10 @@
     <Page Include="Controls\StalledGuiIndicatorControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Helpers\TraceOutputWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Views\FileInformationView.xaml">
       <SubType>Designer</SubType>
