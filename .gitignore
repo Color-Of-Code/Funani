@@ -9,3 +9,4 @@ bin
 /src/packages/FluentMongo.*
 /src/packages/mongocsharpdriver.*
 /src/packages/NUnit*
+/src/packages/WPFToolkit*

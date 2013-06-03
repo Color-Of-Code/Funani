@@ -5,12 +5,19 @@
                    xmlns:funaniControls="clr-namespace:Funani.Gui.Controls"
                    mc:Ignorable="d" xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
                    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                   xmlns:controls="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Input.Toolkit"
                    d:DesignHeight="480" d:DesignWidth="640">
     <StackPanel>
         <StackPanel Orientation="Vertical" Grid.Column="1">
             <StackPanel Orientation="Horizontal">
                 <CheckBox IsChecked="{Binding IsDeleted}">Deleted</CheckBox>
-                <funaniControls:RatingControl RatingValue="{Binding Rating}" Height="10"></funaniControls:RatingControl>
+                <controls:Rating Value="{Binding Rating}">
+                    <controls:RatingItem/>
+                    <controls:RatingItem/>
+                    <controls:RatingItem/>
+                    <controls:RatingItem/>
+                    <controls:RatingItem/>
+                </controls:Rating>
                 <TextBox Text="{Binding Title,Mode=TwoWay}" FontWeight="Bold"></TextBox>
             </StackPanel>
             <TextBlock>
