@@ -12,21 +12,29 @@
                 <ListView Name="Console" ItemsSource="{Binding Lines}" />
             </TabItem>
             <TabItem Header="Query">
-                <Grid>
+                <catel:StackGrid>
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition></ColumnDefinition>
-                        <ColumnDefinition Width="Auto"></ColumnDefinition>
+                        <ColumnDefinition/>
+                        <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto"></RowDefinition>
-                        <RowDefinition></RowDefinition>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition />
+                        <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
-                    <TextBox Name="Query" Text="{Binding Query}" Grid.Column="0" Grid.Row="0"></TextBox>
-                    <Button Name="Run" Content="Run" Command="{Binding RunQuery}" Grid.Column="1" Grid.Row="0"></Button>
-                    <ListView Name="QueryResult" ItemsSource="{Binding QueryResults}" Grid.Column="0" Grid.Row="1"
-                              Grid.ColumnSpan="2">
-                    </ListView>
-                </Grid>
+                    
+                    <TextBlock Text="Collections:" />
+                    <ListBox ItemsSource="{Binding CollectionNames}" />
+                    
+                    <TextBox Name="Query" Text="{Binding Query}"/>
+                    <Button Name="Run" Content="Run" Command="{Binding RunQuery}"/>
+                    
+                    <ListView Name="QueryResult" ItemsSource="{Binding QueryResults}" Grid.ColumnSpan="2" />
+                    
+                    <TextBlock Foreground="Red" FontWeight="Bold" Text="{Binding QueryException.Message}"
+                               TextWrapping="Wrap" Grid.ColumnSpan="2" />
+                </catel:StackGrid>
             </TabItem>
             <TabItem Header="Statistics">
                 <Grid>

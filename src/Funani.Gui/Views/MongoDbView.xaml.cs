@@ -29,8 +29,8 @@
  */
 
 using Catel.IoC;
+using Catel.MVVM;
 using Catel.Windows.Controls;
-
 using Funani.Api;
 using Funani.Gui.ViewModels;
 
@@ -44,9 +44,13 @@ namespace Funani.Gui.Views
         public MongoDbView()
         {
             InitializeComponent();
+        }
 
-            //HACK: this is not clean...
-            DataContext = ServiceLocator.Default.ResolveType<IConsoleRedirect>() as MongoDbViewModel;
+        protected override IViewModel GetViewModelInstance(object dataContext)
+        {
+            var viewModel = ServiceLocator.Default.ResolveType<IConsoleRedirect>() as MongoDbViewModel;
+            DataContext = viewModel;
+            return viewModel;
         }
     }
 }

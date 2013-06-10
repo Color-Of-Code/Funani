@@ -32,12 +32,10 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Windows.Threading;
-
 using Catel.Data;
 using Catel.MVVM;
-
 using Funani.Api;
-
+using MongoDB.Bson;
 using MongoDB.Driver;
 
 namespace Funani.Gui.ViewModels
@@ -51,7 +49,6 @@ namespace Funani.Gui.ViewModels
         {
             _engine = GetService<IEngine>();
             _dispatcher = dispatcher;
-            Lines = new ObservableCollection<string>();
 
             // commands
             GetStatistics = new Command(OnGetStatisticsExecute);
@@ -59,25 +56,81 @@ namespace Funani.Gui.ViewModels
             RunQuery = new Command(OnRunQueryExecute);
         }
 
-        public ObservableCollection<String> Lines { get; private set; }
+        #region Property: Lines
 
-        public String Query { get; set; }
+        public static readonly PropertyData LinesProperty =
+            RegisterProperty("Lines", typeof (ObservableCollection<String>), new ObservableCollection<string>());
 
-        public IList<String> QueryResults { get; set; }
+        public ObservableCollection<String> Lines
+        {
+            get { return GetValue<ObservableCollection<String>>(LinesProperty); }
+            private set { SetValue(LinesProperty, value); }
+        }
 
-        /// <summary>
-        /// Retrieves the statistics.
-        /// </summary>
+        #endregion
+
+        #region Property: Query
+
+        public static readonly PropertyData QueryProperty =
+            RegisterProperty("Query", typeof (String), null);
+
+        public String Query
+        {
+            get { return GetValue<String>(QueryProperty); }
+            set { SetValue(QueryProperty, value); }
+        }
+
+        #endregion
+
+        #region Property: QueryResults
+
+        public static readonly PropertyData QueryResultsProperty =
+            RegisterProperty("QueryResults", typeof (IList<String>), null);
+
+        public IList<String> QueryResults
+        {
+            get { return GetValue<IList<String>>(QueryResultsProperty); }
+            set { SetValue(QueryResultsProperty, value); }
+        }
+
+        #endregion
+
+        #region Property: QueryException
+
+        public static readonly PropertyData QueryExceptionProperty =
+            RegisterProperty("QueryException", typeof (Exception), null);
+
+        public Exception QueryException
+        {
+            get { return GetValue<Exception>(QueryExceptionProperty); }
+            set { SetValue(QueryExceptionProperty, value); }
+        }
+
+        #endregion
+
+        #region Property: CollectionNames
+        public IEnumerable<String> CollectionNames
+        {
+            get { return GetValue<IEnumerable<String>>(CollectionNamesProperty); }
+            set { SetValue(CollectionNamesProperty, value); }
+        }
+
+        public static readonly PropertyData CollectionNamesProperty =
+            RegisterProperty("CollectionNames", typeof(IEnumerable<String>), null);
+        #endregion
+
+        #region Property: Statistics
+
+        public static readonly PropertyData StatisticsProperty =
+            RegisterProperty("Statistics", typeof (DatabaseStatsResult), null);
+
         public DatabaseStatsResult Statistics
         {
             get { return GetValue<DatabaseStatsResult>(StatisticsProperty); }
             set { SetValue(StatisticsProperty, value); }
         }
 
-        /// <summary>
-        /// Register the Statistics property so it is known in the class.
-        /// </summary>
-        public static readonly PropertyData StatisticsProperty = RegisterProperty("Statistics", typeof(DatabaseStatsResult), null);
+        #endregion
 
         private MongoDatabase Funani
         {
@@ -88,7 +141,7 @@ namespace Funani.Gui.ViewModels
         {
             if (data != null)
             {
-                _dispatcher.BeginInvoke((Action)(() =>
+                _dispatcher.BeginInvoke((Action) (() =>
                                                   Lines.Add(data.TrimEnd()))
                     );
             }
@@ -98,56 +151,77 @@ namespace Funani.Gui.ViewModels
         {
             if (data != null)
             {
-                _dispatcher.BeginInvoke((Action)(() =>
+                _dispatcher.BeginInvoke((Action) (() =>
                                                   Lines.Add(data.TrimEnd()))
                     );
             }
         }
 
+        #region Commands
+
         #region Command: GetStatistics
+
         /// <summary>
-        /// Gets the GetStatistics command.
+        ///     Gets the GetStatistics command.
         /// </summary>
         public Command GetStatistics { get; private set; }
 
         /// <summary>
-        /// Method to invoke when the GetStatistics command is executed.
+        ///     Method to invoke when the GetStatistics command is executed.
         /// </summary>
         private void OnGetStatisticsExecute()
         {
             Statistics = Funani.GetStats();
         }
+
         #endregion
 
         #region Command: Backup
+
         /// <summary>
-        /// Gets the Backup command.
+        ///     Gets the Backup command.
         /// </summary>
         public Command Backup { get; private set; }
 
         /// <summary>
-        /// Method to invoke when the Backup command is executed.
+        ///     Method to invoke when the Backup command is executed.
         /// </summary>
         private void OnBackupExecute()
         {
             _engine.Backup();
         }
+
         #endregion
 
         #region Command: RunQuery
+
         /// <summary>
-        /// Gets the RunQuery command.
+        ///     Gets the RunQuery command.
         /// </summary>
         public Command RunQuery { get; private set; }
 
         /// <summary>
-        /// Method to invoke when the RunQuery command is executed.
+        ///     Method to invoke when the RunQuery command is executed.
         /// </summary>
         private void OnRunQueryExecute()
         {
-            RaisePropertyChanged("QueryResults");
+            if (CollectionNames == null)
+                CollectionNames = Funani.GetCollectionNames();
+            try
+            {
+                QueryException = null; // reset
+                var bsonJS = new BsonJavaScript(Query);
+                BsonValue result = Funani.Eval(bsonJS);
+                QueryResults = result.ToJson().Split();
+            }
+            catch (Exception ex)
+            {
+                QueryException = ex;
+            }
         }
+
         #endregion
 
+        #endregion
     }
 }

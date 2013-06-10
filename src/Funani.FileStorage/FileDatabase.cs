@@ -67,12 +67,12 @@ namespace Funani.FileStorage
             Directory.CreateDirectory(destination.DirectoryName);
             File.Copy(file.FullName, destination.FullName);
 
-            // verify the hash, paranoid, but would detect hardware issues
+            // verify the hash, paranoid, but would detect some possible hardware issues
             string hashNew = ComputeHash.SHA1(destination);
             if (hash != hashNew)
             {
                 destination.Delete();
-                throw new Exception("Copy not equal to original image");
+                throw new Exception("Copy not equal to original image (SHA1 hash differs)");
             }
             destination.Attributes = destination.Attributes | FileAttributes.ReadOnly;
             return hashNew;
