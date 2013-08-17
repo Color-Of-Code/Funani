@@ -33,10 +33,10 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Catel.Core">
-      <HintPath>..\packages\Catel.Core.3.5\lib\NET40\Catel.Core.dll</HintPath>
+      <HintPath>..\packages\Catel.Core.3.6\lib\NET40\Catel.Core.dll</HintPath>
     </Reference>
     <Reference Include="Catel.Extensions.FluentValidation">
-      <HintPath>..\packages\Catel.Extensions.FluentValidation.3.5\lib\NET40\Catel.Extensions.FluentValidation.dll</HintPath>
+      <HintPath>..\packages\Catel.Extensions.FluentValidation.3.6\lib\NET40\Catel.Extensions.FluentValidation.dll</HintPath>
     </Reference>
     <Reference Include="PresentationCore">
       <RequiredTargetFramework>3.0</RequiredTargetFramework>
