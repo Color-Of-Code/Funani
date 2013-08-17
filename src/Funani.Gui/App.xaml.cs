@@ -38,6 +38,7 @@ using Catel.Windows;
 using Funani.Api;
 using Funani.Engine;
 using Funani.Gui.ViewModels;
+using Catel.Logging;
 
 namespace Funani.Gui
 {
@@ -48,6 +49,9 @@ namespace Funani.Gui
     {
         protected override void OnStartup(StartupEventArgs e)
         {
+//#if DEBUG
+//            LogManager.RegisterDebugListener();
+//#endif
             StyleHelper.CreateStyleForwardersForDefaultStyles();
             
             // ensure the UI elements are drawn using the current UI culture

@@ -139,7 +139,7 @@ namespace Funani.Gui.ViewModels
         /// Title.
         /// </summary>
         [ViewModelToModel("FileInformation")]
-        public String Title
+        public new String Title
         {
             get { return GetValue<String>(TitleProperty); }
             set { SetValue(TitleProperty, value); }
@@ -222,7 +222,7 @@ namespace Funani.Gui.ViewModels
         /// <summary>
         /// Gets the Save command.
         /// </summary>
-        public Command Save { get; private set; }
+        public new Command Save { get; private set; }
 
         /// <summary>
         /// Method to invoke when the Save command is executed.

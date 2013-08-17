@@ -100,14 +100,16 @@ namespace Funani.Gui.ViewModels
         /// Register the SelectedDirectory property so it is known in the class.
         /// </summary>
         public static readonly PropertyData SelectedDirectoryProperty = RegisterProperty("SelectedDirectory",
-            typeof(DirectoryViewModel), null, (sender, e) => ((DirectoryTreeViewModel)sender).OnSelectedDirectoryChanged());
+            typeof(DirectoryViewModel), null, 
+            (sender, e) => ((DirectoryTreeViewModel)sender).OnSelectedDirectoryChanged(
+                e.OldValue as DirectoryViewModel, e.NewValue as DirectoryViewModel));
 
         /// <summary>
         /// Called when the SelectedDirectory property has changed.
         /// </summary>
-        private void OnSelectedDirectoryChanged()
+        private void OnSelectedDirectoryChanged(DirectoryViewModel oldValue, DirectoryViewModel newValue)
         {
-            DirectoryViewModel item = SelectedDirectory;
+            DirectoryViewModel item = newValue;
             if (item != null)
             {
                 DirectoryInfo di = item.DirectoryInfo;
