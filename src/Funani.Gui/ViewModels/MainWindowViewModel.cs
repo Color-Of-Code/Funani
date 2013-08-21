@@ -30,6 +30,7 @@ namespace Funani.Gui.ViewModels
         public MainWindowViewModel()
         {
             ApplicationExit = new Command(OnApplicationExitExecute);
+            BrowseToFunanidb = new Command(OnBrowseToFunanidbExecute);
             BrowseToMongod = new Command(OnBrowseToMongodExecute);
 
             Settings = Settings.Default;
@@ -157,6 +158,25 @@ namespace Funani.Gui.ViewModels
                 OnBrowseToMongodExecute();
                 if (!IsMongodbPathValid)
                     OnApplicationExitExecute();
+            }
+        }
+
+        #endregion
+
+        #region Command: BrowseToMongod
+
+        public Command BrowseToFunanidb { get; private set; }
+
+        private void OnBrowseToFunanidbExecute()
+        {
+            var ofd = new SWF.FolderBrowserDialog();
+            ofd.Description = "Browse to a valid Funani DB or empty directory";
+            ofd.ShowNewFolderButton = true;
+            if (ofd.ShowDialog() == SWF.DialogResult.OK)
+            {
+                var di = new DirectoryInfo(ofd.SelectedPath);
+                Settings.LastFunaniDatabase = di.FullName;
+                Settings.Save();
             }
         }
 

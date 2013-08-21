@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <catel:DataWindow
 	x:Class="Funani.Gui.Views.MainWindow"
 	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
@@ -13,16 +13,26 @@
     ResizeMode="CanResizeWithGrip"
 	Icon="pack://application:,,,/Images/logo2.png"
 	Height="640" Width="1024">
-    <catel:StackGrid>
-        <catel:StackGrid.RowDefinitions>
-            <RowDefinition></RowDefinition>
-            <RowDefinition Height="16"></RowDefinition>
-        </catel:StackGrid.RowDefinitions>
-        <catel:StackGrid.ColumnDefinitions>
-            <ColumnDefinition />
-            <ColumnDefinition Width="Auto" />
-        </catel:StackGrid.ColumnDefinitions>
-        <catel:TabControl catel:StackGrid.ColumnSpan="2">
+	<DockPanel LastChildFill="True">
+		<Menu DockPanel.Dock="Top" IsMainMenu="True">
+			<MenuItem Header="_File">
+				<MenuItem Header="Select a Funanni DB" Command="{Binding BrowseToFunanidb}" />
+				<MenuItem Header="Select Mongo Server" Command="{Binding BrowseToMongod}" />
+				<Separator />
+				<MenuItem Header="Exit" Command="{Binding ApplicationExit}" />
+			</MenuItem>
+		</Menu>
+		
+		<catel:StackGrid DockPanel.Dock="Bottom">
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="*" />
+				<ColumnDefinition Width="Auto" />
+			</Grid.ColumnDefinitions>
+	        <funani:CommandProgressControl />
+	        <controls:StalledGuiIndicatorControl />
+		</catel:StackGrid>
+		
+        <catel:TabControl>
             <TabItem>
                 <TabItem.Header>
                     <StackPanel Orientation="Horizontal">
@@ -70,8 +80,5 @@
                 </Grid>
             </TabItem>
         </catel:TabControl>
-
-        <funani:CommandProgressControl />
-        <controls:StalledGuiIndicatorControl/>
-    </catel:StackGrid>
+	</DockPanel>
 </catel:DataWindow>
