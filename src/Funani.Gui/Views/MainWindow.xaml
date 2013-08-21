@@ -57,7 +57,7 @@
                     </catel:StackGrid.ColumnDefinitions>
                     <funani:DirectoryTreeView Grid.Column="0" />
                     <GridSplitter Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
-                    <funani:FileView Grid.Column="2" />
+                    <funani:DirectoryBrowserView Grid.Column="2" />
                 </catel:StackGrid>
             </TabItem>
             <TabItem>

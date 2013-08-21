@@ -1,4 +1,4 @@
-<catel:UserControl x:Class="Funani.Gui.Views.FileView"
+<catel:UserControl x:Class="Funani.Gui.Views.DirectoryBrowserView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:funani="clr-namespace:Funani.Gui.Controls"
@@ -12,9 +12,9 @@
             <RowDefinition Height="Auto"></RowDefinition>
             <RowDefinition></RowDefinition>
         </Grid.RowDefinitions>
-        <TextBox Grid.Row="0" Name="PathControl" Text="{Binding SelectedPath, Mode=OneWay}" IsReadOnly="True" />
+        <TextBox Grid.Row="0" Name="PathControl" Text="{Binding SelectedDirectory.DirectoryInfo, Mode=OneWay}" IsReadOnly="True" />
         <Slider Name="SliderSize" Grid.Row="1" Minimum="60" Maximum="320" Value="160"></Slider>
-        <ListView Grid.Row="2" Name="ListControl" ItemsSource="{Binding}"
+        <ListView Grid.Row="2" Name="ListControl" ItemsSource="{Binding FileViewModels}"
 		          ScrollViewer.HorizontalScrollBarVisibility="Disabled"
 		          Background="Transparent"
 		          ScrollViewer.IsDeferredScrollingEnabled="True">
@@ -79,8 +79,7 @@
                         </Border>
                         <CheckBox IsChecked="{Binding IsStored, Mode=OneWay}" 
                                   IsThreeState="True"
-                                  Click="CheckBox_Clicked"
-							      Canvas.Bottom="4"
+                                  Canvas.Bottom="4"
 							      Canvas.Right="4"
                                   Style="{StaticResource CheckBoxStyle}"
                                   />

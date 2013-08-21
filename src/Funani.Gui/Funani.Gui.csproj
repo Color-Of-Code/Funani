@@ -106,6 +106,7 @@
     <Compile Include="Helpers\TraceOutputWindow.xaml.cs">
       <DependentUpon>TraceOutputWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="ViewModels\DirectoryBrowserViewModel.cs" />
     <Compile Include="ViewModels\DirectoryTreeViewModel.cs" />
     <Compile Include="ViewModels\DirectoryViewModel.cs" />
     <Compile Include="ViewModels\FileViewModel.cs" />
@@ -119,8 +120,8 @@
       <DependentUpon>DirectoryTreeView.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Views\FileView.xaml.cs">
-      <DependentUpon>FileView.xaml</DependentUpon>
+    <Compile Include="Views\DirectoryBrowserView.xaml.cs">
+      <DependentUpon>DirectoryBrowserView.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Views\FunaniDatabaseView.xaml.cs">
@@ -176,7 +177,9 @@
       <SubType>Code</SubType>
     </Compile>
     <Page Include="Views\DirectoryTreeView.xaml" />
-    <Page Include="Views\FileView.xaml" />
+    <Page Include="Views\DirectoryBrowserView.xaml">
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Views\FunaniDatabaseView.xaml">
       <SubType>Designer</SubType>
     </Page>
