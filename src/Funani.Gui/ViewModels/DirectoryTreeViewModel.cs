@@ -52,9 +52,9 @@ namespace Funani.Gui.ViewModels
         private readonly IEngine _engine;
         private readonly ObservableCollection<DirectoryViewModel> _firstGeneration;
 
-        public DirectoryTreeViewModel()
+        public DirectoryTreeViewModel(IEngine engine)
         {
-            _engine = GetService<IEngine>();
+            _engine = engine;
 
             // register commands
             UploadAllInThisDirectory = new Command(OnUploadAllInThisDirectoryExecute, OnUploadAllInThisDirectoryCanExecute);

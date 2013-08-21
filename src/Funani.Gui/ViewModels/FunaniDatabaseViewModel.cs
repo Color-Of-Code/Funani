@@ -50,9 +50,9 @@ namespace Funani.Gui.ViewModels
         /// <summary>
         ///     Initializes a new instance of the <see cref="FunaniDatabaseViewModel" /> class.
         /// </summary>
-        public FunaniDatabaseViewModel()
+        public FunaniDatabaseViewModel(IEngine engine)
         {
-            _engine = GetService<IEngine>();
+            _engine = engine;
         }
 
         #endregion

@@ -32,8 +32,11 @@ using System;
 using System.IO;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+
 using Catel.Data;
+using Catel.IoC;
 using Catel.MVVM;
+
 using Funani.Api;
 using Funani.Api.Metadata;
 using Funani.Gui.Converters;
@@ -53,7 +56,7 @@ namespace Funani.Gui.ViewModels
         public FileInformationViewModel(FileInformation fileInformation)
         {
             FileInformation = fileInformation;
-            _engine = GetService<IEngine>();
+            _engine = ServiceLocator.ResolveType<IEngine>();
             RefreshMetadata = new Command(OnRefreshMetadataExecute);
             Save = new Command(OnSaveExecute);
             Delete = new Command(OnDeleteExecute);

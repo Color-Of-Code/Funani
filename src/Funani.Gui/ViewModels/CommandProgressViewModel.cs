@@ -41,9 +41,9 @@ namespace Funani.Gui.ViewModels
     {
         private readonly ICommandQueue _commands;
 
-        public CommandProgressViewModel()
+        public CommandProgressViewModel(ICommandQueue commands)
         {
-            _commands = GetService<ICommandQueue>();
+            _commands = commands;
             BindEvents();
         }
 

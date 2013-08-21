@@ -32,9 +32,13 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Windows.Threading;
+
 using Catel.Data;
+using Catel.IoC;
 using Catel.MVVM;
+
 using Funani.Api;
+
 using MongoDB.Bson;
 using MongoDB.Driver;
 
@@ -47,7 +51,7 @@ namespace Funani.Gui.ViewModels
 
         public MongoDbViewModel(Dispatcher dispatcher)
         {
-            _engine = GetService<IEngine>();
+            _engine = ServiceLocator.ResolveType<IEngine>();
             _dispatcher = dispatcher;
 
             // commands

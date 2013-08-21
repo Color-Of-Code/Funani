@@ -47,9 +47,9 @@ namespace Funani.Gui.ViewModels
     /// </summary>
     public class DatabaseViewModel : ViewModelBase, IItemsProvider<FileInformationViewModel>
     {
-        public DatabaseViewModel()
+        public DatabaseViewModel(IEngine engine)
         {
-            _engine = GetService<IEngine>();
+            _engine = engine;
 
             Refresh = new Command(OnRefreshExecute);
             RefreshAllMetadata = new Command(OnRefreshAllMetadataExecute);
@@ -380,7 +380,7 @@ namespace Funani.Gui.ViewModels
         /// </summary>
         private void OnRefreshAllMetadataExecute()
         {
-            var engine = GetService<IEngine>();
+            var engine = _engine;
             foreach (FileInformation fi in engine.FileInformation)
                 engine.RefreshMetadata(fi);
             OnRefreshExecute();
@@ -400,7 +400,7 @@ namespace Funani.Gui.ViewModels
         private void OnRefreshSelectedMetadataExecute()
         {
             throw new NotImplementedException();
-            var engine = GetService<IEngine>();
+            var engine = _engine;
             foreach (FileInformation fi in engine.FileInformation)
                 engine.RefreshMetadata(fi);
             OnRefreshExecute();

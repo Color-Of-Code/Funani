@@ -1,4 +1,5 @@
 ﻿using Catel.Data;
+using Catel.IoC;
 using Catel.MVVM;
 using Catel.MVVM.Services;
 using Funani.Api;
@@ -27,16 +28,16 @@ namespace Funani.Gui.ViewModels
         /// <summary>
         /// Initializes a new instance of the <see cref="MainWindowViewModel"/> class.
         /// </summary>
-        public MainWindowViewModel()
+        public MainWindowViewModel(IEngine engine)
         {
+            _engine = engine;
+
             ApplicationExit = new Command(OnApplicationExitExecute);
             BrowseToFunanidb = new Command(OnBrowseToFunanidbExecute);
             BrowseToMongod = new Command(OnBrowseToMongodExecute);
 
             Settings = Settings.Default;
             Settings.Upgrade();
-
-            _engine = GetService<IEngine>();
         }
 
         protected override void Initialize()
@@ -138,7 +139,7 @@ namespace Funani.Gui.ViewModels
 
         private void OnBrowseToMongodExecute()
         {
-            var openFileService = GetService<IOpenFileService>();
+            var openFileService = ServiceLocator.ResolveType<IOpenFileService>();
             openFileService.Title = "Browse to the mongoDB executable";
             openFileService.Filter = MongodFileFilter;
             if (openFileService.DetermineFile())

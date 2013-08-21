@@ -40,19 +40,9 @@ namespace Funani.Gui.Views
     /// </summary>
     public partial class DirectoryTreeView : UserControl
     {
-        public static readonly DependencyProperty SelectedDirectoryProperty =
-            DependencyProperty.Register("SelectedDirectory", typeof(DirectoryViewModel), typeof(DirectoryTreeView),
-                                        new PropertyMetadata(null));
-
         public DirectoryTreeView()
         {
             InitializeComponent();
-        }
-
-        public DirectoryViewModel SelectedDirectory
-        {
-            get { return (DirectoryViewModel)GetValue(SelectedDirectoryProperty); }
-            set { SetValue(SelectedDirectoryProperty, value); }
         }
 
         private void TreeView_SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
@@ -62,7 +52,6 @@ namespace Funani.Gui.Views
             var vm = ViewModel as DirectoryTreeViewModel;
             if (vm != null)
             {
-                SelectedDirectory = item;
                 vm.SelectedDirectory = item;
             }
         }

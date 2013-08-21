@@ -55,10 +55,9 @@
                         <ColumnDefinition Width="10" />
                         <ColumnDefinition Width="2*" />
                     </catel:StackGrid.ColumnDefinitions>
-                    <funani:DirectoryTreeView x:Name="DirectoryTree" Grid.Column="0"></funani:DirectoryTreeView>
+                    <funani:DirectoryTreeView Grid.Column="0" />
                     <GridSplitter Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
-                    <funani:FileView Grid.Column="2"
-                                     SelectedPath="{Binding ElementName=DirectoryTree,Path=SelectedDirectory}" />
+                    <funani:FileView Grid.Column="2" />
                 </catel:StackGrid>
             </TabItem>
             <TabItem>
