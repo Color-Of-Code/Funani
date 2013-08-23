@@ -40,7 +40,7 @@
   <ItemGroup>
     <Reference Include="Catel.Core, Version=3.7.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Catel.Core.3.6.1308192112-beta\lib\net40\Catel.Core.dll</HintPath>
+      <HintPath>..\packages\Catel.Core.3.6.1308231004-beta\lib\net40\Catel.Core.dll</HintPath>
     </Reference>
     <Reference Include="FluentMongo">
       <HintPath>..\packages\FluentMongo.1.3.1.1\lib\FluentMongo.dll</HintPath>
@@ -50,6 +50,9 @@
     </Reference>
     <Reference Include="MongoDB.Driver">
       <HintPath>..\packages\mongocsharpdriver.1.8.2\lib\net35\MongoDB.Driver.dll</HintPath>
+    </Reference>
+    <Reference Include="MongoRepository">
+      <HintPath>..\packages\MongoRepository.1.5.2\lib\MongoRepository.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core">
@@ -76,6 +79,8 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <None Include="app.config" />
+    <None Include="Documentation.chm" />
     <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
