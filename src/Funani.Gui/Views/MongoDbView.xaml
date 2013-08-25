@@ -4,8 +4,9 @@
                    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
                    xmlns:catel="http://catel.codeplex.com"
+                   xmlns:oxy="http://oxyplot.codeplex.com"
                    mc:Ignorable="d"
-                   d:DesignHeight="300" d:DesignWidth="300">
+                   d:DesignHeight="300" d:DesignWidth="600">
     <Grid>
         <TabControl>
             <TabItem Header="Console">
@@ -37,16 +38,17 @@
                 </catel:StackGrid>
             </TabItem>
             <TabItem Header="Statistics">
-                <Grid>
+                <catel:StackGrid>
                     <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"></RowDefinition>
                         <RowDefinition Height="Auto"></RowDefinition>
                         <RowDefinition Height="Auto"></RowDefinition>
                         <RowDefinition></RowDefinition>
                     </Grid.RowDefinitions>
-                    <GroupBox Grid.Row="0" Header="Backup to the mongod directory\dump\Funani\">
+                    <GroupBox Header="Backup to the mongod directory\dump\Funani\">
                         <Button Command="{Binding Backup}" Content="Backup"></Button>
                     </GroupBox>
-                    <GroupBox FontFamily="Courier New" Grid.Row="1">
+                    <GroupBox FontFamily="Courier New">
                         <GroupBox.Header>
                             <Button Command="{Binding GetStatistics}" Content="Refresh"></Button>
                         </GroupBox.Header>
@@ -113,7 +115,17 @@
                             </TextBlock>
                         </Grid>
                     </GroupBox>
-                </Grid>
+                    <GroupBox Header="Items in database">
+                        <catel:StackGrid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="1*" />
+                                <ColumnDefinition Width="1*" />
+                            </Grid.ColumnDefinitions>
+                            <oxy:Plot Model="{Binding MimeCountPlotModel}" Height="400" />
+                            <oxy:Plot Model="{Binding MimeSizePlotModel}" Height="400" />
+                        </catel:StackGrid>
+                    </GroupBox>
+                </catel:StackGrid>
             </TabItem>
         </TabControl>
     </Grid>

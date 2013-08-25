@@ -31,6 +31,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Windows.Threading;
 
 using Catel.Data;
@@ -41,6 +42,9 @@ using Funani.Api;
 
 using MongoDB.Bson;
 using MongoDB.Driver;
+using OxyPlot;
+using OxyPlot.Series;
+using Funani.Api.Metadata;
 
 namespace Funani.Gui.ViewModels
 {
@@ -60,10 +64,89 @@ namespace Funani.Gui.ViewModels
             RunQuery = new Command(OnRunQueryExecute);
         }
 
+        private void LoadData()
+        {
+            var groupByMimeTypeOperation = new BsonDocument
+            {
+                {
+                    "$group",
+                    new BsonDocument
+                    {
+                        { "_id", "$MimeType" },
+                        {
+                            "SumCount",
+                            new BsonDocument { { "$sum", 1 } }
+                        },
+                        {
+                            "SumSize",
+                            new BsonDocument { { "$sum", "$FileSize" } }
+                        }
+                    }
+                }
+            };
+
+            var sortOperation = new BsonDocument { { "$sort", new BsonDocument { { "SumSize", -1 } } } };
+
+            MongoDatabase db = _engine.MetadataDatabase as MongoDatabase;
+            AggregateResult result = db.GetCollection<FileInformation>("fileinfo").Aggregate(
+                groupByMimeTypeOperation,
+                sortOperation);
+
+            if (result.Ok)
+            {
+                var psCount = new PieSeries();
+                var psSize = new PieSeries();
+
+                foreach (var doc in result.ResultDocuments)
+                {
+                    String mime = doc["_id"].AsString;
+                    var size = doc["SumSize"].AsInt64 / 1024.0 / 1024.0 / 1024.0;
+                    var count = doc["SumCount"].AsInt32;
+                    psSize.Slices.Add(
+                        new PieSlice()
+                        {
+                            Label = String.Format("{0:0.0} GB: {1}", size, mime),
+                            Value = size
+                        }
+                        );
+                    psCount.Slices.Add(
+                        new PieSlice()
+                        {
+                            Label = String.Format("{0}: {1}", count, mime),
+                            Value = count
+                        }
+                        );
+                }
+
+                psCount.InnerDiameter = 0.2;
+                psCount.ExplodedDistance = 0;
+                psCount.Stroke = OxyColors.Black;
+                psCount.StrokeThickness = 1.0;
+                psCount.AngleSpan = 360;
+                psCount.StartAngle = 0;
+
+                psSize.InnerDiameter = 0.2;
+                psSize.ExplodedDistance = 0;
+                psSize.Stroke = OxyColors.Black;
+                psSize.StrokeThickness = 1.0;
+                psSize.AngleSpan = 360;
+                psSize.StartAngle = 0;
+
+                var modelCount = new PlotModel("Count by MIME type");
+                var modelSize = new PlotModel("Size by MIME type");
+
+                modelCount.Series.Add(psCount);
+                modelSize.Series.Add(psSize);
+
+                MimeSizePlotModel = modelSize;
+                MimeCountPlotModel = modelCount;
+            }
+        }
+
         #region Property: Lines
 
         public static readonly PropertyData LinesProperty =
-            RegisterProperty("Lines", typeof (ObservableCollection<String>), new ObservableCollection<string>());
+            RegisterProperty("Lines", typeof(ObservableCollection<String>), new ObservableCollection<string>());
 
         public ObservableCollection<String> Lines
         {
@@ -76,7 +159,7 @@ namespace Funani.Gui.ViewModels
         #region Property: Query
 
         public static readonly PropertyData QueryProperty =
-            RegisterProperty("Query", typeof (String), null);
+            RegisterProperty("Query", typeof(String), null);
 
         public String Query
         {
@@ -89,7 +172,7 @@ namespace Funani.Gui.ViewModels
         #region Property: QueryResults
 
         public static readonly PropertyData QueryResultsProperty =
-            RegisterProperty("QueryResults", typeof (IList<String>), null);
+            RegisterProperty("QueryResults", typeof(IList<String>), null);
 
         public IList<String> QueryResults
         {
@@ -102,7 +185,7 @@ namespace Funani.Gui.ViewModels
         #region Property: QueryException
 
         public static readonly PropertyData QueryExceptionProperty =
-            RegisterProperty("QueryException", typeof (Exception), null);
+            RegisterProperty("QueryException", typeof(Exception), null);
 
         public Exception QueryException
         {
@@ -123,10 +206,36 @@ namespace Funani.Gui.ViewModels
             RegisterProperty("CollectionNames", typeof(IEnumerable<String>), null);
         #endregion
 
+        #region Property: MimeCountPlotModel
+
+        public static readonly PropertyData MimeCountPlotModelProperty =
+            RegisterProperty("MimeCountPlotModel", typeof(PlotModel), null);
+
+        public PlotModel MimeCountPlotModel
+        {
+            get { return GetValue<PlotModel>(MimeCountPlotModelProperty); }
+            set { SetValue(MimeCountPlotModelProperty, value); }
+        }
+
+        #endregion
+
+        #region Property: MimeSizePlotModel
+
+        public static readonly PropertyData MimeSizePlotModelProperty =
+            RegisterProperty("MimeSizePlotModel", typeof(PlotModel), null);
+
+        public PlotModel MimeSizePlotModel
+        {
+            get { return GetValue<PlotModel>(MimeSizePlotModelProperty); }
+            set { SetValue(MimeSizePlotModelProperty, value); }
+        }
+
+        #endregion
+
         #region Property: Statistics
 
         public static readonly PropertyData StatisticsProperty =
-            RegisterProperty("Statistics", typeof (DatabaseStatsResult), null);
+            RegisterProperty("Statistics", typeof(DatabaseStatsResult), null);
 
         public DatabaseStatsResult Statistics
         {
@@ -145,7 +254,7 @@ namespace Funani.Gui.ViewModels
         {
             if (data != null)
             {
-                _dispatcher.BeginInvoke((Action) (() =>
+                _dispatcher.BeginInvoke((Action)(() =>
                                                   Lines.Add(data.TrimEnd()))
                     );
             }
@@ -155,7 +264,7 @@ namespace Funani.Gui.ViewModels
         {
             if (data != null)
             {
-                _dispatcher.BeginInvoke((Action) (() =>
+                _dispatcher.BeginInvoke((Action)(() =>
                                                   Lines.Add(data.TrimEnd()))
                     );
             }
@@ -176,6 +285,7 @@ namespace Funani.Gui.ViewModels
         private void OnGetStatisticsExecute()
         {
             Statistics = Funani.GetStats();
+            LoadData();
         }
 
         #endregion
