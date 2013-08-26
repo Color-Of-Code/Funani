@@ -50,7 +50,7 @@ namespace Funani.Gui.Converters
             image.BeginInit();
             image.UriSource = packUri;
             image.CacheOption = BitmapCacheOption.OnLoad;
-            image.CreateOptions = BitmapCreateOptions.None;
+            image.CreateOptions = BitmapCreateOptions.DelayCreation;
             image.EndInit();
 
             if (image.CanFreeze)

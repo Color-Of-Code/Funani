@@ -1,0 +1,16 @@
+﻿<catel:UserControl x:Class="Funani.Gui.Views.ThumbnailControl"
+                   xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                   xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+				   xmlns:catel="http://catel.codeplex.com"
+                   >
+    <Border Background="Black" BorderBrush="Gray" BorderThickness="4" >
+        <Image RenderOptions.BitmapScalingMode="{Binding ScalingMode}"
+								        Source="{Binding Thumbnail}"
+								        Width="{Binding ThumbnailWidth}"
+								        Height="{Binding ThumbnailHeight}"
+								        Stretch="Uniform"
+                                        HorizontalAlignment="Center"
+                                        VerticalAlignment="Center"
+							    />
+    </Border>
+</catel:UserControl>

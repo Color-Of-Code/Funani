@@ -47,10 +47,6 @@ namespace Funani.Gui.ViewModels
     /// </summary>
     public class FileViewModel : ViewModelBase
     {
-        private const int MaxThumbnailSize = 120;
-        private static readonly UriToThumbnailConverter Converter = new UriToThumbnailConverter(MaxThumbnailSize);
-
-        private BitmapSource _thumbnail;
         private readonly IEngine _engine;
 
         public FileViewModel(FileInfo fileInfo)
@@ -83,50 +79,6 @@ namespace Funani.Gui.ViewModels
         public DateTime LastWriteTime
         {
             get { return FileInfo.LastWriteTime; }
-        }
-
-        public double ThumbnailWidth
-        {
-            get
-            {
-                if (MaxThumbnailSize < Thumbnail.PixelWidth)
-                    return double.NaN;
-                return Thumbnail.PixelWidth;
-            }
-        }
-
-        public double ThumbnailHeight
-        {
-            get
-            {
-                if (MaxThumbnailSize < Thumbnail.PixelHeight)
-                    return double.NaN;
-                return Thumbnail.PixelHeight;
-            }
-        }
-
-        public Stretch Stretch
-        {
-            get { return Stretch.Uniform; }
-        }
-
-        public BitmapSource Thumbnail
-        {
-            get
-            {
-                return _thumbnail ??
-                       (_thumbnail = Converter.Convert(FullName, typeof(BitmapSource), null, null) as BitmapSource);
-            }
-        }
-
-        public BitmapScalingMode ScalingMode
-        {
-            get
-            {
-                if (ThumbnailWidth < MaxThumbnailSize && ThumbnailHeight < MaxThumbnailSize)
-                    return BitmapScalingMode.Linear;
-                return BitmapScalingMode.HighQuality;
-            }
         }
 
         #region Property: IsStored

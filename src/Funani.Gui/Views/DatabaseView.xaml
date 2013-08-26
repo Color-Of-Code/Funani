@@ -97,19 +97,10 @@
                                 <MenuItem Header="Update metadata" Command="{Binding RefreshMetadata}"></MenuItem>
                             </ContextMenu>
                         </Canvas.ContextMenu>
-                        <Border Background="Black" BorderBrush="Gray" BorderThickness="4"
-                                Width="{Binding ElementName=SliderSize,Path=Value,
-                                    Converter={StaticResource MathConverter},ConverterParameter=(@VALUE-8)}"
-                                Height="{Binding ElementName=SliderSize,Path=Value,
-                                    Converter={StaticResource MathConverter},ConverterParameter=(@VALUE-8)}"
-                                Canvas.Left="2"
-                                Canvas.Top="2">
-                            <Image RenderOptions.BitmapScalingMode="HighQuality"
-                                   Source="{Binding Thumbnail}"
-                                   Stretch="Uniform"
-                                   HorizontalAlignment="Center"
-                                   VerticalAlignment="Center" />
-                        </Border>
+                        <funani:ThumbnailControl DataContext="{Binding ThumbnailPath}"
+                                                 Width="{Binding ElementName=SliderSize,Path=Value}"
+                                                 Height="{Binding ElementName=SliderSize,Path=Value}"
+                                                 />
                         <Canvas.ToolTip>
                             <funani:FileInformationView></funani:FileInformationView>
                         </Canvas.ToolTip>

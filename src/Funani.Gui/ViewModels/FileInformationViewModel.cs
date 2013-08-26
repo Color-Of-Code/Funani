@@ -39,7 +39,6 @@ using Catel.MVVM;
 
 using Funani.Api;
 using Funani.Api.Metadata;
-using Funani.Gui.Converters;
 
 namespace Funani.Gui.ViewModels
 {
@@ -48,9 +47,6 @@ namespace Funani.Gui.ViewModels
     /// </summary>
     public class FileInformationViewModel : ViewModelBase
     {
-        private const int MaxThumbnailSize = 256;
-        private static readonly UriToThumbnailConverter Converter = new UriToThumbnailConverter(MaxThumbnailSize);
-
         private readonly IEngine _engine;
 
         public FileInformationViewModel(FileInformation fileInformation)
@@ -160,15 +156,12 @@ namespace Funani.Gui.ViewModels
             get { return Stretch.Uniform; }
         }
 
-        public BitmapSource Thumbnail
+        public String ThumbnailPath
         {
             get
             {
-                FileInfo thumbPath = _engine.GetThumbnail(
-                    FileInformation.Id, FileInformation.MimeType);
-                object value = thumbPath == null ? null : thumbPath.FullName;
-                var bitmap = Converter.Convert(value, typeof(BitmapSource), null, null) as BitmapSource;
-                return bitmap;
+                FileInfo thumbPath = _engine.GetThumbnail(FileInformation.Id, FileInformation.MimeType);
+                return thumbPath == null ? null : thumbPath.FullName;
             }
         }
 
