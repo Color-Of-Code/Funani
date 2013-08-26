@@ -97,22 +97,34 @@ namespace Funani.Gui.ViewModels
                 var psCount = new PieSeries();
                 var psSize = new PieSeries();
 
-                foreach (var doc in result.ResultDocuments)
+                var list = result.ResultDocuments
+                	.Select(doc => new {
+                	        	Mime = MimeMap(doc["_id"].AsString),
+                	        	Size = doc["SumSize"].AsInt64 / 1024.0 / 1024.0 / 1024.0,
+                	        	Count = doc["SumCount"].AsInt32
+                	        });
+
+                foreach (var doc in list.GroupBy(x => x.Mime)
+                         .Select(doc => new {
+                                 	Mime = doc.Key,
+                                 	Size = doc.Sum(x => x.Size),
+                                 	Count = doc.Sum(x => x.Count)
+                                 })
+                         .OrderByDescending(x => x.Size))
                 {
-                    String mime = doc["_id"].AsString;
-                    var size = doc["SumSize"].AsInt64 / 1024.0 / 1024.0 / 1024.0;
-                    var count = doc["SumCount"].AsInt32;
+                	var size = doc.Size;
+                	var count = doc.Count;
                     psSize.Slices.Add(
                         new PieSlice()
                         {
-                            Label = String.Format("{0:0.0} GB: {1}", size, mime),
+                            Label = String.Format("{0:0.0} GB: {1}", size, doc.Mime),
                             Value = size
                         }
                         );
                     psCount.Slices.Add(
                         new PieSlice()
                         {
-                            Label = String.Format("{0}: {1}", count, mime),
+                            Label = String.Format("{0}: {1}", count, doc.Mime),
                             Value = count
                         }
                         );
@@ -141,6 +153,17 @@ namespace Funani.Gui.ViewModels
                 MimeSizePlotModel = modelSize;
                 MimeCountPlotModel = modelCount;
             }
+        }
+        
+        private String MimeMap(String input)
+        {
+        	if (input.StartsWith("image/"))
+        		return "images";
+        	if (input.StartsWith("video/"))
+        		return "videos";
+        	if (input=="application/pdf")
+        		return "documents";
+        	return input;
         }
 
         #region Property: Lines
