@@ -31,8 +31,11 @@
 using System.Globalization;
 using System.Windows;
 using System.Windows.Markup;
+
 using Catel.IoC;
+using Catel.Logging;
 using Catel.Windows;
+
 using Funani.Api;
 using Funani.Engine;
 using Funani.Gui.ViewModels;
@@ -46,9 +49,10 @@ namespace Funani.Gui
     {
         protected override void OnStartup(StartupEventArgs e)
         {
-//#if DEBUG
-//            LogManager.RegisterDebugListener();
-//#endif
+#if DEBUG
+            LogManager.RegisterDebugListener();
+#endif
+            log4net.Config.XmlConfigurator.Configure();
             StyleHelper.CreateStyleForwardersForDefaultStyles();
 
             // ensure the UI elements are drawn using the current UI culture
