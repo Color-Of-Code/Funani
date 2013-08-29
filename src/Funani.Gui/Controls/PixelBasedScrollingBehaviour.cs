@@ -8,13 +8,13 @@ namespace Funani.Gui.Controls
     public static class PixelBasedScrollingBehavior
     {
         public static readonly DependencyProperty IsEnabledProperty =
-            DependencyProperty.RegisterAttached("IsEnabled", typeof (bool),
-                                                typeof (PixelBasedScrollingBehavior),
+            DependencyProperty.RegisterAttached("IsEnabled", typeof(bool),
+                                                typeof(PixelBasedScrollingBehavior),
                                                 new UIPropertyMetadata(false, HandleIsEnabledChanged));
 
         public static bool GetIsEnabled(DependencyObject obj)
         {
-            return (bool) obj.GetValue(IsEnabledProperty);
+            return (bool)obj.GetValue(IsEnabledProperty);
         }
 
         public static void SetIsEnabled(DependencyObject obj, bool value)
@@ -30,7 +30,7 @@ namespace Funani.Gui.Controls
                 return;
             }
 
-            var property = typeof (VirtualizingStackPanel).
+            PropertyInfo property = typeof(VirtualizingStackPanel).
                 GetProperty("IsPixelBased", BindingFlags.NonPublic | BindingFlags.Instance);
 
             if (property == null)
@@ -38,7 +38,7 @@ namespace Funani.Gui.Controls
                 throw new InvalidOperationException("Pixel-based scrolling behaviour hack no longer works!");
             }
 
-            property.SetValue(vsp, (bool) e.NewValue, new object[0]);
+            property.SetValue(vsp, (bool)e.NewValue, new object[0]);
         }
     }
 }

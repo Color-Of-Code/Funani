@@ -33,12 +33,9 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-
 using Catel.IoC;
-
 using Funani.Api;
 using Funani.Api.Metadata;
-
 using MongoDB.Bson;
 using MongoDB.Driver;
 using MongoDB.Driver.Builders;
@@ -162,10 +159,11 @@ namespace Funani.Metadata
         {
             MongoCollection<BsonDocument> files = Funani.GetCollection("fileinfo");
             string path = file.FullName;
-            var result = files.AsQueryable<FileInformation>()
-                .Where(x => (x.FileSize == file.Length) && (x.Paths.Contains(path)));
-            //TODO: Check why some have more than one!
-            //return result.SingleOrDefault();
+            IQueryable<FileInformation> result = files.AsQueryable<FileInformation>()
+                                                      .Where(x => (x.FileSize == file.Length) && x.Paths.Contains(path));
+
+            // TODO: Check why some have more than one!
+            // return result.SingleOrDefault();
             return result.FirstOrDefault();
         }
 
@@ -173,7 +171,7 @@ namespace Funani.Metadata
         {
             MongoCollection<BsonDocument> files = Funani.GetCollection("fileinfo");
             string path = file.FullName;
-            var list = new[] {path};
+            var list = new[] { path };
             var queryBuilder = new QueryBuilder<FileInformation>();
             IMongoQuery query = queryBuilder.In(x => x.Paths, list);
             var info = files.FindOneAs<FileInformation>(query);

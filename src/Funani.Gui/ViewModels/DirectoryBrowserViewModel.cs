@@ -28,36 +28,21 @@
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.IO;
-using System.Linq;
-using System.Threading;
-
-using Catel.MVVM;
-
-using Funani.Api;
-using Funani.Engine.Commands;
-using Catel.Data;
-using Funani.Gui.Properties;
 using System.Diagnostics;
+using Catel.Data;
+using Catel.MVVM;
 using Funani.Gui.Controls;
 using Funani.Gui.Model;
-using System.Windows;
 
 namespace Funani.Gui.ViewModels
 {
     [InterestedIn(typeof(DirectoryTreeViewModel))]
     public class DirectoryBrowserViewModel : ViewModelBase
     {
-        public DirectoryBrowserViewModel()
-        {
-        }
-
         protected override void OnViewModelPropertyChanged(IViewModel viewModel, string propertyName)
         {
- 	        base.OnViewModelPropertyChanged(viewModel, propertyName);
+            base.OnViewModelPropertyChanged(viewModel, propertyName);
             if (propertyName == "SelectedDirectory")
                 SelectedDirectory = (viewModel as DirectoryTreeViewModel).SelectedDirectory;
         }
@@ -103,8 +88,20 @@ namespace Funani.Gui.ViewModels
 
         #region Property: SelectedDirectory
 
+        private const bool FilterAlreadyStored = false;
+
         /// <summary>
-        /// Gets or sets the property value.
+        ///     Register the SelectedDirectory property so it is known in the class.
+        /// </summary>
+        public static readonly PropertyData SelectedDirectoryProperty =
+            RegisterProperty("SelectedDirectory", typeof(DirectoryViewModel), null,
+                             (sender, e) => ((DirectoryBrowserViewModel)sender)
+                                 .OnSelectedDirectoryChanged(
+                                     e.OldValue as DirectoryViewModel,
+                                     e.NewValue as DirectoryViewModel));
+
+        /// <summary>
+        ///     Gets or sets the property value.
         /// </summary>
         public DirectoryViewModel SelectedDirectory
         {
@@ -113,15 +110,7 @@ namespace Funani.Gui.ViewModels
         }
 
         /// <summary>
-        /// Register the SelectedDirectory property so it is known in the class.
-        /// </summary>
-        public static readonly PropertyData SelectedDirectoryProperty = RegisterProperty("SelectedDirectory",
-            typeof(DirectoryViewModel), null,
-            (sender, e) => ((DirectoryBrowserViewModel)sender).OnSelectedDirectoryChanged(
-                e.OldValue as DirectoryViewModel, e.NewValue as DirectoryViewModel));
-
-        /// <summary>
-        /// Called when the SelectedDirectory property has changed.
+        ///     Called when the SelectedDirectory property has changed.
         /// </summary>
         private void OnSelectedDirectoryChanged(DirectoryViewModel oldValue, DirectoryViewModel newValue)
         {
@@ -130,23 +119,22 @@ namespace Funani.Gui.ViewModels
             FileViewModels = items;
         }
 
-        private const bool FilterAlreadyStored = false;
-
         #endregion
 
         #region Property: FileViewModels
 
+        public static readonly PropertyData FileViewModelsProperty = RegisterProperty("FileViewModels",
+                                                                                      typeof(IEnumerable<FileViewModel>),
+                                                                                      null);
+
         /// <summary>
-        /// Gets or sets the property value.
+        ///     Gets or sets the property value.
         /// </summary>
         public IEnumerable<FileViewModel> FileViewModels
         {
             get { return GetValue<IEnumerable<FileViewModel>>(FileViewModelsProperty); }
             set { SetValue(FileViewModelsProperty, value); }
         }
-
-        public static readonly PropertyData FileViewModelsProperty = RegisterProperty("FileViewModels",
-            typeof(IEnumerable<FileViewModel>), null);
 
         #endregion
     }

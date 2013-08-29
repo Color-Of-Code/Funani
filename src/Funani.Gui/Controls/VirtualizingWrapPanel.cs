@@ -23,15 +23,15 @@ namespace Funani.Gui.Controls
         private const int RecycledIndex = -1;
 
         public static readonly DependencyProperty ItemWidthProperty =
-            DependencyProperty.Register("ItemWidth", typeof (double), typeof (VirtualizingWrapPanel),
+            DependencyProperty.Register("ItemWidth", typeof(double), typeof(VirtualizingWrapPanel),
                                         new PropertyMetadata(1.0, HandleItemDimensionChanged));
 
         public static readonly DependencyProperty ItemHeightProperty =
-            DependencyProperty.Register("ItemHeight", typeof (double), typeof (VirtualizingWrapPanel),
+            DependencyProperty.Register("ItemHeight", typeof(double), typeof(VirtualizingWrapPanel),
                                         new PropertyMetadata(1.0, HandleItemDimensionChanged));
 
         private static readonly DependencyProperty VirtualItemIndexProperty =
-            DependencyProperty.RegisterAttached("VirtualItemIndex", typeof (int), typeof (VirtualizingWrapPanel),
+            DependencyProperty.RegisterAttached("VirtualItemIndex", typeof(int), typeof(VirtualizingWrapPanel),
                                                 new PropertyMetadata(-1));
 
         /// <summary>
@@ -51,19 +51,19 @@ namespace Funani.Gui.Controls
         {
             if (!DesignerProperties.GetIsInDesignMode(this))
             {
-                Dispatcher.BeginInvoke((Action) Initialize);
+                Dispatcher.BeginInvoke((Action)Initialize);
             }
         }
 
         public double ItemHeight
         {
-            get { return (double) GetValue(ItemHeightProperty); }
+            get { return (double)GetValue(ItemHeightProperty); }
             set { SetValue(ItemHeightProperty, value); }
         }
 
         public double ItemWidth
         {
-            get { return (double) GetValue(ItemWidthProperty); }
+            get { return (double)GetValue(ItemWidthProperty); }
             set { SetValue(ItemWidthProperty, value); }
         }
 
@@ -135,7 +135,7 @@ namespace Funani.Gui.Controls
         private static int GetVirtualItemIndex(UIElement element)
         {
             if (element == null) throw new ArgumentNullException("element");
-            return (int) element.GetValue(VirtualItemIndexProperty);
+            return (int)element.GetValue(VirtualItemIndexProperty);
         }
 
         private static void SetVirtualItemIndex(UIElement element, int value)
@@ -147,7 +147,7 @@ namespace Funani.Gui.Controls
         private void Initialize()
         {
             _itemsControl = ItemsControl.GetItemsOwner(this);
-            _itemsGenerator = (IRecyclingItemContainerGenerator) ItemContainerGenerator;
+            _itemsGenerator = (IRecyclingItemContainerGenerator)ItemContainerGenerator;
 
             InvalidateMeasure();
         }
@@ -192,7 +192,7 @@ namespace Funani.Gui.Controls
                     {
                         bool newlyRealized;
 
-                        var child = (UIElement) _itemsGenerator.GenerateNext(out newlyRealized);
+                        var child = (UIElement)_itemsGenerator.GenerateNext(out newlyRealized);
                         SetVirtualItemIndex(child, itemIndex);
 
                         if (newlyRealized)
@@ -232,7 +232,7 @@ namespace Funani.Gui.Controls
 
                         _childLayouts.Add(child, new Rect(currentX, currentY, ItemWidth, ItemHeight));
 
-                        if (currentX + ItemWidth*2 >= availableSize.Width)
+                        if (currentX + ItemWidth * 2 >= availableSize.Width)
                         {
                             // wrap to a new line
                             currentY += ItemHeight;
@@ -336,19 +336,18 @@ namespace Funani.Gui.Controls
             // so that keyboard navigation works properly. For example, when focus is on the first visible item, and the user
             // navigates up, the ListBox selects the previous item, and the scrolls that into view - and this triggers the loading of the rest of the items 
             // in that row
+            var firstVisibleLine = (int)Math.Floor(VerticalOffset / itemHeight);
 
-            var firstVisibleLine = (int) Math.Floor(VerticalOffset/itemHeight);
+            int firstRealizedIndex = Math.Max(extentInfo.ItemsPerLine * firstVisibleLine - 1, 0);
+            double firstRealizedItemLeft = firstRealizedIndex % extentInfo.ItemsPerLine * ItemWidth - HorizontalOffset;
+            double firstRealizedItemTop = (firstRealizedIndex / extentInfo.ItemsPerLine) * itemHeight - VerticalOffset;
 
-            int firstRealizedIndex = Math.Max(extentInfo.ItemsPerLine*firstVisibleLine - 1, 0);
-            double firstRealizedItemLeft = firstRealizedIndex%extentInfo.ItemsPerLine*ItemWidth - HorizontalOffset;
-            double firstRealizedItemTop = (firstRealizedIndex/extentInfo.ItemsPerLine)*itemHeight - VerticalOffset;
-
-            double firstCompleteLineTop = (firstVisibleLine == 0
+            double firstCompleteLineTop = firstVisibleLine == 0
                                                ? firstRealizedItemTop
-                                               : firstRealizedItemTop + ItemHeight);
-            var completeRealizedLines = (int) Math.Ceiling((availableSize.Height - firstCompleteLineTop)/itemHeight);
+                                               : firstRealizedItemTop + ItemHeight;
+            var completeRealizedLines = (int)Math.Ceiling((availableSize.Height - firstCompleteLineTop) / itemHeight);
 
-            int lastRealizedIndex = Math.Min(firstRealizedIndex + completeRealizedLines*extentInfo.ItemsPerLine + 2,
+            int lastRealizedIndex = Math.Min(firstRealizedIndex + completeRealizedLines * extentInfo.ItemsPerLine + 2,
                                              _itemsControl.Items.Count - 1);
 
             return new ItemLayoutInfo
@@ -367,9 +366,9 @@ namespace Funani.Gui.Controls
                 return new ExtentInfo();
             }
 
-            int itemsPerLine = Math.Max((int) Math.Floor(viewPortSize.Width/ItemWidth), 1);
-            var totalLines = (int) Math.Ceiling((double) _itemsControl.Items.Count/itemsPerLine);
-            double extentHeight = Math.Max(totalLines*itemHeight, viewPortSize.Height);
+            int itemsPerLine = Math.Max((int)Math.Floor(viewPortSize.Width / ItemWidth), 1);
+            var totalLines = (int)Math.Ceiling((double)_itemsControl.Items.Count / itemsPerLine);
+            double extentHeight = Math.Max(totalLines * itemHeight, viewPortSize.Height);
 
             return new ExtentInfo
                 {
@@ -396,7 +395,6 @@ namespace Funani.Gui.Controls
             return bottomChild - (bottomView - topView);
         }
 
-
         public ItemLayoutInfo GetVisibleItemsRange()
         {
             return GetLayoutInfo(_viewportSize, ItemHeight, GetExtentInfo(_viewportSize, ItemHeight));
@@ -412,7 +410,7 @@ namespace Funani.Gui.Controls
 
         private static void HandleItemDimensionChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            var wrapPanel = (d as VirtualizingWrapPanel);
+            var wrapPanel = d as VirtualizingWrapPanel;
 
             if (wrapPanel != null)
                 wrapPanel.InvalidateMeasure();
@@ -462,22 +460,22 @@ namespace Funani.Gui.Controls
 
         public void MouseWheelUp()
         {
-            SetVerticalOffset(VerticalOffset - ScrollLineAmount*SystemParameters.WheelScrollLines);
+            SetVerticalOffset(VerticalOffset - ScrollLineAmount * SystemParameters.WheelScrollLines);
         }
 
         public void MouseWheelDown()
         {
-            SetVerticalOffset(VerticalOffset + ScrollLineAmount*SystemParameters.WheelScrollLines);
+            SetVerticalOffset(VerticalOffset + ScrollLineAmount * SystemParameters.WheelScrollLines);
         }
 
         public void MouseWheelLeft()
         {
-            SetHorizontalOffset(HorizontalOffset - ScrollLineAmount*SystemParameters.WheelScrollLines);
+            SetHorizontalOffset(HorizontalOffset - ScrollLineAmount * SystemParameters.WheelScrollLines);
         }
 
         public void MouseWheelRight()
         {
-            SetHorizontalOffset(HorizontalOffset + ScrollLineAmount*SystemParameters.WheelScrollLines);
+            SetHorizontalOffset(HorizontalOffset + ScrollLineAmount * SystemParameters.WheelScrollLines);
         }
 
         public void SetHorizontalOffset(double offset)
@@ -520,18 +518,18 @@ namespace Funani.Gui.Controls
         /// </summary>
         internal class ExtentInfo
         {
-            public double ExtentHeight;
-            public int ItemsPerLine;
-            public double MaxVerticalOffset;
-            public int TotalLines;
+            public double ExtentHeight { get; set; }
+            public int ItemsPerLine { get; set; }
+            public double MaxVerticalOffset { get; set; }
+            public int TotalLines { get; set; }
         }
 
         public class ItemLayoutInfo
         {
-            public int FirstRealizedItemIndex;
-            public double FirstRealizedItemLeft;
-            public double FirstRealizedLineTop;
-            public int LastRealizedItemIndex;
+            public int FirstRealizedItemIndex { get; set; }
+            public double FirstRealizedItemLeft { get; set; }
+            public double FirstRealizedLineTop { get; set; }
+            public int LastRealizedItemIndex { get; set; }
         }
     }
 }

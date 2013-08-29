@@ -29,12 +29,11 @@
  */
 
 using System;
-using System.ComponentModel;
 using System.IO;
 using System.Linq;
 
-using Catel.IoC;
 using Catel.Data;
+using Catel.IoC;
 
 using Funani.Api;
 using Funani.Api.Metadata;

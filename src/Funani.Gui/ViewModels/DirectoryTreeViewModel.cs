@@ -35,11 +35,11 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 
+using Catel.Data;
 using Catel.MVVM;
 
 using Funani.Api;
 using Funani.Engine.Commands;
-using Catel.Data;
 using Funani.Gui.Properties;
 
 namespace Funani.Gui.ViewModels
@@ -149,8 +149,7 @@ namespace Funani.Gui.ViewModels
                 return;
             DirectoryInfo di = dvm.DirectoryInfo;
             var t = new Thread(() =>
-                               AddFilesInDirectory(di, false)
-                              );
+                               AddFilesInDirectory(di, false));
             t.Start();
         }
         #endregion
@@ -180,8 +179,7 @@ namespace Funani.Gui.ViewModels
                 return;
             DirectoryInfo di = dvm.DirectoryInfo;
             var t = new Thread(() =>
-                               AddFilesInDirectory(di, true)
-                              );
+                               AddFilesInDirectory(di, true));
             t.Start();
         }
         #endregion

@@ -1,32 +1,32 @@
-﻿using Catel.Data;
+﻿using System;
+using System.IO;
+using System.Windows;
+using Catel.Data;
 using Catel.IoC;
 using Catel.MVVM;
 using Catel.MVVM.Services;
 using Funani.Api;
 using Funani.Gui.Properties;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Windows;
 using SWF = System.Windows.Forms;
 
 namespace Funani.Gui.ViewModels
 {
     /// <summary>
-    /// MainWindow view model.
+    ///     MainWindow view model.
     /// </summary>
     public class MainWindowViewModel : ViewModelBase
     {
         #region Fields
+
         private static readonly String MongodFileFilter = "Mongo Server (mongod.exe)|mongod.exe";
         private readonly IEngine _engine;
+
         #endregion
 
         #region Constructors
+
         /// <summary>
-        /// Initializes a new instance of the <see cref="MainWindowViewModel"/> class.
+        ///     Initializes a new instance of the <see cref="MainWindowViewModel" /> class.
         /// </summary>
         public MainWindowViewModel(IEngine engine)
         {
@@ -46,22 +46,30 @@ namespace Funani.Gui.ViewModels
             EnsureFunanidbPathIsValid();
             _engine.OpenDatabase(MongodbPath, Settings.LastFunaniDatabase);
         }
+
         protected override void OnClosed(bool? result)
         {
             _engine.CloseDatabase();
             base.OnClosed(result);
         }
+
         #endregion
 
         #region Properties
 
         #region Property: Title
 
-        public override string Title { get { return "MainWindow"; } }
+        public override string Title
+        {
+            get { return "MainWindow"; }
+        }
 
         #endregion
 
         #region Property: [Model]Settings
+
+        public static readonly PropertyData SettingsProperty =
+            RegisterProperty("Settings", typeof(Settings));
 
         [Model]
         public Settings Settings
@@ -70,12 +78,13 @@ namespace Funani.Gui.ViewModels
             private set { SetValue(SettingsProperty, value); }
         }
 
-        public static readonly PropertyData SettingsProperty =
-            RegisterProperty("Settings", typeof(Settings));
-
         #endregion
 
         #region Property: MongodbPath
+
+        public static readonly PropertyData MongodbPathProperty =
+            RegisterProperty("MongodbPath", typeof(String), null,
+                             (sender, e) => ((MainWindowViewModel)sender).OnMongodbPathChanged());
 
         [ViewModelToModel("Settings")]
         public String MongodbPath
@@ -83,10 +92,6 @@ namespace Funani.Gui.ViewModels
             get { return GetValue<String>(MongodbPathProperty); }
             set { SetValue(MongodbPathProperty, value); }
         }
-
-        public static readonly PropertyData MongodbPathProperty =
-            RegisterProperty("MongodbPath", typeof(String), null,
-            (sender, e) => ((MainWindowViewModel)sender).OnMongodbPathChanged());
 
         private void OnMongodbPathChanged()
         {
@@ -98,14 +103,14 @@ namespace Funani.Gui.ViewModels
 
         #region Property: IsMongodbPathValid
 
+        public static readonly PropertyData IsMongodbPathValidProperty =
+            RegisterProperty("IsMongodbPathValid", typeof(bool), null);
+
         public bool IsMongodbPathValid
         {
             get { return GetValue<bool>(IsMongodbPathValidProperty); }
             set { SetValue(IsMongodbPathValidProperty, value); }
         }
-
-        public static readonly PropertyData IsMongodbPathValidProperty =
-            RegisterProperty("IsMongodbPathValid", typeof(bool), null);
 
         private static bool GetIsMongodbPathValid(String path)
         {

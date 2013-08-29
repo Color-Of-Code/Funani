@@ -13,10 +13,10 @@ namespace Funani.Gui.Converters
     // from http://rachel53461.wordpress.com/2011/08/20/the-math-converter/
     public class MathConverter : IValueConverter
     {
-        private static readonly char[] AllOperators = new[] {'+', '-', '*', '/', '%', '(', ')'};
+        private static readonly char[] AllOperators = new[] { '+', '-', '*', '/', '%', '(', ')' };
 
-        private static readonly List<string> Grouping = new List<string> {"(", ")"};
-        private static readonly List<string> Operators = new List<string> {"+", "-", "*", "/", "%"};
+        private static readonly List<string> Grouping = new List<string> { "(", ")" };
+        private static readonly List<string> Operators = new List<string> { "+", "-", "*", "/", "%" };
 
         #region IValueConverter Members
 
@@ -31,7 +31,7 @@ namespace Funani.Gui.Converters
             // Validate values and get list of numbers in equation
             var numbers = new List<double>();
 
-            foreach (var s in mathEquation.Split(AllOperators).Where(s => s != string.Empty))
+            foreach (string s in mathEquation.Split(AllOperators).Where(s => s != string.Empty))
             {
                 double tmp;
                 if (double.TryParse(s, out tmp))
@@ -109,13 +109,13 @@ namespace Funani.Gui.Converters
                                 numbers[index] = numbers[index] - numbers[index + 1];
                                 break;
                             case "*":
-                                numbers[index] = numbers[index]*numbers[index + 1];
+                                numbers[index] = numbers[index] * numbers[index + 1];
                                 break;
                             case "/":
-                                numbers[index] = numbers[index]/numbers[index + 1];
+                                numbers[index] = numbers[index] / numbers[index + 1];
                                 break;
                             case "%":
-                                numbers[index] = numbers[index]%numbers[index + 1];
+                                numbers[index] = numbers[index] % numbers[index + 1];
                                 break;
                         }
                         numbers.RemoveAt(index + 1);
@@ -146,7 +146,7 @@ namespace Funani.Gui.Converters
             {
                 if (AllOperators.Contains(c))
                 {
-                    return (tmp == string.Empty ? c.ToString(CultureInfo.InvariantCulture) : tmp);
+                    return tmp == string.Empty ? c.ToString(CultureInfo.InvariantCulture) : tmp;
                 }
                 tmp += c;
             }

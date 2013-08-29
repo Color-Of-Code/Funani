@@ -61,7 +61,7 @@ namespace Funani.Gui.Controls
             }
             catch (Exception)
             {
-                //TODO: handle probable access rights issue in a cleaner fashion
+                // TODO: handle probable access rights issue in a cleaner fashion
                 _files = new List<FileInfo>(); // empty list...
             }
         }
@@ -106,5 +106,4 @@ namespace Funani.Gui.Controls
             }
         }
     }
-
 }

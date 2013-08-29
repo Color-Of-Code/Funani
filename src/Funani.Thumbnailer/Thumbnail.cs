@@ -77,7 +77,7 @@ namespace Funani.Thumbnailer
             if (!mime.StartsWith("image/"))
                 return null;
 
-            //TODO: write thumbnailers depending on the mime type
+            // TODO: write thumbnailers depending on the mime type
             // this works for WPF supported image formats only
             var orientation = Orientation.Normal;
             BitmapFrame frame = BitmapFrame.Create(
@@ -129,8 +129,8 @@ namespace Funani.Thumbnailer
                 double angle = 0;
                 if (meta.GetQuery("/app1/ifd/{ushort=274}") != null)
                 {
-                    orientation = (Orientation) Enum.Parse(typeof (Orientation),
-                                                           meta.GetQuery("/app1/ifd/{ushort=274}").ToString());
+                    orientation = (Orientation)Enum.Parse(typeof(Orientation),
+                                                          meta.GetQuery("/app1/ifd/{ushort=274}").ToString());
                 }
 
                 switch (orientation)

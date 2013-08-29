@@ -29,32 +29,26 @@
  */
 
 using System;
-using System.IO;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-
 using Catel.Data;
-using Catel.IoC;
 using Catel.MVVM;
-
-using Funani.Api;
 using Funani.Gui.Converters;
 
 namespace Funani.Gui.ViewModels
 {
     /// <summary>
-    /// ThumbnailViewModel view model.
+    ///     ThumbnailViewModel view model.
     /// </summary>
     public class ThumbnailViewModel : ViewModelBase
     {
         private const int MaxThumbnailSize = 256;
         private static readonly UriToThumbnailConverter Converter = new UriToThumbnailConverter(MaxThumbnailSize);
 
-
         private BitmapSource _thumbnail;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ThumbnailViewModel"/> class.
+        ///     Initializes a new instance of the <see cref="ThumbnailViewModel" /> class.
         /// </summary>
         public ThumbnailViewModel(string fullName)
         {
@@ -62,22 +56,27 @@ namespace Funani.Gui.ViewModels
         }
 
         /// <summary>
-        /// Gets the title of the view model.
+        ///     Gets the title of the view model.
         /// </summary>
         /// <value>The title.</value>
-        public override string Title { get { return "ThumbnailViewModel"; } }
+        public override string Title
+        {
+            get { return "ThumbnailViewModel"; }
+        }
 
         #region Properties
 
         #region Property: FullName
+
+        public static readonly PropertyData FullNameProperty =
+            RegisterProperty("FullName", typeof(String), null);
+
         public String FullName
         {
             get { return GetValue<String>(FullNameProperty); }
             set { SetValue(FullNameProperty, value); }
         }
 
-        public static readonly PropertyData FullNameProperty =
-            RegisterProperty("FullName", typeof(String), null);
         #endregion
 
         public double ThumbnailWidth
@@ -122,6 +121,7 @@ namespace Funani.Gui.ViewModels
         #endregion
 
         #region Commands
+
         #endregion
     }
 }

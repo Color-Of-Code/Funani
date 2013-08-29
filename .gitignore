@@ -16,3 +16,5 @@ bin
 /src/packages/OxyPlot.*
 /src/packages/PropertyTools.*
 /src/packages/WPFToolkit*
+
+*.Cache

@@ -36,11 +36,9 @@ using System.Windows.Media.Imaging;
 
 namespace Funani.Gui.Converters
 {
-    [ValueConversion(typeof (string), typeof (ImageSource))]
+    [ValueConversion(typeof(string), typeof(ImageSource))]
     public class HeaderToImageConverter : IValueConverter
     {
-        public static HeaderToImageConverter Instance = new HeaderToImageConverter();
-
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             if ((value as string).Contains(@"\"))

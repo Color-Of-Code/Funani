@@ -31,14 +31,11 @@
 using System.Globalization;
 using System.Windows;
 using System.Windows.Markup;
-
 using Catel.IoC;
 using Catel.Windows;
-
 using Funani.Api;
 using Funani.Engine;
 using Funani.Gui.ViewModels;
-using Catel.Logging;
 
 namespace Funani.Gui
 {
@@ -53,17 +50,17 @@ namespace Funani.Gui
 //            LogManager.RegisterDebugListener();
 //#endif
             StyleHelper.CreateStyleForwardersForDefaultStyles();
-            
+
             // ensure the UI elements are drawn using the current UI culture
             FrameworkElement.LanguageProperty.OverrideMetadata(
-                typeof (FrameworkElement),
+                typeof(FrameworkElement),
                 new FrameworkPropertyMetadata(
                     XmlLanguage.GetLanguage(
                         CultureInfo.CurrentCulture.IetfLanguageTag)));
 
             ServiceLocator.Default.RegisterType<IEngine, FunaniEngine>();
             ServiceLocator.Default.RegisterType<ICommandQueue, FunaniCommandQueue>();
-            
+
             var modelView = new MongoDbViewModel(Dispatcher);
             ServiceLocator.Default.RegisterInstance<IConsoleRedirect>(modelView);
 

@@ -147,18 +147,18 @@ namespace Funani.Gui.Model
             get
             {
                 // determine which page and offset within page
-                int pageIndex = index/PageSize;
-                int pageOffset = index%PageSize;
+                int pageIndex = index / PageSize;
+                int pageOffset = index % PageSize;
 
                 // request primary page
                 RequestPage(pageIndex);
 
                 // if accessing upper 50% then request next page
-                if (pageOffset > PageSize/2 && pageIndex < Count/PageSize)
+                if (pageOffset > PageSize / 2 && pageIndex < Count / PageSize)
                     RequestPage(pageIndex + 1);
 
                 // if accessing lower 50% then request prev page
-                if (pageOffset < PageSize/2 && pageIndex > 0)
+                if (pageOffset < PageSize / 2 && pageIndex > 0)
                     RequestPage(pageIndex - 1);
 
                 // remove stale pages
@@ -235,7 +235,7 @@ namespace Funani.Gui.Model
 
         bool IList.Contains(object value)
         {
-            return Contains((T) value);
+            return Contains((T)value);
         }
 
         /// <summary>
@@ -273,7 +273,7 @@ namespace Funani.Gui.Model
 
         int IList.IndexOf(object value)
         {
-            return IndexOf((T) value);
+            return IndexOf((T)value);
         }
 
         /// <summary>
@@ -296,7 +296,7 @@ namespace Funani.Gui.Model
 
         void IList.Insert(int index, object value)
         {
-            Insert(index, (T) value);
+            Insert(index, (T)value);
         }
 
         /// <summary>
@@ -550,7 +550,7 @@ namespace Funani.Gui.Model
         /// <returns></returns>
         protected IList<T> FetchPage(int pageIndex)
         {
-            return ItemsProvider.FetchRange(pageIndex*PageSize, PageSize);
+            return ItemsProvider.FetchRange(pageIndex * PageSize, PageSize);
         }
 
         /// <summary>

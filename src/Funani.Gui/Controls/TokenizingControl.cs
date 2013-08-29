@@ -10,7 +10,7 @@ namespace Funani.Gui.Controls
     public class TokenizingControl : RichTextBox
     {
         public static readonly DependencyProperty TokenTemplateProperty =
-            DependencyProperty.Register("TokenTemplate", typeof (DataTemplate), typeof (TokenizingControl));
+            DependencyProperty.Register("TokenTemplate", typeof(DataTemplate), typeof(TokenizingControl));
 
         public TokenizingControl()
         {
@@ -19,7 +19,7 @@ namespace Funani.Gui.Controls
 
         public DataTemplate TokenTemplate
         {
-            get { return (DataTemplate) GetValue(TokenTemplateProperty); }
+            get { return (DataTemplate)GetValue(TokenTemplateProperty); }
             set { SetValue(TokenTemplateProperty, value); }
         }
 
@@ -49,10 +49,12 @@ namespace Funani.Gui.Controls
             var matchedRun = para.Inlines.FirstOrDefault(inline =>
                 {
                     var run = inline as Run;
-                    return (run != null && run.Text.EndsWith(inputText));
+                    return run != null && run.Text.EndsWith(inputText);
                 }) as Run;
-            if (matchedRun != null) // Found a Run that matched the inputText
+
+            if (matchedRun != null)
             {
+                // Found a Run that matched the inputText
                 InlineUIContainer tokenContainer = CreateTokenContainer(inputText, token);
                 para.Inlines.InsertBefore(matchedRun, tokenContainer);
 
@@ -61,8 +63,9 @@ namespace Funani.Gui.Controls
                 {
                     para.Inlines.Remove(matchedRun);
                 }
-                else // Split up
+                else 
                 {
+                    // Split up
                     int index = matchedRun.Text.IndexOf(inputText, StringComparison.Ordinal) + inputText.Length;
                     var tailEnd = new Run(matchedRun.Text.Substring(index));
                     para.Inlines.InsertAfter(matchedRun, tailEnd);
@@ -76,7 +79,6 @@ namespace Funani.Gui.Controls
         private InlineUIContainer CreateTokenContainer(string inputText, object token)
         {
             // Note: we are not using the inputText here, but could be used in future
-
             var presenter = new ContentPresenter
                 {
                     Content = token,
@@ -84,7 +86,10 @@ namespace Funani.Gui.Controls
                 };
 
             // BaselineAlignment is needed to align with Run
-            return new InlineUIContainer(presenter) {BaselineAlignment = BaselineAlignment.TextBottom};
+            return new InlineUIContainer(presenter)
+                {
+                    BaselineAlignment = BaselineAlignment.TextBottom
+                };
         }
     }
 }

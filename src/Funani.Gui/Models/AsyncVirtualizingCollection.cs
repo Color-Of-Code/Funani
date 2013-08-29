@@ -181,7 +181,7 @@ namespace Funani.Gui.Model
         /// <param name="args">Number of items returned.</param>
         private void LoadCountCompleted(object args)
         {
-            Count = (int) args;
+            Count = (int)args;
             IsLoading = false;
             FireCollectionReset();
         }
@@ -202,9 +202,9 @@ namespace Funani.Gui.Model
         /// <param name="args">Index of the page to load.</param>
         private void LoadPageWork(object args)
         {
-            var pageIndex = (int) args;
+            var pageIndex = (int)args;
             IEnumerable<T> page = FetchPage(pageIndex);
-            SynchronizationContext.Send(LoadPageCompleted, new object[] {pageIndex, page});
+            SynchronizationContext.Send(LoadPageCompleted, new object[] { pageIndex, page });
         }
 
         /// <summary>
@@ -213,8 +213,8 @@ namespace Funani.Gui.Model
         /// <param name="args">object[] { int pageIndex, IList(T) page }</param>
         private void LoadPageCompleted(object args)
         {
-            var pageIndex = (int) ((object[]) args)[0];
-            var page = (IList<T>) ((object[]) args)[1];
+            var pageIndex = (int)((object[])args)[0];
+            var page = (IList<T>)((object[])args)[1];
 
             PopulatePage(pageIndex, page);
             IsLoading = false;

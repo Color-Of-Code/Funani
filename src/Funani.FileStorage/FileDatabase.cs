@@ -111,6 +111,7 @@ namespace Funani.FileStorage
                 {
                     FileInfo originalImage = GetFileInfo(hash);
                     Thumbnail.Create(new Uri(originalImage.FullName), mime, 256, source);
+                    
                     // if the thumbnail was not created for some reason...
                     if (!source.Exists)
                         source = null;
@@ -182,6 +183,7 @@ namespace Funani.FileStorage
             var baseDir = new DirectoryInfo(DataPath);
             baseDir.Create();
             baseDir.Attributes = FileAttributes.Directory | FileAttributes.Hidden;
+            
             // the other subdirectories are created once needed
         }
 

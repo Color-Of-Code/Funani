@@ -31,28 +31,30 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-
 using Catel.Data;
 using Catel.IoC;
-
 using Funani.Api.Utils;
 
 namespace Funani.Api.Metadata
 {
     /// <summary>
-    /// TODO: There is an issue with using Catel ModelBase together with MongoDB C# Driver
-    /// These attributes are created additionally and make trouble on reading back
-    ///"Mode" : 0,
-    ///"IsDirty" : true,
-    ///"IsReadOnly" : false,
-    ///"Validator" : null,
-    ///"ValidationContext" : {
-    ///  "_t" : "ValidationContext"
-    ///},
+    ///     TODO: There is an issue with using Catel ModelBase together with MongoDB C# Driver
+    ///     These attributes are created additionally and make trouble on reading back
+    ///     "Mode" : 0,
+    ///     "IsDirty" : true,
+    ///     "IsReadOnly" : false,
+    ///     "Validator" : null,
+    ///     "ValidationContext" : {
+    ///     "_t" : "ValidationContext"
+    ///     },
     /// </summary>
     public class FileInformation : ObservableObject
     {
         private readonly IEngine _engine;
+        private int? _angle;
+        private bool _isDeleted;
+        private int? _rating;
+        private String _title;
 
         public FileInformation()
         {
@@ -72,32 +74,16 @@ namespace Funani.Api.Metadata
         }
 
         /// <summary>
-        /// Persist to the mongo db
+        ///     Gets or sets the Id value.
         /// </summary>
-        public void Save()
-        {
-            _engine.Save(this);
-        }
-
-        /// <summary>
-        /// Gets or sets the Id value.
-        /// </summary>
-        public String Id
-        {
-            get;
-            private set;
-        }
+        public String Id { get; private set; }
 
         public Int64 FileSize { get; private set; }
 
         /// <summary>
-        /// Gets or sets the MimeType value.
+        ///     Gets or sets the MimeType value.
         /// </summary>
-        public String MimeType
-        {
-            get;
-            private set;
-        }
+        public String MimeType { get; private set; }
 
         public IList<String> Paths { get; private set; }
 
@@ -107,8 +93,7 @@ namespace Funani.Api.Metadata
         public Double Latitude { get; set; }
         public Double Longitude { get; set; }
 
-        private String _title;
-        public String Title 
+        public String Title
         {
             get { return _title; }
             set
@@ -127,7 +112,6 @@ namespace Funani.Api.Metadata
         public String ApplicationName { get; set; } // application used to process the data
 
         // orientation for view
-        private int? _angle = null;
         public int? Angle
         {
             get { return _angle; }
@@ -138,7 +122,6 @@ namespace Funani.Api.Metadata
             }
         }
 
-        private bool _isDeleted = false;
         public Boolean IsDeleted
         {
             get { return _isDeleted; }
@@ -149,8 +132,9 @@ namespace Funani.Api.Metadata
             }
         }
 
-        // 0 -> 5
-        private int? _rating = null;
+        /// <summary>
+        /// 0 -> 5
+        /// </summary>
         public int? Rating
         {
             get { return _rating; }
@@ -162,6 +146,14 @@ namespace Funani.Api.Metadata
         }
 
         public IList<Tag> Tags { get; private set; }
+
+        /// <summary>
+        ///     Persist to the mongo db
+        /// </summary>
+        public void Save()
+        {
+            _engine.Save(this);
+        }
 
         public void AddPath(FileInfo file)
         {
