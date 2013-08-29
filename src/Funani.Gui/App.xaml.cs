@@ -50,7 +50,7 @@ namespace Funani.Gui
         protected override void OnStartup(StartupEventArgs e)
         {
 #if DEBUG
-            LogManager.RegisterDebugListener();
+            //LogManager.RegisterDebugListener();
 #endif
             log4net.Config.XmlConfigurator.Configure();
             StyleHelper.CreateStyleForwardersForDefaultStyles();
