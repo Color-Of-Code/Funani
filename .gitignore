@@ -1,5 +1,6 @@
 obj
 bin
+*.Cache
 /src/*.suo
 /src/*.vsp
 /src/*.psess
@@ -16,5 +17,4 @@ bin
 /src/packages/OxyPlot.*
 /src/packages/PropertyTools.*
 /src/packages/WPFToolkit*
-
-*.Cache
+/src/packages/NuGet.CommandLine.*
