@@ -34,13 +34,15 @@ using System.Globalization;
 using System.Windows.Data;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using Catel.Logging;
 using Funani.Thumbnailer;
 
 namespace Funani.Gui.Converters
 {
-    [ValueConversion(typeof (string), typeof (ImageSource))]
+    [ValueConversion(typeof(string), typeof(ImageSource))]
     public class UriToThumbnailConverter : IValueConverter
     {
+        private static readonly ILog Log = LogManager.GetCurrentClassLogger();
         private static readonly BitmapSource DefaultThumbnail;
 
         static UriToThumbnailConverter()
@@ -73,14 +75,15 @@ namespace Funani.Gui.Converters
             try
             {
                 BitmapSource ret = Thumbnail.Extract(new Uri(value.ToString()),
-                                                     "image/", ThumbnailSize
-                    );
-                //TODO: why is this called twice?
+                                                     "image/", ThumbnailSize);
+
+                // TODO: why is this called twice?
                 Trace.TraceInformation("Generating thumbnail for '{0}'", value);
                 return ret;
             }
-            catch
+            catch (Exception ex)
             {
+                Log.Error(ex);
                 return DefaultThumbnail;
             }
         }

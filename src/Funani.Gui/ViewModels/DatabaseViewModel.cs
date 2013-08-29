@@ -32,10 +32,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
-
 using Catel.Data;
+using Catel.Logging;
 using Catel.MVVM;
-
 using Funani.Api;
 using Funani.Api.Metadata;
 using Funani.Gui.Model;
@@ -47,6 +46,16 @@ namespace Funani.Gui.ViewModels
     /// </summary>
     public class DatabaseViewModel : ViewModelBase, IItemsProvider<FileInformationViewModel>
     {
+        private static readonly ILog Log = LogManager.GetCurrentClassLogger();
+
+        /// <summary>
+        ///     Register the FileInformationViewModels property so it is known in the class.
+        /// </summary>
+        public static readonly PropertyData FileInformationViewModelsProperty =
+            RegisterProperty("FileInformationViewModels", typeof(IEnumerable<FileInformationViewModel>), null);
+
+        private readonly IEngine _engine;
+
         public DatabaseViewModel(IEngine engine)
         {
             _engine = engine;
@@ -57,8 +66,18 @@ namespace Funani.Gui.ViewModels
         }
 
         #region Property: WhereClause
+
         /// <summary>
-        /// Gets or sets the property value.
+        ///     Register the WhereClause property so it is known in the class.
+        /// </summary>
+        public static readonly PropertyData WhereClauseProperty = RegisterProperty("WhereClause", typeof(String),
+                                                                                   null,
+                                                                                   (sender, e) =>
+                                                                                   ((DatabaseViewModel)sender)
+                                                                                       .OnWhereClauseChanged());
+
+        /// <summary>
+        ///     Gets or sets the property value.
         /// </summary>
         public String WhereClause
         {
@@ -67,23 +86,28 @@ namespace Funani.Gui.ViewModels
         }
 
         /// <summary>
-        /// Register the WhereClause property so it is known in the class.
-        /// </summary>
-        public static readonly PropertyData WhereClauseProperty = RegisterProperty("WhereClause", typeof(String),
-            null, (sender, e) => ((DatabaseViewModel)sender).OnWhereClauseChanged());
-
-        /// <summary>
-        /// Called when the WhereClause property has changed.
+        ///     Called when the WhereClause property has changed.
         /// </summary>
         private void OnWhereClauseChanged()
         {
             OnRefreshExecute();
         }
+
         #endregion
 
         #region Property: OrderByClause
+
         /// <summary>
-        /// Gets or sets the property value.
+        ///     Register the OrderByClause property so it is known in the class.
+        /// </summary>
+        public static readonly PropertyData OrderByClauseProperty = RegisterProperty("OrderByClause", typeof(String),
+                                                                                     null,
+                                                                                     (sender, e) =>
+                                                                                     ((DatabaseViewModel)sender)
+                                                                                         .OnOrderByClauseChanged());
+
+        /// <summary>
+        ///     Gets or sets the property value.
         /// </summary>
         public String OrderByClause
         {
@@ -92,23 +116,26 @@ namespace Funani.Gui.ViewModels
         }
 
         /// <summary>
-        /// Register the OrderByClause property so it is known in the class.
-        /// </summary>
-        public static readonly PropertyData OrderByClauseProperty = RegisterProperty("OrderByClause", typeof(String),
-            null, (sender, e) => ((DatabaseViewModel)sender).OnOrderByClauseChanged());
-
-        /// <summary>
-        /// Called when the OrderByClause property has changed.
+        ///     Called when the OrderByClause property has changed.
         /// </summary>
         private void OnOrderByClauseChanged()
         {
             OnRefreshExecute();
         }
+
         #endregion
 
         #region Property: RegularExpression
+
         /// <summary>
-        /// Gets or sets the property value.
+        ///     Register the RegularExpression property so it is known in the class.
+        /// </summary>
+        public static readonly PropertyData RegularExpressionProperty =
+            RegisterProperty("RegularExpression", typeof(String), null,
+                             (sender, e) => ((DatabaseViewModel)sender).OnRegularExpressionChanged());
+
+        /// <summary>
+        ///     Gets or sets the property value.
         /// </summary>
         public String RegularExpression
         {
@@ -117,23 +144,29 @@ namespace Funani.Gui.ViewModels
         }
 
         /// <summary>
-        /// Register the RegularExpression property so it is known in the class.
-        /// </summary>
-        public static readonly PropertyData RegularExpressionProperty = RegisterProperty("RegularExpression",
-            typeof(String), null, (sender, e) => ((DatabaseViewModel)sender).OnRegularExpressionChanged());
-
-        /// <summary>
-        /// Called when the RegularExpression property has changed.
+        ///     Called when the RegularExpression property has changed.
         /// </summary>
         private void OnRegularExpressionChanged()
         {
             OnRefreshExecute();
         }
+
         #endregion
 
         #region Property: QueryDeletedFiles
+
         /// <summary>
-        /// Gets or sets the property value.
+        ///     Register the QueryDeletedFiles property so it is known in the class.
+        /// </summary>
+        public static readonly PropertyData QueryDeletedFilesProperty = RegisterProperty("QueryDeletedFiles",
+                                                                                         typeof(Boolean), false,
+                                                                                         (sender, e) =>
+                                                                                         ((DatabaseViewModel)sender)
+                                                                                             .OnQueryDeletedFilesChanged
+                                                                                             ());
+
+        /// <summary>
+        ///     Gets or sets the property value.
         /// </summary>
         public Boolean QueryDeletedFiles
         {
@@ -142,23 +175,28 @@ namespace Funani.Gui.ViewModels
         }
 
         /// <summary>
-        /// Register the QueryDeletedFiles property so it is known in the class.
-        /// </summary>
-        public static readonly PropertyData QueryDeletedFilesProperty = RegisterProperty("QueryDeletedFiles",
-            typeof(Boolean), false, (sender, e) => ((DatabaseViewModel)sender).OnQueryDeletedFilesChanged());
-
-        /// <summary>
-        /// Called when the QueryDeletedFiles property has changed.
+        ///     Called when the QueryDeletedFiles property has changed.
         /// </summary>
         private void OnQueryDeletedFilesChanged()
         {
             OnRefreshExecute();
         }
+
         #endregion
 
         #region Property: StartDate
+
         /// <summary>
-        /// Gets or sets the property value.
+        ///     Register the StartDate property so it is known in the class.
+        /// </summary>
+        public static readonly PropertyData StartDateProperty = RegisterProperty("StartDate",
+                                                                                 typeof(DateTime?), null,
+                                                                                 (sender, e) =>
+                                                                                 ((DatabaseViewModel)sender)
+                                                                                     .OnStartDateChanged());
+
+        /// <summary>
+        ///     Gets or sets the property value.
         /// </summary>
         public DateTime? StartDate
         {
@@ -167,23 +205,28 @@ namespace Funani.Gui.ViewModels
         }
 
         /// <summary>
-        /// Register the StartDate property so it is known in the class.
-        /// </summary>
-        public static readonly PropertyData StartDateProperty = RegisterProperty("StartDate",
-            typeof(DateTime?), null, (sender, e) => ((DatabaseViewModel)sender).OnStartDateChanged());
-
-        /// <summary>
-        /// Called when the StartDate property has changed.
+        ///     Called when the StartDate property has changed.
         /// </summary>
         private void OnStartDateChanged()
         {
             OnRefreshExecute();
         }
+
         #endregion
 
         #region Property: EndDate
+
         /// <summary>
-        /// Gets or sets the property value.
+        ///     Register the EndDate property so it is known in the class.
+        /// </summary>
+        public static readonly PropertyData EndDateProperty = RegisterProperty("EndDate",
+                                                                               typeof(DateTime?), null,
+                                                                               (sender, e) =>
+                                                                               ((DatabaseViewModel)sender)
+                                                                                   .OnEndDateChanged());
+
+        /// <summary>
+        ///     Gets or sets the property value.
         /// </summary>
         public DateTime? EndDate
         {
@@ -192,35 +235,23 @@ namespace Funani.Gui.ViewModels
         }
 
         /// <summary>
-        /// Register the EndDate property so it is known in the class.
-        /// </summary>
-        public static readonly PropertyData EndDateProperty = RegisterProperty("EndDate",
-            typeof(DateTime?), null, (sender, e) => ((DatabaseViewModel)sender).OnEndDateChanged());
-
-        /// <summary>
-        /// Called when the EndDate property has changed.
+        ///     Called when the EndDate property has changed.
         /// </summary>
         private void OnEndDateChanged()
         {
             OnRefreshExecute();
         }
+
         #endregion
 
         /// <summary>
-        /// Gets or sets the property value.
+        ///     Gets or sets the property value.
         /// </summary>
         public IEnumerable<FileInformationViewModel> FileInformationViewModels
         {
             get { return GetValue<IEnumerable<FileInformationViewModel>>(FileInformationViewModelsProperty); }
             private set { SetValue(FileInformationViewModelsProperty, value); }
         }
-
-        /// <summary>
-        /// Register the FileInformationViewModels property so it is known in the class.
-        /// </summary>
-        public static readonly PropertyData FileInformationViewModelsProperty = RegisterProperty("FileInformationViewModels", typeof(IEnumerable<FileInformationViewModel>), null);
-
-        private readonly IEngine _engine;
 
         public IEnumerable<String> SupportedOrderByClauses
         {
@@ -254,18 +285,6 @@ namespace Funani.Gui.ViewModels
         }
 
         /// <summary>
-        /// Tokenizer used inside the tagging controls
-        /// </summary>
-        /// <param name="text"></param>
-        /// <returns></returns>
-        public static String TokenMatcher(String text)
-        {
-            if (text.EndsWith(";") || text.EndsWith(","))
-                return text.Substring(0, text.Length - 1).Trim().ToUpper();
-            return null;
-        }
-
-        /// <summary>
         ///     Fetches the total number of items available.
         /// </summary>
         /// <returns></returns>
@@ -293,12 +312,13 @@ namespace Funani.Gui.ViewModels
             }
             catch (Exception ex)
             {
-                //HACK: log out something...
+                Log.Error(ex);
                 return null;
             }
         }
 
         #region Helpers
+
         private IQueryable<FileInformation> BuildQuery()
         {
             IQueryable<FileInformation> query = _engine.FileInformation;
@@ -352,35 +372,39 @@ namespace Funani.Gui.ViewModels
 
             return query;
         }
+
         #endregion
 
         #region Command: Refresh
+
         /// <summary>
-        /// Gets the Refresh command.
+        ///     Gets the Refresh command.
         /// </summary>
         public Command Refresh { get; private set; }
 
         /// <summary>
-        /// Method to invoke when the Refresh command is executed.
+        ///     Method to invoke when the Refresh command is executed.
         /// </summary>
         private void OnRefreshExecute()
         {
             FileInformationViewModels = new AsyncVirtualizingCollection<FileInformationViewModel>(this, 40, 10 * 1000);
         }
+
         #endregion
 
         #region Command: RefreshAllMetadata
+
         /// <summary>
-        /// Gets the RefreshAllMetadata command.
+        ///     Gets the RefreshAllMetadata command.
         /// </summary>
         public Command RefreshAllMetadata { get; private set; }
 
         /// <summary>
-        /// Refresh Metadata for each entry in the database
+        ///     Refresh Metadata for each entry in the database
         /// </summary>
         private void OnRefreshAllMetadataExecute()
         {
-            var engine = _engine;
+            IEngine engine = _engine;
             foreach (FileInformation fi in engine.FileInformation)
                 engine.RefreshMetadata(fi);
             OnRefreshExecute();
@@ -389,35 +413,47 @@ namespace Funani.Gui.ViewModels
         #endregion
 
         #region Command: RefreshSelectedMetadata
+
         /// <summary>
-        /// Gets the RefreshSelectedMetadata command.
+        ///     Gets the RefreshSelectedMetadata command.
         /// </summary>
         public Command RefreshSelectedMetadata { get; private set; }
 
         /// <summary>
-        /// Refresh Metadata for the selected entries in the database
+        ///     Refresh Metadata for the selected entries in the database
         /// </summary>
         private void OnRefreshSelectedMetadataExecute()
         {
             throw new NotImplementedException();
-            var engine = _engine;
+            IEngine engine = _engine;
             foreach (FileInformation fi in engine.FileInformation)
                 engine.RefreshMetadata(fi);
             OnRefreshExecute();
-            //if (ListControl.SelectedItem == null || !ListControl.SelectedItems.Contains(viewModel))
-            //{
-            //    viewModel.RefreshMetadata();
-            //}
-            //else
-            //{
-            //    foreach (FileInformationViewModel item in ListControl.SelectedItems)
-            //    {
-            //        item.RefreshMetadata();
-            //    }
-            //}
+            ////if (ListControl.SelectedItem == null || !ListControl.SelectedItems.Contains(viewModel))
+            ////{
+            ////    viewModel.RefreshMetadata();
+            ////}
+            ////else
+            ////{
+            ////    foreach (FileInformationViewModel item in ListControl.SelectedItems)
+            ////    {
+            ////        item.RefreshMetadata();
+            ////    }
+            ////}
         }
 
         #endregion
 
+        /// <summary>
+        ///     Tokenizer used inside the tagging controls
+        /// </summary>
+        /// <param name="text"></param>
+        /// <returns></returns>
+        public static String TokenMatcher(String text)
+        {
+            if (text.EndsWith(";") || text.EndsWith(","))
+                return text.Substring(0, text.Length - 1).Trim().ToUpper();
+            return null;
+        }
     }
 }
