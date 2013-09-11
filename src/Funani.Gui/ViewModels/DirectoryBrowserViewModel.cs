@@ -123,18 +123,10 @@ namespace Funani.Gui.ViewModels
 
         #region Property: FileViewModels
 
-        public static readonly PropertyData FileViewModelsProperty = RegisterProperty("FileViewModels",
-                                                                                      typeof(IEnumerable<FileViewModel>),
-                                                                                      null);
-
         /// <summary>
         ///     Gets or sets the property value.
         /// </summary>
-        public IEnumerable<FileViewModel> FileViewModels
-        {
-            get { return GetValue<IEnumerable<FileViewModel>>(FileViewModelsProperty); }
-            set { SetValue(FileViewModelsProperty, value); }
-        }
+        public IEnumerable<FileViewModel> FileViewModels { get; set; }
 
         #endregion
     }

@@ -66,18 +66,7 @@ namespace Funani.Gui.ViewModels
 
         #region Properties
 
-        #region Property: FullName
-
-        public static readonly PropertyData FullNameProperty =
-            RegisterProperty("FullName", typeof(String), null);
-
-        public String FullName
-        {
-            get { return GetValue<String>(FullNameProperty); }
-            set { SetValue(FullNameProperty, value); }
-        }
-
-        #endregion
+        public String FullName { get; set; }
 
         public double ThumbnailWidth
         {

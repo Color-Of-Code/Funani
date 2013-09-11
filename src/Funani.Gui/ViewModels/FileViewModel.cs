@@ -86,16 +86,7 @@ namespace Funani.Gui.ViewModels
         /// <summary>
         /// Is this file alread inside the storage area.
         /// </summary>
-        public bool? IsStored
-        {
-            get { return GetValue<bool?>(IsStoredProperty); }
-            set { SetValue(IsStoredProperty, value); }
-        }
-
-        /// <summary>
-        /// Register the IsStored property so it is known in the class.
-        /// </summary>
-        public static readonly PropertyData IsStoredProperty = RegisterProperty("IsStored", typeof(bool?), null);
+        public bool? IsStored { get; set; }
 
         #endregion
 

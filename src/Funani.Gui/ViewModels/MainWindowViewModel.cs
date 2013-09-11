@@ -66,32 +66,12 @@ namespace Funani.Gui.ViewModels
 
         #endregion
 
-        #region Property: [Model]Settings
-
-        public static readonly PropertyData SettingsProperty =
-            RegisterProperty("Settings", typeof(Settings));
-
         [Model]
-        public Settings Settings
-        {
-            get { return GetValue<Settings>(SettingsProperty); }
-            private set { SetValue(SettingsProperty, value); }
-        }
+        public Settings Settings { get; set; }
 
-        #endregion
-
-        #region Property: MongodbPath
-
-        public static readonly PropertyData MongodbPathProperty =
-            RegisterProperty("MongodbPath", typeof(String), null,
-                             (sender, e) => ((MainWindowViewModel)sender).OnMongodbPathChanged());
 
         [ViewModelToModel("Settings")]
-        public String MongodbPath
-        {
-            get { return GetValue<String>(MongodbPathProperty); }
-            set { SetValue(MongodbPathProperty, value); }
-        }
+        public String MongodbPath { get; set; }
 
         private void OnMongodbPathChanged()
         {
@@ -99,18 +79,7 @@ namespace Funani.Gui.ViewModels
             IsMongodbPathValid = GetIsMongodbPathValid(MongodbPath);
         }
 
-        #endregion
-
-        #region Property: IsMongodbPathValid
-
-        public static readonly PropertyData IsMongodbPathValidProperty =
-            RegisterProperty("IsMongodbPathValid", typeof(bool), null);
-
-        public bool IsMongodbPathValid
-        {
-            get { return GetValue<bool>(IsMongodbPathValidProperty); }
-            set { SetValue(IsMongodbPathValidProperty, value); }
-        }
+        public bool IsMongodbPathValid { get; set; }
 
         private static bool GetIsMongodbPathValid(String path)
         {
@@ -120,8 +89,6 @@ namespace Funani.Gui.ViewModels
                 return false;
             return true;
         }
-
-        #endregion
 
         #endregion
 

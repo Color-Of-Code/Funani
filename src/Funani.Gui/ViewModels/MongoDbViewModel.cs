@@ -55,6 +55,8 @@ namespace Funani.Gui.ViewModels
             _engine = ServiceLocator.ResolveType<IEngine>();
             _dispatcher = dispatcher;
 
+            Lines = new ObservableCollection<string>();
+            
             // commands
             GetStatistics = new Command(OnGetStatisticsExecute);
             Backup = new Command(OnBackupExecute);
@@ -256,107 +258,23 @@ namespace Funani.Gui.ViewModels
             return "others";
         }
 
-        #region Property: Lines
+        #region Properties
 
-        public static readonly PropertyData LinesProperty =
-            RegisterProperty("Lines", typeof(ObservableCollection<String>), new ObservableCollection<string>());
+        public ObservableCollection<String> Lines { get; set; }
 
-        public ObservableCollection<String> Lines
-        {
-            get { return GetValue<ObservableCollection<String>>(LinesProperty); }
-            private set { SetValue(LinesProperty, value); }
-        }
+        public String Query { get; set; }
 
-        #endregion
+        public IList<String> QueryResults { get; set; }
 
-        #region Property: Query
+        public Exception QueryException { get; set; }
 
-        public static readonly PropertyData QueryProperty =
-            RegisterProperty("Query", typeof(String), null);
+        public IEnumerable<String> CollectionNames { get; set; }
 
-        public String Query
-        {
-            get { return GetValue<String>(QueryProperty); }
-            set { SetValue(QueryProperty, value); }
-        }
+        public PlotModel MimeCountPlotModel { get; set; }
 
-        #endregion
+        public PlotModel MimeSizePlotModel { get; set; }
 
-        #region Property: QueryResults
-
-        public static readonly PropertyData QueryResultsProperty =
-            RegisterProperty("QueryResults", typeof(IList<String>), null);
-
-        public IList<String> QueryResults
-        {
-            get { return GetValue<IList<String>>(QueryResultsProperty); }
-            set { SetValue(QueryResultsProperty, value); }
-        }
-
-        #endregion
-
-        #region Property: QueryException
-
-        public static readonly PropertyData QueryExceptionProperty =
-            RegisterProperty("QueryException", typeof(Exception), null);
-
-        public Exception QueryException
-        {
-            get { return GetValue<Exception>(QueryExceptionProperty); }
-            set { SetValue(QueryExceptionProperty, value); }
-        }
-
-        #endregion
-
-        #region Property: CollectionNames
-
-        public static readonly PropertyData CollectionNamesProperty =
-            RegisterProperty("CollectionNames", typeof(IEnumerable<String>), null);
-
-        public IEnumerable<String> CollectionNames
-        {
-            get { return GetValue<IEnumerable<String>>(CollectionNamesProperty); }
-            set { SetValue(CollectionNamesProperty, value); }
-        }
-
-        #endregion
-
-        #region Property: MimeCountPlotModel
-
-        public static readonly PropertyData MimeCountPlotModelProperty =
-            RegisterProperty("MimeCountPlotModel", typeof(PlotModel), null);
-
-        public PlotModel MimeCountPlotModel
-        {
-            get { return GetValue<PlotModel>(MimeCountPlotModelProperty); }
-            set { SetValue(MimeCountPlotModelProperty, value); }
-        }
-
-        #endregion
-
-        #region Property: MimeSizePlotModel
-
-        public static readonly PropertyData MimeSizePlotModelProperty =
-            RegisterProperty("MimeSizePlotModel", typeof(PlotModel), null);
-
-        public PlotModel MimeSizePlotModel
-        {
-            get { return GetValue<PlotModel>(MimeSizePlotModelProperty); }
-            set { SetValue(MimeSizePlotModelProperty, value); }
-        }
-
-        #endregion
-
-        #region Property: Statistics
-
-        public static readonly PropertyData StatisticsProperty =
-            RegisterProperty("Statistics", typeof(DatabaseStatsResult), null);
-
-        public DatabaseStatsResult Statistics
-        {
-            get { return GetValue<DatabaseStatsResult>(StatisticsProperty); }
-            set { SetValue(StatisticsProperty, value); }
-        }
+        public DatabaseStatsResult Statistics { get; set; }
 
         #endregion
     }
