@@ -11,7 +11,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
     <RestorePackages>true</RestorePackages>
-    <FodyPath>..\packages\Fody.1.15.0.0</FodyPath>
+    <FodyPath>..\packages\Fody.1.17.0.0</FodyPath>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Platform)' == 'x86' ">
     <PlatformTarget>x86</PlatformTarget>
@@ -33,11 +33,11 @@
     <DefineConstants>TRACE</DefineConstants>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Catel.Core, Version=3.7.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Catel.Core.3.6.1308271743-beta\lib\net40\Catel.Core.dll</HintPath>
+    <Reference Include="Catel.Core">
+      <HintPath>..\packages\Catel.Core.3.6.1309061638-beta\lib\net40\Catel.Core.dll</HintPath>
     </Reference>
-    <Reference Include="Catel.Extensions.FluentValidation, Version=3.7.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Catel.Extensions.FluentValidation.3.6.1308271743-beta\lib\net40\Catel.Extensions.FluentValidation.dll</HintPath>
+    <Reference Include="Catel.Extensions.FluentValidation">
+      <HintPath>..\packages\Catel.Extensions.FluentValidation.3.6.1309061638-beta\lib\net40\Catel.Extensions.FluentValidation.dll</HintPath>
     </Reference>
     <Reference Include="PresentationCore">
       <RequiredTargetFramework>3.0</RequiredTargetFramework>
