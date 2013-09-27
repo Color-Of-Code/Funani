@@ -56,7 +56,7 @@
       <HintPath>..\packages\Catel.MVVM.3.6.1309061638-beta\lib\net40\Catel.MVVM.dll</HintPath>
     </Reference>
     <Reference Include="log4net">
-      <HintPath>..\packages\log4net.2.0.0\lib\net40-client\log4net.dll</HintPath>
+      <HintPath>..\packages\log4net.2.0.1\lib\net40-client\log4net.dll</HintPath>
     </Reference>
     <Reference Include="MongoDB.Bson">
       <HintPath>..\packages\mongocsharpdriver.1.8.2\lib\net35\MongoDB.Bson.dll</HintPath>
@@ -138,6 +138,7 @@
     </Compile>
     <Compile Include="Logging\Log4netListener.cs" />
     <Compile Include="Logging\Log4netTraceListener.cs" />
+    <Compile Include="Properties\AssemblyInfo.log4net.cs" />
     <Compile Include="ViewModels\DirectoryBrowserViewModel.cs" />
     <Compile Include="ViewModels\DirectoryTreeViewModel.cs" />
     <Compile Include="ViewModels\DirectoryViewModel.cs" />
