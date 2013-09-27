@@ -44,16 +44,16 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Catel.Core">
-      <HintPath>..\packages\Catel.Core.3.6.1309061638-beta\lib\net40\Catel.Core.dll</HintPath>
+      <HintPath>..\packages\Catel.Core.3.6.1309271100-beta\lib\net40\Catel.Core.dll</HintPath>
     </Reference>
     <Reference Include="Catel.Extensions.Controls">
-      <HintPath>..\packages\Catel.Extensions.Controls.3.6.1309061638-beta\lib\net40\Catel.Extensions.Controls.dll</HintPath>
+      <HintPath>..\packages\Catel.Extensions.Controls.3.6.1309271100-beta\lib\net40\Catel.Extensions.Controls.dll</HintPath>
     </Reference>
     <Reference Include="Catel.Extensions.FluentValidation">
-      <HintPath>..\packages\Catel.Extensions.FluentValidation.3.6.1309061638-beta\lib\net40\Catel.Extensions.FluentValidation.dll</HintPath>
+      <HintPath>..\packages\Catel.Extensions.FluentValidation.3.6.1309271100-beta\lib\net40\Catel.Extensions.FluentValidation.dll</HintPath>
     </Reference>
     <Reference Include="Catel.MVVM">
-      <HintPath>..\packages\Catel.MVVM.3.6.1309061638-beta\lib\net40\Catel.MVVM.dll</HintPath>
+      <HintPath>..\packages\Catel.MVVM.3.6.1309271100-beta\lib\net40\Catel.MVVM.dll</HintPath>
     </Reference>
     <Reference Include="log4net">
       <HintPath>..\packages\log4net.2.0.1\lib\net40-client\log4net.dll</HintPath>
@@ -92,7 +92,7 @@
     </Reference>
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Windows.Interactivity">
-      <HintPath>..\packages\Catel.MVVM.3.6.1309061638-beta\lib\net40\System.Windows.Interactivity.dll</HintPath>
+      <HintPath>..\packages\Catel.MVVM.3.6.1309271100-beta\lib\net40\System.Windows.Interactivity.dll</HintPath>
     </Reference>
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />

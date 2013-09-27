@@ -36,7 +36,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Catel.Core">
-      <HintPath>..\packages\Catel.Core.3.6.1309061638-beta\lib\net40\Catel.Core.dll</HintPath>
+      <HintPath>..\packages\Catel.Core.3.6.1309271100-beta\lib\net40\Catel.Core.dll</HintPath>
     </Reference>
     <Reference Include="PresentationCore">
       <RequiredTargetFramework>3.0</RequiredTargetFramework>
