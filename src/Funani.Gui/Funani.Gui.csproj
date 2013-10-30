@@ -18,7 +18,7 @@
     <NoWin32Manifest>False</NoWin32Manifest>
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
     <RestorePackages>true</RestorePackages>
-    <FodyPath>..\packages\Fody.1.17.0.0</FodyPath>
+    <FodyPath>..\packages\Fody.1.17.4.0</FodyPath>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
     <PlatformTarget>x86</PlatformTarget>
@@ -55,8 +55,9 @@
     <Reference Include="Catel.MVVM">
       <HintPath>..\packages\Catel.MVVM.3.6.1309271100-beta\lib\net40\Catel.MVVM.dll</HintPath>
     </Reference>
-    <Reference Include="log4net">
-      <HintPath>..\packages\log4net.2.0.1\lib\net40-client\log4net.dll</HintPath>
+    <Reference Include="log4net, Version=1.2.12.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\log4net.2.0.2\lib\net40-client\log4net.dll</HintPath>
     </Reference>
     <Reference Include="MongoDB.Bson">
       <HintPath>..\packages\mongocsharpdriver.1.8.2\lib\net35\MongoDB.Bson.dll</HintPath>
@@ -138,7 +139,6 @@
     </Compile>
     <Compile Include="Logging\Log4netListener.cs" />
     <Compile Include="Logging\Log4netTraceListener.cs" />
-    <Compile Include="Properties\AssemblyInfo.log4net.cs" />
     <Compile Include="ViewModels\DirectoryBrowserViewModel.cs" />
     <Compile Include="ViewModels\DirectoryTreeViewModel.cs" />
     <Compile Include="ViewModels\DirectoryViewModel.cs" />
