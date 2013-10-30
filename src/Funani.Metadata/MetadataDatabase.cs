@@ -33,9 +33,12 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+
 using Catel.IoC;
+
 using Funani.Api;
 using Funani.Api.Metadata;
+
 using MongoDB.Bson;
 using MongoDB.Driver;
 using MongoDB.Driver.Builders;
