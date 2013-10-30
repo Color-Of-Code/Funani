@@ -77,11 +77,12 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\OxyPlot.Wpf.2013.2.107.1\lib\NET40\OxyPlot.Xps.dll</HintPath>
     </Reference>
-    <Reference Include="PropertyTools">
-      <HintPath>..\packages\PropertyTools.Wpf.2013.1.15.1\lib\NET40\PropertyTools.dll</HintPath>
+    <Reference Include="PropertyTools, Version=2013.1.1.1, Culture=neutral, PublicKeyToken=ea0c9f2b460934d0, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\PropertyTools.Wpf.2013.1.18.1\lib\NET40\PropertyTools.dll</HintPath>
     </Reference>
-    <Reference Include="PropertyTools.Wpf">
-      <HintPath>..\packages\PropertyTools.Wpf.2013.1.15.1\lib\NET40\PropertyTools.Wpf.dll</HintPath>
+    <Reference Include="PropertyTools.Wpf, Version=2013.1.1.1, Culture=neutral, PublicKeyToken=ea0c9f2b460934d0, processorArchitecture=MSIL">
+      <HintPath>..\packages\PropertyTools.Wpf.2013.1.18.1\lib\NET40\PropertyTools.Wpf.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
