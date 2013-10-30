@@ -111,7 +111,7 @@ namespace Funani.Gui.ViewModels
 
         private void OnBrowseToMongodExecute()
         {
-            var openFileService = ServiceLocator.ResolveType<IOpenFileService>();
+            var openFileService = DependencyResolver.Resolve<IOpenFileService>();
             openFileService.Title = "Browse to the mongoDB executable";
             openFileService.Filter = MongodFileFilter;
             if (openFileService.DetermineFile())

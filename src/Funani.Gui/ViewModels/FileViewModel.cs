@@ -52,7 +52,7 @@ namespace Funani.Gui.ViewModels
         public FileViewModel(FileInfo fileInfo)
         {
             FileInfo = fileInfo;
-            _engine = ServiceLocator.ResolveType<IEngine>();
+            _engine = DependencyResolver.Resolve<IEngine>();
             UpdateInsideFunani();
 
             Store = new Command(OnStoreExecute);

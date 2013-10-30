@@ -52,7 +52,7 @@ namespace Funani.Gui.ViewModels
         public FileInformationViewModel(FileInformation fileInformation)
         {
             FileInformation = fileInformation;
-            _engine = ServiceLocator.ResolveType<IEngine>();
+            _engine = DependencyResolver.Resolve<IEngine>();
             RefreshMetadata = new Command(OnRefreshMetadataExecute);
             Save = new Command(OnSaveExecute);
             Delete = new Command(OnDeleteExecute);
