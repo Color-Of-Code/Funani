@@ -43,10 +43,6 @@
       <HintPath>..\packages\Catel.Fody.1.5.3.1311250610-beta\lib\net40\Catel.Fody.Attributes.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="ImageProcessor, Version=1.7.1.1, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\ImageProcessor.1.7.1.1\lib\net40\ImageProcessor.dll</HintPath>
-    </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
     <Reference Include="System" />
