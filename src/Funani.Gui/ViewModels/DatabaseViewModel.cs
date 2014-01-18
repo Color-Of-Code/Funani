@@ -1,40 +1,12 @@
-﻿/*
- * Copyright (c) 2008-2013, Jaap de Haan <jaap.dehaan@color-of-code.de>
- * All rights reserved.
- * 
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions
- * are met:
- * 
- *   * Redistributions of source code must retain the above copyright notice,
- *     this list of conditions and the following disclaimer.
- *   * Redistributions in binary form must reproduce the above copyright
- *     notice, this list of conditions and the following disclaimer in the
- *     documentation and/or other materials provided with the distribution.
- *   * Neither the name of the "Color-Of-Code" nor the names of its
- *     contributors may be used to endorse or promote products derived from
- *     this software without specific prior written permission.
- * 
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
- * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
- * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
- * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
- * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
- * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
- * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
- * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
- * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
- * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
- * THE POSSIBILITY OF SUCH DAMAGE.
- */
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
+
 using Catel.Data;
 using Catel.Logging;
 using Catel.MVVM;
+
 using Funani.Api;
 using Funani.Api.Metadata;
 using Funani.Gui.Model;
@@ -47,13 +19,6 @@ namespace Funani.Gui.ViewModels
     public class DatabaseViewModel : ViewModelBase, IItemsProvider<FileInformationViewModel>
     {
         private static readonly ILog Log = LogManager.GetCurrentClassLogger();
-
-        /// <summary>
-        ///     Register the FileInformationViewModels property so it is known in the class.
-        /// </summary>
-        public static readonly PropertyData FileInformationViewModelsProperty =
-            RegisterProperty("FileInformationViewModels", typeof(IEnumerable<FileInformationViewModel>), null);
-
         private readonly IEngine _engine;
 
         public DatabaseViewModel(IEngine engine)
@@ -68,21 +33,12 @@ namespace Funani.Gui.ViewModels
         #region Property: WhereClause
 
         /// <summary>
-        ///     Register the WhereClause property so it is known in the class.
-        /// </summary>
-        public static readonly PropertyData WhereClauseProperty = RegisterProperty("WhereClause", typeof(String),
-                                                                                   null,
-                                                                                   (sender, e) =>
-                                                                                   ((DatabaseViewModel)sender)
-                                                                                       .OnWhereClauseChanged());
-
-        /// <summary>
         ///     Gets or sets the property value.
         /// </summary>
         public String WhereClause
         {
-            get { return GetValue<String>(WhereClauseProperty); }
-            set { SetValue(WhereClauseProperty, value); }
+            get;
+            set;
         }
 
         /// <summary>
@@ -98,21 +54,12 @@ namespace Funani.Gui.ViewModels
         #region Property: OrderByClause
 
         /// <summary>
-        ///     Register the OrderByClause property so it is known in the class.
-        /// </summary>
-        public static readonly PropertyData OrderByClauseProperty = RegisterProperty("OrderByClause", typeof(String),
-                                                                                     null,
-                                                                                     (sender, e) =>
-                                                                                     ((DatabaseViewModel)sender)
-                                                                                         .OnOrderByClauseChanged());
-
-        /// <summary>
         ///     Gets or sets the property value.
         /// </summary>
         public String OrderByClause
         {
-            get { return GetValue<String>(OrderByClauseProperty); }
-            set { SetValue(OrderByClauseProperty, value); }
+            get;
+            set;
         }
 
         /// <summary>
@@ -128,19 +75,12 @@ namespace Funani.Gui.ViewModels
         #region Property: RegularExpression
 
         /// <summary>
-        ///     Register the RegularExpression property so it is known in the class.
-        /// </summary>
-        public static readonly PropertyData RegularExpressionProperty =
-            RegisterProperty("RegularExpression", typeof(String), null,
-                             (sender, e) => ((DatabaseViewModel)sender).OnRegularExpressionChanged());
-
-        /// <summary>
         ///     Gets or sets the property value.
         /// </summary>
         public String RegularExpression
         {
-            get { return GetValue<String>(RegularExpressionProperty); }
-            set { SetValue(RegularExpressionProperty, value); }
+            get;
+            set;
         }
 
         /// <summary>
@@ -156,22 +96,12 @@ namespace Funani.Gui.ViewModels
         #region Property: QueryDeletedFiles
 
         /// <summary>
-        ///     Register the QueryDeletedFiles property so it is known in the class.
-        /// </summary>
-        public static readonly PropertyData QueryDeletedFilesProperty = RegisterProperty("QueryDeletedFiles",
-                                                                                         typeof(Boolean), false,
-                                                                                         (sender, e) =>
-                                                                                         ((DatabaseViewModel)sender)
-                                                                                             .OnQueryDeletedFilesChanged
-                                                                                             ());
-
-        /// <summary>
         ///     Gets or sets the property value.
         /// </summary>
         public Boolean QueryDeletedFiles
         {
-            get { return GetValue<Boolean>(QueryDeletedFilesProperty); }
-            set { SetValue(QueryDeletedFilesProperty, value); }
+            get;
+            set;
         }
 
         /// <summary>
@@ -187,21 +117,12 @@ namespace Funani.Gui.ViewModels
         #region Property: StartDate
 
         /// <summary>
-        ///     Register the StartDate property so it is known in the class.
-        /// </summary>
-        public static readonly PropertyData StartDateProperty = RegisterProperty("StartDate",
-                                                                                 typeof(DateTime?), null,
-                                                                                 (sender, e) =>
-                                                                                 ((DatabaseViewModel)sender)
-                                                                                     .OnStartDateChanged());
-
-        /// <summary>
         ///     Gets or sets the property value.
         /// </summary>
         public DateTime? StartDate
         {
-            get { return GetValue<DateTime?>(StartDateProperty); }
-            set { SetValue(StartDateProperty, value); }
+            get;
+            set;
         }
 
         /// <summary>
@@ -217,21 +138,12 @@ namespace Funani.Gui.ViewModels
         #region Property: EndDate
 
         /// <summary>
-        ///     Register the EndDate property so it is known in the class.
-        /// </summary>
-        public static readonly PropertyData EndDateProperty = RegisterProperty("EndDate",
-                                                                               typeof(DateTime?), null,
-                                                                               (sender, e) =>
-                                                                               ((DatabaseViewModel)sender)
-                                                                                   .OnEndDateChanged());
-
-        /// <summary>
         ///     Gets or sets the property value.
         /// </summary>
         public DateTime? EndDate
         {
-            get { return GetValue<DateTime?>(EndDateProperty); }
-            set { SetValue(EndDateProperty, value); }
+            get;
+            set;
         }
 
         /// <summary>
@@ -249,8 +161,8 @@ namespace Funani.Gui.ViewModels
         /// </summary>
         public IEnumerable<FileInformationViewModel> FileInformationViewModels
         {
-            get { return GetValue<IEnumerable<FileInformationViewModel>>(FileInformationViewModelsProperty); }
-            private set { SetValue(FileInformationViewModelsProperty, value); }
+            get;
+            private set;
         }
 
         public IEnumerable<String> SupportedOrderByClauses

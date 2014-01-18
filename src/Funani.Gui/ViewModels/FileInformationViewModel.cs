@@ -1,32 +1,4 @@
-﻿/*
- * Copyright (c) 2008-2013, Jaap de Haan <jaap.dehaan@color-of-code.de>
- * All rights reserved.
- * 
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions
- * are met:
- * 
- *   * Redistributions of source code must retain the above copyright notice,
- *     this list of conditions and the following disclaimer.
- *   * Redistributions in binary form must reproduce the above copyright
- *     notice, this list of conditions and the following disclaimer in the
- *     documentation and/or other materials provided with the distribution.
- *   * Neither the name of the "Color-Of-Code" nor the names of its
- *     contributors may be used to endorse or promote products derived from
- *     this software without specific prior written permission.
- * 
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
- * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
- * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
- * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
- * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
- * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
- * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
- * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
- * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
- * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
- * THE POSSIBILITY OF SUCH DAMAGE.
- */
+﻿
 
 using System;
 using System.IO;
@@ -63,19 +35,13 @@ namespace Funani.Gui.ViewModels
         #region Model: FileInformation
 
         /// <summary>
-        ///     Register the FileInformation property so it is known in the class.
-        /// </summary>
-        public static readonly PropertyData FileInformationProperty
-            = RegisterProperty("FileInformation", typeof(FileInformation));
-
-        /// <summary>
         ///     FileInformation model.
         /// </summary>
         [Model]
         public FileInformation FileInformation
         {
-            get { return GetValue<FileInformation>(FileInformationProperty); }
-            private set { SetValue(FileInformationProperty, value); }
+            get;
+            private set;
         }
 
         #endregion
@@ -88,14 +54,9 @@ namespace Funani.Gui.ViewModels
         [ViewModelToModel("FileInformation")]
         public int? Rating
         {
-            get { return GetValue<int?>(RatingProperty); }
-            set { SetValue(RatingProperty, value); }
+            get;
+            set;
         }
-
-        /// <summary>
-        /// Register the Rating property so it is known in the class.
-        /// </summary>
-        public static readonly PropertyData RatingProperty = RegisterProperty("Rating", typeof(int?));
 
         #endregion
 
@@ -106,14 +67,10 @@ namespace Funani.Gui.ViewModels
         [ViewModelToModel("FileInformation")]
         public int? Angle
         {
-            get { return GetValue<int?>(AngleProperty); }
-            set { SetValue(AngleProperty, value); }
+            get;
+            set;
         }
 
-        /// <summary>
-        /// Register the Angle property so it is known in the class.
-        /// </summary>
-        public static readonly PropertyData AngleProperty = RegisterProperty("Angle", typeof(int?));
         #endregion
 
         #region Property: IsDeleted
@@ -123,14 +80,10 @@ namespace Funani.Gui.ViewModels
         [ViewModelToModel("FileInformation")]
         public bool IsDeleted
         {
-            get { return GetValue<bool>(IsDeletedProperty); }
-            set { SetValue(IsDeletedProperty, value); }
+            get;
+            set;
         }
 
-        /// <summary>
-        /// Register the IsDeleted property so it is known in the class.
-        /// </summary>
-        public static readonly PropertyData IsDeletedProperty = RegisterProperty("IsDeleted", typeof(bool));
         #endregion
 
         #region Property: Title
@@ -140,14 +93,9 @@ namespace Funani.Gui.ViewModels
         [ViewModelToModel("FileInformation")]
         public new String Title
         {
-            get { return GetValue<String>(TitleProperty); }
-            set { SetValue(TitleProperty, value); }
+            get;
+            set;
         }
-
-        /// <summary>
-        /// Register the Title property so it is known in the class.
-        /// </summary>
-        public static readonly PropertyData TitleProperty = RegisterProperty("Title", typeof(String));
 
         #endregion
 

@@ -1,6 +1,9 @@
 ﻿using System.Windows;
+
 using Catel.Data;
 using Catel.MVVM;
+
+using System.ComponentModel;
 
 namespace Funani.Gui.Helpers
 {
@@ -25,52 +28,42 @@ namespace Funani.Gui.Helpers
 
         #region Property: Top
 
-        public static readonly PropertyData TopProperty =
-            RegisterProperty("Top", typeof(double), null);
-
         public double Top
         {
-            get { return GetValue<double>(TopProperty); }
-            set { SetValue(TopProperty, value); }
+            get;
+            set;
         }
 
         #endregion
 
         #region Property: Left
 
-        public static readonly PropertyData LeftProperty =
-            RegisterProperty("Left", typeof(double), null);
-
         public double Left
         {
-            get { return GetValue<double>(LeftProperty); }
-            set { SetValue(LeftProperty, value); }
+            get;
+            set;
         }
 
         #endregion
 
         #region Property: Width
 
-        public static readonly PropertyData WidthProperty =
-            RegisterProperty("Width", typeof(double), 320.0);
-
+        [DefaultValue(320.0)]
         public double Width
         {
-            get { return GetValue<double>(WidthProperty); }
-            set { SetValue(WidthProperty, value); }
+            get;
+            set;
         }
 
         #endregion
 
         #region Property: Height
 
-        public static readonly PropertyData HeightProperty =
-            RegisterProperty("Height", typeof(double), 240.0);
-
+        [DefaultValue(240.0)]
         public double Height
         {
-            get { return GetValue<double>(HeightProperty); }
-            set { SetValue(HeightProperty, value); }
+            get;
+            set;
         }
 
         #endregion
