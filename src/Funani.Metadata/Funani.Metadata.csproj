@@ -56,8 +56,9 @@
     <Reference Include="MongoDB.Driver">
       <HintPath>..\packages\mongocsharpdriver.1.8.3\lib\net35\MongoDB.Driver.dll</HintPath>
     </Reference>
-    <Reference Include="MongoRepository.Net40">
-      <HintPath>..\packages\MongoRepository.1.6.2\lib\net40\MongoRepository.Net40.dll</HintPath>
+    <Reference Include="MongoRepository.Net40, Version=1.6.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\MongoRepository.1.6.3\lib\net40\MongoRepository.Net40.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core">
