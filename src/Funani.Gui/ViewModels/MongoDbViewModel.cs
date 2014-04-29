@@ -141,7 +141,7 @@ namespace Funani.Gui.ViewModels
             {
                 QueryException = null; // reset
                 var bsonJS = new BsonJavaScript(Query);
-                BsonValue result = Funani.Eval(bsonJS);
+                BsonValue result = Funani.Eval(new EvalArgs() { Code = bsonJS } );
                 QueryResults = result.ToJson().Split();
             }
             catch (Exception ex)
@@ -234,8 +234,15 @@ namespace Funani.Gui.ViewModels
                 seriesSize.AngleSpan = 360;
                 seriesSize.StartAngle = 0;
 
-                var modelCount = new PlotModel("Count by MIME type");
-                var modelSize = new PlotModel("Size by MIME type");
+                var modelCount = new PlotModel()
+                {
+                    Title = "Count by MIME type" 
+                };
+
+                var modelSize = new PlotModel()
+                {
+                    Title = "Size by MIME type"
+                };
 
                 modelCount.Series.Add(seriesCount);
                 modelSize.Series.Add(seriesSize);
