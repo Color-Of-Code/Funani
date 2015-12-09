@@ -6,7 +6,7 @@ FUNANI is an open source project aiming at solving the management of large image
 Wiki
 ----
 
-http://color-of-code.de/wiki/index.php?title=Main_Page
+http://www.color-of-code.de/wiki/product:funani:start
 
 Dependencies
 ------------
