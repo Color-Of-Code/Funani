@@ -7,6 +7,7 @@ __pycache__
 /src/*.vsp
 /src/*.psess
 /src/*.user
+/src/packages/
 /src/packages/AvalonDock.*
 /src/packages/Catel.*
 /src/packages/Fody.*

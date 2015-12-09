@@ -30,7 +30,7 @@
 
 using System;
 using System.Collections.Generic;
-using System.Windows.Media.Imaging;
+//using System.Windows.Media.Imaging;
 
 namespace Funani.MetadataExtractor
 {
@@ -41,6 +41,9 @@ namespace Funani.MetadataExtractor
             var dictionary = new Dictionary<String, String>();
             if (mime.StartsWith("image/"))
             {
+				throw new NotImplementedException();
+
+				/* TODO: implement with an exif lib
                 BitmapFrame frame = BitmapFrame.Create(uri, BitmapCreateOptions.None, BitmapCacheOption.None);
                 dictionary.Add("Width", Convert.ToString(frame.PixelWidth));
                 dictionary.Add("Height", Convert.ToString(frame.PixelHeight));
@@ -76,6 +79,7 @@ namespace Funani.MetadataExtractor
                         }
                     }
                 }
+                */
             }
             return dictionary;
         }

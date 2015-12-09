@@ -48,7 +48,7 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
     <Reference Include="Catel.Core">
-      <HintPath>..\packages\Catel.Core.3.9.0\lib\net40\Catel.Core.dll</HintPath>
+      <HintPath>..\packages\Catel.Core.4.4.0\lib\net45\Catel.Core.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
