@@ -1,6 +1,8 @@
 obj
 bin
 *.Cache
+__pycache__
+*~
 /src/*.suo
 /src/*.vsp
 /src/*.psess
@@ -11,6 +13,7 @@ bin
 /src/packages/FluentMongo.*
 /src/packages/ImageProcessor.*
 /src/packages/log4net.*
+/src/packages/MongoDB.*
 /src/packages/mongocsharpdriver.*
 /src/packages/MongoRepository.*
 /src/packages/NUnit*
