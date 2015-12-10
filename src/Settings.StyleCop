@@ -216,7 +216,7 @@
       <AnalyzerSettings>
         <StringProperty Name="CompanyName">ColorOfCode</StringProperty>
         <StringProperty Name="Copyright">/*
- * Copyright (c) 2008-2013, Jaap de Haan &lt;jaap.dehaan@color-of-code.de&gt;
+ * Copyright (c) 2008-2016, Jaap de Haan &lt;jaap.dehaan@color-of-code.de&gt;
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without

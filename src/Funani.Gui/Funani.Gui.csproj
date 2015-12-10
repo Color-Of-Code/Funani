@@ -98,6 +98,8 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\OxyPlot.Wpf.2014.1.296.1\lib\NET40\OxyPlot.Xps.dll</HintPath>
     </Reference>
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
     <Reference Include="PropertyTools">
       <HintPath>..\packages\PropertyTools.Wpf.2015.2.0\lib\net45\PropertyTools.dll</HintPath>
     </Reference>
@@ -118,7 +120,9 @@
     <Reference Include="System.Windows.Interactivity">
       <HintPath>..\packages\Catel.MVVM.4.4.0\lib\net45\System.Windows.Interactivity.dll</HintPath>
     </Reference>
+    <Reference Include="System.Xaml" />
     <Reference Include="System.Xml" />
+    <Reference Include="WindowsBase" />
     <Reference Include="WPFToolkit, Version=3.5.40128.1, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\WPFToolkit.3.5.50211.1\lib\WPFToolkit.dll</HintPath>
     </Reference>
@@ -146,8 +150,8 @@
     <Compile Include="Controls\StalledGuiIndicatorControl.xaml.cs">
       <DependentUpon>StalledGuiIndicatorControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Helpers\TraceOutputViewModel.cs" />
-    <Compile Include="Helpers\TraceOutputWindow.xaml.cs">
+    <Compile Include="Helpers\ViewModels\TraceOutputViewModel.cs" />
+    <Compile Include="Helpers\Views\TraceOutputWindow.xaml.cs">
       <DependentUpon>TraceOutputWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Logging\Log4netListener.cs" />
@@ -185,7 +189,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Helpers\TraceOutputWindow.xaml">
+    <Page Include="Helpers\Views\TraceOutputWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
