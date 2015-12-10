@@ -5,13 +5,13 @@ namespace Funani.Tests
     [TestFixture]
     public class FileDetection
     {
-        [TestFixtureSetUp]
+        [OneTimeSetUp]
         public void Init()
         {
             // TODO: Add Init code.
         }
 
-        [TestFixtureTearDown]
+        [OneTimeTearDown]
         public void Dispose()
         {
             // TODO: Add tear down code.
