@@ -29,7 +29,7 @@
  */
 
 using Catel.Windows;
-using Funani.Gui.Helpers;
+using Funani.Gui.Helpers.Views;
 
 namespace Funani.Gui.Views
 {

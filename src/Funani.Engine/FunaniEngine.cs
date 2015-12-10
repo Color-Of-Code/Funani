@@ -203,7 +203,7 @@ namespace Funani.Engine
 
         private void CommonCreationOpening(String pathToMongod, String path)
         {
-            _info = DatabaseInfo.Load(DatabaseInfoPath, SerializationMode.Xml);
+            _info = DatabaseInfo.Load(File.OpenRead(DatabaseInfoPath), SerializationMode.Xml);
 
             // create the file database
             _fileStorage = new FileDatabase(path);

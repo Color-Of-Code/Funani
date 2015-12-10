@@ -46,11 +46,13 @@ namespace Funani.Gui.Views
             InitializeComponent();
         }
 
+        /*FIXME: find alternative
         protected override IViewModel GetViewModelInstance(object dataContext)
         {
             var viewModel = ServiceLocator.Default.ResolveType<IConsoleRedirect>() as MongoDbViewModel;
             DataContext = viewModel;
             return viewModel;
         }
+         */
     }
 }

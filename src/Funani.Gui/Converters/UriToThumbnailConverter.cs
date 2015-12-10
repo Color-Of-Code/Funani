@@ -74,12 +74,15 @@ namespace Funani.Gui.Converters
                 return DefaultThumbnail;
             try
             {
+                throw new NotImplementedException();
+                /*
                 BitmapSource ret = Thumbnail.Extract(new Uri(value.ToString()),
                                                      "image/", ThumbnailSize);
 
                 // TODO: why is this called twice?
                 Trace.TraceInformation("Generating thumbnail for '{0}'", value);
                 return ret;
+                 */
             }
             catch (Exception ex)
             {

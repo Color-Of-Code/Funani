@@ -4,10 +4,10 @@ using System.Windows;
 using Catel.Data;
 using Catel.IoC;
 using Catel.MVVM;
-using Catel.MVVM.Services;
+using Catel.Services;
 using Funani.Api;
 using Funani.Gui.Properties;
-using SWF = System.Windows.Forms;
+using System.Threading.Tasks;
 
 namespace Funani.Gui.ViewModels
 {
@@ -20,6 +20,7 @@ namespace Funani.Gui.ViewModels
 
         private static readonly String MongodFileFilter = "Mongo Server (mongod.exe)|mongod.exe";
         private readonly IEngine _engine;
+        private readonly ISelectDirectoryService _selectDirectoryService;
 
         #endregion
 
@@ -28,9 +29,11 @@ namespace Funani.Gui.ViewModels
         /// <summary>
         ///     Initializes a new instance of the <see cref="MainWindowViewModel" /> class.
         /// </summary>
-        public MainWindowViewModel(IEngine engine)
+        public MainWindowViewModel(IEngine engine, ISelectDirectoryService selectDirectoryService)
         {
             _engine = engine;
+            _selectDirectoryService = selectDirectoryService;
+
 
             ApplicationExit = new Command(OnApplicationExitExecute);
             BrowseToFunanidb = new Command(OnBrowseToFunanidbExecute);
@@ -40,17 +43,18 @@ namespace Funani.Gui.ViewModels
             Settings.Upgrade();
         }
 
-        protected override void Initialize()
+        protected override Task InitializeAsync()
         {
             EnsureMongodbPathIsValid();
             EnsureFunanidbPathIsValid();
             _engine.OpenDatabase(MongodbPath, Settings.LastFunaniDatabase);
+            return base.InitializeAsync();
         }
 
-        protected override void OnClosed(bool? result)
+        protected override Task OnClosedAsync(bool? result)
         {
             _engine.CloseDatabase();
-            base.OnClosed(result);
+            return base.OnClosedAsync(result);
         }
 
         #endregion
@@ -142,12 +146,11 @@ namespace Funani.Gui.ViewModels
 
         private void OnBrowseToFunanidbExecute()
         {
-            var ofd = new SWF.FolderBrowserDialog();
-            ofd.Description = "Browse to a valid Funani DB or empty directory";
-            ofd.ShowNewFolderButton = true;
-            if (ofd.ShowDialog() == SWF.DialogResult.OK)
+            _selectDirectoryService.Title = "Browse to a valid Funani DB or empty directory";
+            _selectDirectoryService.ShowNewFolderButton = true;
+            if (_selectDirectoryService.DetermineDirectory())
             {
-                var di = new DirectoryInfo(ofd.SelectedPath);
+                var di = new DirectoryInfo(_selectDirectoryService.DirectoryName);
                 Settings.LastFunaniDatabase = di.FullName;
                 Settings.Save();
             }
@@ -164,16 +167,7 @@ namespace Funani.Gui.ViewModels
             String funanidbPath = Settings.LastFunaniDatabase;
             if (!_engine.IsValidDatabase(funanidbPath))
             {
-                var ofd = new SWF.FolderBrowserDialog();
-                ofd.Description = "Browse to a valid Funani DB or empty directory";
-                ofd.ShowNewFolderButton = true;
-                if (ofd.ShowDialog() == SWF.DialogResult.OK)
-                {
-                    var di = new DirectoryInfo(ofd.SelectedPath);
-                    Settings.LastFunaniDatabase = di.FullName;
-                    Settings.Save();
-                    return;
-                }
+                OnBrowseToFunanidbExecute();
                 OnApplicationExitExecute();
             }
         }

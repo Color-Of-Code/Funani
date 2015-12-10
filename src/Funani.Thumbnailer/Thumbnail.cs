@@ -28,10 +28,13 @@
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+using ImageProcessor;
+using ImageProcessor.Imaging.Formats;
 using System;
 using System.Diagnostics;
+using System.Drawing;
 using System.IO;
-using System.Windows.Media;
+using System.Net.Sockets;
 
 namespace Funani.Thumbnailer
 {
@@ -39,24 +42,28 @@ namespace Funani.Thumbnailer
     {
         public static void Create(Uri uri, String mime, int thumbnailSize, FileInfo destination)
         {
-            BitmapSource bitmap = Extract(uri, mime, thumbnailSize, BitmapCreateOptions.None);
-            if (bitmap != null)
+            // Format is automatically detected though can be changed.
+            ISupportedImageFormat format = new PngFormat { };
+            Size size = new Size(thumbnailSize, thumbnailSize);
+            using (var inStream = File.OpenRead(uri.LocalPath))
             {
-                if (bitmap.CheckAccess())
+                using (var outStream = File.Create(destination.FullName))
                 {
-                    Trace.TraceInformation("Creating thumbnail '{0}'", destination.Name);
-                    var encoder = new PngBitmapEncoder();
-                    String photolocation = destination.FullName;
-                    BitmapFrame frame = BitmapFrame.Create(bitmap);
-                    encoder.Frames.Add(frame);
-
-                    Directory.CreateDirectory(destination.DirectoryName);
-                    using (var filestream = new FileStream(photolocation, FileMode.Create))
-                        encoder.Save(filestream);
+                    // Initialize the ImageFactory using the overload to preserve EXIF metadata.
+                    using (ImageFactory imageFactory = new ImageFactory(preserveExifData:true))
+                    {
+                        // Load, resize, set the format and quality and save an image.
+                        imageFactory.Load(inStream)
+                                    .Resize(size)
+                                    .Format(format)
+                                    .Save(outStream);
+                    }
+                    // Do something with the stream.
                 }
             }
         }
 
+        /*
         /// <summary>
         ///     Create a thumbnail of the given max size for the resource specified by the uri
         ///     assuming the mime type is correctly specified too.
@@ -154,5 +161,6 @@ namespace Funani.Thumbnailer
 
             return ret;
         }
+         */
     }
 }
