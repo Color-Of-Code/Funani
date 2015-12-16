@@ -3,6 +3,8 @@ import hashlib
 import os
 import subprocess
 import sys
+from PIL import Image
+import PIL.ExifTags
 
 #for arg in sys.argv:
 #    print(arg)
@@ -11,6 +13,12 @@ from os.path import join, getsize
 
 # https://pypi.python.org/pypi/hashfs/0.4.0
 # https://github.com/dgilland/hashfs
+
+# Exif standard: http://www.cipa.jp/std/documents/e/DC-008-2012_E.pdf
+
+# PIL
+# /usr/bin/file
+# /usr/bin/identify     (image magick)
 
 DATABASE_ROOT = "/home/jaap/Dokumente/Projekte/Funani/database"
 MEDIA_ROOT = join(DATABASE_ROOT, ".media")
@@ -98,6 +106,39 @@ def _append_meta(metapath, src, dst):
     mime = mime.decode("utf-8").strip()
     mimeline = "mime={}".format(mime)
     _check_add_line(lines, mimeline)
+
+    if mime.startswith("image/"):
+        im = Image.open(dst)
+        w = im.size[0]
+        h = im.size[1]
+        _check_add_line(lines, "image-width={}".format(w))
+        _check_add_line(lines, "image-height={}".format(h))
+        exif = im._getexif()
+        if exif:
+            for tag, value in exif.items():
+                if tag not in [37500, 50341, 37510, 282, 283, 40961, 296, 531]:
+                    if tag == 271: # Make
+                        _check_add_line(lines, "exif:Make={}".format(value))
+                    if tag == 272: # Model
+                        _check_add_line(lines, "exif:Model={}".format(value))
+                    if tag == 274: # Orientation
+                        _check_add_line(lines, "exif:Orientation={}".format(value))
+                    if tag == 36867: # DateTimeOriginal
+                        _check_add_line(lines, "exif:DateTimeOriginal={}".format(value))
+                    if tag == 37382: # SubjectDistance
+                        _check_add_line(lines, "exif:SubjectDistance={}/{} m".format(*value))
+                    if tag == 37385: # Flash
+                        _check_add_line(lines, "exif:Flash={}".format(value))
+                    if tag == 41483: # FlashEnergy
+                        _check_add_line(lines, "exif:FlashEnergy={}/{} BCPS".format(*value))
+                    if tag == 37386: # FocalLength
+                        _check_add_line(lines, "exif:FocalLength={}/{} mm".format(*value))
+                    if tag == 33434: # ExposureTime
+                        _check_add_line(lines, "exif:ExposureTime={}/{} s".format(*value))
+
+                    if tag not in [271, 272, 274, 33434, 36867, 37382, 37385, 37386, 41483]:
+                        decoded = PIL.ExifTags.TAGS.get(tag, tag)
+                        print('tag=', tag, " decoded=", decoded, '->', value)
 
     if len(lines) < org_size:
         raise Exception("Size can never be less than before, there is something going very wrong")
