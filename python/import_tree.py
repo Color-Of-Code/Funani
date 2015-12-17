@@ -79,7 +79,7 @@ def _copy_stdfs(src, dst):
 def _check_add_line(lines, line):
     if line not in lines:
         lines.append(line) 
-        print("..Adding to metadata: ", line)
+        #print("..Adding to metadata: ", line)
 
 # Format of the metadata file:
 # items are added if missing
@@ -113,32 +113,40 @@ def _append_meta(metapath, src, dst):
         h = im.size[1]
         _check_add_line(lines, "image-width={}".format(w))
         _check_add_line(lines, "image-height={}".format(h))
-        exif = im._getexif()
-        if exif:
-            for tag, value in exif.items():
-                if tag not in [37500, 50341, 37510, 282, 283, 40961, 296, 531]:
-                    if tag == 271: # Make
-                        _check_add_line(lines, "exif:Make={}".format(value))
-                    if tag == 272: # Model
-                        _check_add_line(lines, "exif:Model={}".format(value))
-                    if tag == 274: # Orientation
-                        _check_add_line(lines, "exif:Orientation={}".format(value))
-                    if tag == 36867: # DateTimeOriginal
-                        _check_add_line(lines, "exif:DateTimeOriginal={}".format(value))
-                    if tag == 37382: # SubjectDistance
-                        _check_add_line(lines, "exif:SubjectDistance={}/{} m".format(*value))
-                    if tag == 37385: # Flash
-                        _check_add_line(lines, "exif:Flash={}".format(value))
-                    if tag == 41483: # FlashEnergy
-                        _check_add_line(lines, "exif:FlashEnergy={}/{} BCPS".format(*value))
-                    if tag == 37386: # FocalLength
-                        _check_add_line(lines, "exif:FocalLength={}/{} mm".format(*value))
-                    if tag == 33434: # ExposureTime
-                        _check_add_line(lines, "exif:ExposureTime={}/{} s".format(*value))
+        try:
+            exif = im._getexif()
+            if exif:
+                for tag, value in exif.items():
+                    if tag not in [37500, 50341, 37510, 282, 283, 40961, 296, 531]:
+                        if tag == 271: # Make
+                            _check_add_line(lines, "exif:Make={}".format(value))
+                        if tag == 272: # Model
+                            _check_add_line(lines, "exif:Model={}".format(value))
+                        if tag == 274: # Orientation
+                            _check_add_line(lines, "exif:Orientation={}".format(value))
+                        if tag == 36867: # DateTimeOriginal
+                            _check_add_line(lines, "exif:DateTimeOriginal={}".format(value))
+                        if tag == 36868: # DateTimeDigitized
+                            _check_add_line(lines, "exif:DateTimeDigitized={}".format(value))
+                        if tag == 37382: # SubjectDistance
+                            _check_add_line(lines, "exif:SubjectDistance={}/{} m".format(*value))
+                        if tag == 37385: # Flash
+                            _check_add_line(lines, "exif:Flash={}".format(value))
+                        if tag == 41483: # FlashEnergy
+                            _check_add_line(lines, "exif:FlashEnergy={}/{} BCPS".format(*value))
+                        if tag == 37386: # FocalLength
+                            _check_add_line(lines, "exif:FocalLength={}/{} mm".format(*value))
+                        if tag == 33434: # ExposureTime
+                            _check_add_line(lines, "exif:ExposureTime={}/{} s".format(*value))
+                        if tag == 33437: # FNumber
+                            _check_add_line(lines, "exif:FNumber={}/{}".format(*value))
 
-                    if tag not in [271, 272, 274, 33434, 36867, 37382, 37385, 37386, 41483]:
-                        decoded = PIL.ExifTags.TAGS.get(tag, tag)
-                        print('tag=', tag, " decoded=", decoded, '->', value)
+                        #if tag not in [271, 272, 274, 33434, 33437, 36867, 36868, 37382, 37385, 37386, 41483]:
+                        #    decoded = PIL.ExifTags.TAGS.get(tag, tag)
+                        #    print('tag=', tag, " decoded=", decoded, '->', value)
+        except Exception as error:
+            _check_add_line(lines, "exif:__exception__=could not parse exif")
+            
 
     if len(lines) < org_size:
         raise Exception("Size can never be less than before, there is something going very wrong")
