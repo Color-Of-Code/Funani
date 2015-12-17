@@ -5,6 +5,7 @@ import subprocess
 import sys
 from PIL import Image
 import PIL.ExifTags
+from datetime import datetime
 
 #for arg in sys.argv:
 #    print(arg)
@@ -96,7 +97,10 @@ def _append_meta(metapath, src, dst):
     if srcsize != dstsize:
         raise Exception("File size mismatch!")
 
-    srcline = "src={}".format(src)
+
+    ts = os.path.getmtime(src)
+    ts_iso = datetime.fromtimestamp(ts)
+    srcline = "src={}:{}".format(ts_iso.strftime('%Y-%m-%d %H:%M:%S'), src)
     _check_add_line(lines, srcline)
 
     sizeline = "size={}".format(dstsize)
