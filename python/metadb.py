@@ -4,6 +4,7 @@ import os
 import subprocess
 from PIL import Image
 import PIL.ExifTags
+from address import shard
 
 logger = logging.getLogger('metadb')
 dmode = 0o700   # default directory creation mode
@@ -31,6 +32,16 @@ class MetadataDatabase(object):
         if line not in lines:
             lines.append(line) 
             #print("..Adding to metadata: ", line)
+
+    def dump(self, hash_value):
+        reldirname = shard(hash_value, 2, 2)
+        metaabsdirname = os.path.join(self.ROOT_PATH, *reldirname)
+        if os.path.isfile(metaabsdirname):
+            lines = self._read_meta(metaabsdirname)
+            for line in lines:
+                print(line)
+        else:
+            print("File not in Metadata DB")
 
     def import_file(self, srcfullpath, reldirname):
         metaabsdirname = os.path.join(self.ROOT_PATH, *reldirname[:-1])
@@ -73,16 +84,22 @@ class MetadataDatabase(object):
                         #    print('tag=', tag, " decoded=", decoded, '->', value)
         except Exception as error:
             _check_add_line(lines, "exif:__exception__=could not parse exif")
+
+
+    def _read_meta(self, metapath):
+        lines = []
+        if os.path.isfile(metapath):
+            with open(metapath, 'rt', encoding='utf-8') as f:
+                lines = f.read().splitlines()
+        return lines
+
     
     # Format of the metadata file:
     # items are added if missing
     # src=<source path>
     # size=<filesize>
     def _append_meta(metapath, src, dst):
-        lines = []
-        if os.path.isfile(metapath):
-            with open(metapath, 'rt', encoding='utf-8') as f:
-                lines = f.read().splitlines()
+        lines = _read_meta(metapath)
         org_size = len(lines)
         srcsize = os.path.getsize(src)
         dstsize = os.path.getsize(dst)
