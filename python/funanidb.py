@@ -7,6 +7,17 @@ from PIL import Image
 import PIL.ExifTags
 from datetime import datetime
 
+
+import configparser
+
+config = configparser.ConfigParser()
+config['database'] = {}
+config['database']['path'] = '/home/funanidb'
+
+with open('funani.cfg', 'w') as configfile:
+    config.write(configfile)
+
+exit(0)
 #for arg in sys.argv:
 #    print(arg)
 
@@ -21,7 +32,8 @@ from os.path import join, getsize
 # /usr/bin/file
 # /usr/bin/identify     (image magick)
 
-DATABASE_ROOT = "/home/jaap/Dokumente/Projekte/Funani/database"
+from database.config import DATABASE_ROOT
+
 MEDIA_ROOT = join(DATABASE_ROOT, ".media")
 META_ROOT = join(DATABASE_ROOT, ".meta")
 dmode = 0o700
@@ -162,7 +174,7 @@ def _append_meta(metapath, src, dst):
             print(content)
             f.write(content)
 
-def process_image_file(dir_path, filename):
+def process_file(dir_path, filename):
     srcfullpath = join(dir_path, filename)
     hash_value = hash_file(srcfullpath)
     reldirname = shard(hash_value, 2, 2)
@@ -178,13 +190,13 @@ def process_image_file(dir_path, filename):
     _append_meta(metafullpath, srcfullpath, dstfullpath)
     #print(dstfullpath, " | dup=", is_duplicate, " | ", dir_path, " | ", filename)
 
-def traverse(directory_path):
+def traverse(directory_path, extensions):
     for root, dirs, files in os.walk(directory_path):
         for name in files:
-            if name.lower().endswith(('.png', '.jpg', '.jpeg')):
-                process_image_file(root, name)
+            if name.lower().endswith(extensions):
+                process_file(root, name)
 
-
-traverse(sys.argv[1])
+extensions = ('.png', '.jpg', '.jpeg')
+traverse(sys.argv[1], extensions)
 
 
