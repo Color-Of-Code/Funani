@@ -1,4 +1,5 @@
 
+from datetime import datetime
 import logging
 import os
 import subprocess
@@ -15,6 +16,45 @@ dmode = 0o700   # default directory creation mode
 # /usr/bin/file
 # /usr/bin/identify     (image magick)
 
+def _check_add_line(lines, line):
+    if line not in lines:
+        lines.append(line) 
+        #print("..Adding to metadata: ", line)
+
+def _handle_exif(lines, im):
+    try:
+        exif = im._getexif()
+        if exif:
+            for tag, value in exif.items():
+                if tag not in [37500, 50341, 37510, 282, 283, 40961, 296, 531]:
+                    if tag == 271: # Make
+                        _check_add_line(lines, "exif:Make={}".format(value))
+                    if tag == 272: # Model
+                        _check_add_line(lines, "exif:Model={}".format(value))
+                    if tag == 274: # Orientation
+                        _check_add_line(lines, "exif:Orientation={}".format(value))
+                    if tag == 36867: # DateTimeOriginal
+                        _check_add_line(lines, "exif:DateTimeOriginal={}".format(value))
+                    if tag == 36868: # DateTimeDigitized
+                        _check_add_line(lines, "exif:DateTimeDigitized={}".format(value))
+                    if tag == 37382: # SubjectDistance
+                        _check_add_line(lines, "exif:SubjectDistance={}/{} m".format(*value))
+                    if tag == 37385: # Flash
+                        _check_add_line(lines, "exif:Flash={}".format(value))
+                    if tag == 41483: # FlashEnergy
+                        _check_add_line(lines, "exif:FlashEnergy={}/{} BCPS".format(*value))
+                    if tag == 37386: # FocalLength
+                        _check_add_line(lines, "exif:FocalLength={}/{} mm".format(*value))
+                    if tag == 33434: # ExposureTime
+                        _check_add_line(lines, "exif:ExposureTime={}/{} s".format(*value))
+                    if tag == 33437: # FNumber
+                        _check_add_line(lines, "exif:FNumber={}/{}".format(*value))
+
+                    #if tag not in [271, 272, 274, 33434, 33437, 36867, 36868, 37382, 37385, 37386, 41483]:
+                    #    decoded = PIL.ExifTags.TAGS.get(tag, tag)
+                    #    print('tag=', tag, " decoded=", decoded, '->', value)
+    except Exception as error:
+        _check_add_line(lines, "exif:__exception__=could not parse exif")
 
 class MetadataDatabase(object):
 
@@ -28,11 +68,6 @@ class MetadataDatabase(object):
     def __str__(self):
         return 'METADB:{}'.format(self.ROOT_PATH)
 
-    def _check_add_line(lines, line):
-        if line not in lines:
-            lines.append(line) 
-            #print("..Adding to metadata: ", line)
-
     def dump(self, hash_value):
         reldirname = shard(hash_value, 2, 2)
         metaabsdirname = os.path.join(self.ROOT_PATH, *reldirname)
@@ -43,48 +78,12 @@ class MetadataDatabase(object):
         else:
             print("File not in Metadata DB")
 
-    def import_file(self, srcfullpath, reldirname):
+    def import_file(self, srcfullpath, dstfullpath, reldirname):
         metaabsdirname = os.path.join(self.ROOT_PATH, *reldirname[:-1])
         metafullpath = os.path.join(metaabsdirname, reldirname[-1])
         os.makedirs(metaabsdirname, dmode, True)
-        _append_meta(metafullpath, srcfullpath, dstfullpath)
+        self._append_meta(metafullpath, srcfullpath, dstfullpath)
         #print(dstfullpath, " | dup=", is_duplicate, " | ", dir_path, " | ", filename)
-
-    def _handle_exif(self, lines, im):
-        try:
-            exif = im._getexif()
-            if exif:
-                for tag, value in exif.items():
-                    if tag not in [37500, 50341, 37510, 282, 283, 40961, 296, 531]:
-                        if tag == 271: # Make
-                            _check_add_line(lines, "exif:Make={}".format(value))
-                        if tag == 272: # Model
-                            _check_add_line(lines, "exif:Model={}".format(value))
-                        if tag == 274: # Orientation
-                            _check_add_line(lines, "exif:Orientation={}".format(value))
-                        if tag == 36867: # DateTimeOriginal
-                            _check_add_line(lines, "exif:DateTimeOriginal={}".format(value))
-                        if tag == 36868: # DateTimeDigitized
-                            _check_add_line(lines, "exif:DateTimeDigitized={}".format(value))
-                        if tag == 37382: # SubjectDistance
-                            _check_add_line(lines, "exif:SubjectDistance={}/{} m".format(*value))
-                        if tag == 37385: # Flash
-                            _check_add_line(lines, "exif:Flash={}".format(value))
-                        if tag == 41483: # FlashEnergy
-                            _check_add_line(lines, "exif:FlashEnergy={}/{} BCPS".format(*value))
-                        if tag == 37386: # FocalLength
-                            _check_add_line(lines, "exif:FocalLength={}/{} mm".format(*value))
-                        if tag == 33434: # ExposureTime
-                            _check_add_line(lines, "exif:ExposureTime={}/{} s".format(*value))
-                        if tag == 33437: # FNumber
-                            _check_add_line(lines, "exif:FNumber={}/{}".format(*value))
-
-                        #if tag not in [271, 272, 274, 33434, 33437, 36867, 36868, 37382, 37385, 37386, 41483]:
-                        #    decoded = PIL.ExifTags.TAGS.get(tag, tag)
-                        #    print('tag=', tag, " decoded=", decoded, '->', value)
-        except Exception as error:
-            _check_add_line(lines, "exif:__exception__=could not parse exif")
-
 
     def _read_meta(self, metapath):
         lines = []
@@ -98,8 +97,8 @@ class MetadataDatabase(object):
     # items are added if missing
     # src=<source path>
     # size=<filesize>
-    def _append_meta(metapath, src, dst):
-        lines = _read_meta(metapath)
+    def _append_meta(self, metapath, src, dst):
+        lines = self._read_meta(metapath)
         org_size = len(lines)
         srcsize = os.path.getsize(src)
         dstsize = os.path.getsize(dst)
@@ -120,21 +119,24 @@ class MetadataDatabase(object):
         mimeline = "mime={}".format(mime)
         _check_add_line(lines, mimeline)
 
-        if mime.startswith("image/"):
-            im = Image.open(dst)
-            w = im.size[0]
-            h = im.size[1]
-            _check_add_line(lines, "image-width={}".format(w))
-            _check_add_line(lines, "image-height={}".format(h))
-            
-            _handle_exif(lines, im)
+        if mime.startswith("image/") and not mime.startswith("image/x-xcf"):
+            try:
+                im = Image.open(dst)
+                w = im.size[0]
+                h = im.size[1]
+                _check_add_line(lines, "image-width={}".format(w))
+                _check_add_line(lines, "image-height={}".format(h))
+                _handle_exif(lines, im)
+            except Exception as error:
+                logger.error("Could not use PIL to get metadata for file '%s' (%s)", metapath, error)
 
         if len(lines) < org_size:
             raise Exception("Size can never be less than before, there is something going very wrong")
 
         if len(lines) > org_size:
             with open(metapath, mode='wt', encoding='utf-8') as f:
-                print("--- Metapath: ", metapath)
+                logger.debug("Update metadata '%s'", metapath)
                 content = '\n'.join(sorted(lines))
-                print(content)
+                #print(content)
                 f.write(content)
+

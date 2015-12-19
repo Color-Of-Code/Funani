@@ -14,13 +14,16 @@ parser.add_argument('--loglevel', choices=['error', 'warning', 'info', 'debug'],
 subparsers = parser.add_subparsers(dest='command', help='sub-command help')
 
 # import
-parser_import = subparsers.add_parser('import', help='import help')
+parser_import = subparsers.add_parser('import', help='import files or directories')
 parser_import.add_argument('--recursive', action='store_true', help='Import also directory contents recursively')
 parser_import.add_argument('file', nargs='*', metavar='FILE', help='Files (and/or directories in recursive mode) to import in DB')
 
 # check
-parser_check = subparsers.add_parser('check', help='check help')
+parser_check = subparsers.add_parser('check', help='check metadata for an existing file')
 parser_check.add_argument('file', metavar='FILE', help='Check the hits for this file in DB')
+
+# verify
+parser_verify = subparsers.add_parser('verify', help='verify integrity of the data in DB')
 
 args = parser.parse_args()
 
@@ -45,25 +48,23 @@ logger = logging.getLogger('funani')
 # parse configuration file --------------------------
 config = configparser.ConfigParser()
 config.read('funani.cfg')
-logger.info("Read configuration file")
+logger.debug("Read configuration file")
 
 # setup database --------------------------
 db = FunaniDatabase(config['database'])
 
-extensions = ('.png', '.jpg', '.jpeg')
-
-def traverse(directory_path, extensions):
-    for root, dirs, files in os.walk(directory_path):
-        for name in files:
-            if name.lower().endswith(extensions):
-                db.import_file(root, name)
-
 #print(args)
 if args.command == 'import':
-    for path in args.file:
-        print("... Importing ...", path)
+    if args.recursive:
+        for path in args.file:
+            db.import_recursive(path)
+    else:
+        for path in args.file:
+            db.import_single_file(path)
 
 elif args.command == 'check':
     db.check_file(args.file)
 
+elif args.command == 'verify':
+    db.verify_files()
 
