@@ -7,11 +7,12 @@ from address import hash_file, shard
 
 logger = logging.getLogger('funanidb')
 
-#images
 extensions_images = ('.jpg', '.jpeg', '.png', '.tif', '.tiff', '.pnm', '.bmp', '.xcf', '.gif')
 extensions_videos = ('.mp4', '.mov', '.avi', '.mpg', '.3gp')
 extensions_all = extensions_images + extensions_videos
-extensions = extensions_videos
+
+# extensions to use below
+extensions = extensions_all
 
 class FunaniDatabase(object):
 
@@ -46,7 +47,7 @@ class FunaniDatabase(object):
                     self.import_file(root, name)
                 else:
                     if not name.lower().endswith(extensions_all):
-                        if name.lower() != 'thumbs.db':
+                        if name.lower() != 'thumbs.db': # avoid noise in output
                             logger.warning("skipping '%s'", os.path.join(root, name))
 
     def import_file(self, dir_path, filename):
