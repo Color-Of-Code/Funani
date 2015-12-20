@@ -107,12 +107,14 @@ class MediaDatabase(object):
                 logger.debug('Verifying files in %s', mediaabsdirname)
                 self._verify_files_in_dir(reldirname, mediaabsdirname)
 
-    def import_file(self, srcfullpath, reldirname):
+    def import_file(self, srcfullpath, reldirname, reflink):
         mediaabsdirname = os.path.join(self.ROOT_PATH, *reldirname[:-1])
         mediafullpath = os.path.join(mediaabsdirname, reldirname[-1])
         os.makedirs(mediaabsdirname, dmode, True)
-        return _copy_stdfs(srcfullpath, mediafullpath)
-        #return _copy_btrfs(srcfullpath, mediafullpath)
+        if reflink:
+            return _copy_btrfs(srcfullpath, mediafullpath)
+        else:
+            return _copy_stdfs(srcfullpath, mediafullpath)
 
 #TODO: find out when the optimization with btrfs can be used
 

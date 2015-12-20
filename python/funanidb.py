@@ -32,6 +32,9 @@ class FunaniDatabase(object):
     def verify_files(self):
         self.media_db.verify_files()
 
+    def meta_get(self, hash_value):
+        self.metadata_db.dump(hash_value)
+
     def check_file(self, file_path):
         srcfullpath = os.path.abspath(file_path)
         srcfullpath = os.path.realpath(srcfullpath)
@@ -39,30 +42,27 @@ class FunaniDatabase(object):
         hash_value = hash_file(srcfullpath)
         self.metadata_db.dump(hash_value)
 
-    def _traverse(self, directory_path):
+    def _traverse(self, directory_path, reflink):
         logger.info("recursing through '%s'", directory_path)
         for root, dirs, files in os.walk(directory_path):
             for name in files:
                 if name.lower().endswith(extensions):
-                    self.import_file(root, name)
+                    srcfullpath = os.path.join(root, name)
+                    self.import_file(srcfullpath, reflink)
                 else:
                     if not name.lower().endswith(extensions_all):
                         if name.lower() != 'thumbs.db': # avoid noise in output
                             logger.warning("skipping '%s'", os.path.join(root, name))
 
-    def import_file(self, dir_path, filename):
-        srcfullpath = os.path.join(dir_path, filename)
-        self.import_single_file(srcfullpath)
-
-    def import_recursive(self, src):
+    def import_recursive(self, src, reflink):
         srcfullpath = os.path.abspath(src)
-        srcfullpath = os.path.realpath(srcfullpath)
-        if os.path.isfile(src):
-            self.import_single_file(src)
+        srcfullpath = os.path.realpath(src)
+        if os.path.isfile(srcfullpath):
+            self.import_file(srcfullpath, reflink)
         else:
-            self._traverse(src)
+            self._traverse(srcfullpath, reflink)
 
-    def import_single_file(self, src):
+    def import_file(self, src, reflink):
         srcfullpath = os.path.abspath(src)
         srcfullpath = os.path.realpath(srcfullpath)
         
@@ -70,6 +70,6 @@ class FunaniDatabase(object):
         hash_value = hash_file(srcfullpath)
         reldirname = shard(hash_value, 2, 2)
 
-        (dstfullpath, is_duplicate) = self.media_db.import_file(srcfullpath, reldirname)
+        (dstfullpath, is_duplicate) = self.media_db.import_file(srcfullpath, reldirname, reflink)
         self.metadata_db.import_file(srcfullpath, dstfullpath, reldirname)
 

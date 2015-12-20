@@ -135,8 +135,8 @@ class MetadataDatabase(object):
 
         if len(lines) > org_size:
             with open(metapath, mode='wt', encoding='utf-8') as f:
-                logger.debug("Update metadata '%s'", metapath)
                 content = '\n'.join(sorted(lines))
                 #print(content)
                 f.write(content)
+            logger.info("Updated metadata for '%s'", src)
 

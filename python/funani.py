@@ -15,8 +15,13 @@ subparsers = parser.add_subparsers(dest='command', help='sub-command help')
 
 # import
 parser_import = subparsers.add_parser('import', help='import files or directories')
+parser_import.add_argument('--reflink', action='store_true', help='Use speed optimized reflink copies for Btrfs')
 parser_import.add_argument('--recursive', action='store_true', help='Import also directory contents recursively')
 parser_import.add_argument('file', nargs='*', metavar='FILE', help='Files (and/or directories in recursive mode) to import in DB')
+
+# meta
+parser_meta = subparsers.add_parser('meta', help='metadata operations')
+parser_meta.add_argument('hash', metavar='SHA1', help='Get the metadata for specified hash')
 
 # check
 parser_check = subparsers.add_parser('check', help='check metadata for an existing file')
@@ -57,10 +62,13 @@ db = FunaniDatabase(config['database'])
 if args.command == 'import':
     if args.recursive:
         for path in args.file:
-            db.import_recursive(path)
+            db.import_recursive(path, args.reflink)
     else:
         for path in args.file:
-            db.import_single_file(path)
+            db.import_file(path, args.reflink)
+
+elif args.command == 'meta':
+    db.meta_get(args.hash)
 
 elif args.command == 'check':
     db.check_file(args.file)
