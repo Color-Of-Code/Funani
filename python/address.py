@@ -4,6 +4,12 @@ import hashlib
 # https://pypi.python.org/pypi/hashfs/0.4.0
 # https://github.com/dgilland/hashfs
 
+# TODO: What is the best block size
+
+# TODO: use of mmap for better performance?
+# http://stackoverflow.com/questions/32748231/preferred-block-size-when-reading-writing-big-binary-files
+# https://docs.python.org/3.4/library/mmap.html
+
 def compact(items):
     """Return only truthy elements of `items`."""
     return [item for item in items if item]
@@ -16,7 +22,7 @@ def shard(digest, depth, width):
                    [digest[depth * width:]])
 
 def hash_file(file_path):
-    BLOCKSIZE = 65536
+    BLOCKSIZE = 65536       # 64KB
     hasher = hashlib.sha1()
     with open(file_path, 'rb') as afile:
         buf = afile.read(BLOCKSIZE)

@@ -1,61 +1,15 @@
 #!/usr/bin/python3
 
-import argparse
-import configparser
-import logging
-import os
-import sys
-
+from funaniarg import parse_args
+from funanilog import setup_logging
+from funanicfg import parse_config
 from funanidb import FunaniDatabase
 
-# setting up the command line options parser
-parser = argparse.ArgumentParser(description='Funani low level access to the back end data and metadata.')
-parser.add_argument('--loglevel', choices=['error', 'warning', 'info', 'debug'], help='Set the log level')
-subparsers = parser.add_subparsers(dest='command', help='sub-command help')
+args = parse_args()
+setup_logging(args)
+config = parse_config(args)
 
-# import
-parser_import = subparsers.add_parser('import', help='import files or directories')
-parser_import.add_argument('--reflink', action='store_true', help='Use speed optimized reflink copies for Btrfs')
-parser_import.add_argument('--recursive', action='store_true', help='Import also directory contents recursively')
-parser_import.add_argument('file', nargs='*', metavar='FILE', help='Files (and/or directories in recursive mode) to import in DB')
-
-# meta
-parser_meta = subparsers.add_parser('meta', help='metadata operations')
-parser_meta.add_argument('hash', metavar='SHA1', help='Get the metadata for specified hash')
-
-# check
-parser_check = subparsers.add_parser('check', help='check metadata for an existing file')
-parser_check.add_argument('file', metavar='FILE', help='Check the hits for this file in DB')
-
-# verify
-parser_verify = subparsers.add_parser('verify', help='verify integrity of the data in DB')
-
-args = parser.parse_args()
-
-# setup logging --------------------------
-argloglevel = logging.NOTSET
-if args.loglevel == 'error':
-    argloglevel = logging.ERROR
-elif args.loglevel == 'warning':
-    argloglevel = logging.WARNING
-elif args.loglevel == 'info':
-    argloglevel = logging.INFO
-elif args.loglevel == 'debug':
-    argloglevel = logging.DEBUG
-
-logging.basicConfig(
-    format='%(asctime)s.%(msecs)03d - %(name)s - %(levelname)s - %(message)s',
-    datefmt='%Y-%m-%d %H:%M:%S',
-    level=argloglevel)
-
-logger = logging.getLogger('funani')
-
-# parse configuration file --------------------------
-config = configparser.ConfigParser()
-config.read('funani.cfg')
-logger.debug("Read configuration file")
-
-# setup database --------------------------
+# setup database -------------------------
 db = FunaniDatabase(config['database'])
 
 #print(args)
