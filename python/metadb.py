@@ -69,6 +69,7 @@ class MetadataDatabase(object):
         return 'METADB:{}'.format(self.ROOT_PATH)
 
     def dump(self, hash_value):
+        hash_value = hash_value.lower()
         reldirname = shard(hash_value, 2, 2)
         metaabsdirname = os.path.join(self.ROOT_PATH, *reldirname)
         if os.path.isfile(metaabsdirname):
@@ -119,16 +120,21 @@ class MetadataDatabase(object):
         mimeline = "mime={}".format(mime)
         _check_add_line(lines, mimeline)
 
-        if mime.startswith("image/") and not mime.startswith("image/x-xcf"):
-            try:
-                im = Image.open(dst)
-                w = im.size[0]
-                h = im.size[1]
-                _check_add_line(lines, "image-width={}".format(w))
-                _check_add_line(lines, "image-height={}".format(h))
-                _handle_exif(lines, im)
-            except Exception as error:
-                logger.error("Could not use PIL to get metadata for file '%s' (%s)", metapath, error)
+        if mime.startswith("image/"):
+            if mime.startswith("image/x-xcf"):
+                pass
+            elif mime.startswith("image/x-canon-cr2"):
+                pass
+            else:
+                try:
+                    im = Image.open(dst)
+                    w = im.size[0]
+                    h = im.size[1]
+                    _check_add_line(lines, "image-width={}".format(w))
+                    _check_add_line(lines, "image-height={}".format(h))
+                    _handle_exif(lines, im)
+                except Exception as error:
+                    logger.error("Could not use PIL to get metadata for file mime='%s' file='%s' (%s)", mime, metapath, error)
 
         if len(lines) < org_size:
             raise Exception("Size can never be less than before, there is something going very wrong")

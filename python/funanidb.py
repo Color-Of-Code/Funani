@@ -7,7 +7,7 @@ from address import hash_file, shard
 
 logger = logging.getLogger('funanidb')
 
-extensions_images = ('.jpg', '.jpeg', '.png', '.tif', '.tiff', '.pnm', '.bmp', '.xcf', '.gif')
+extensions_images = ('.jpg', '.jpeg', '.png', '.tif', '.tiff', '.pnm', '.cr2', '.bmp', '.xcf', '.gif')
 extensions_videos = ('.mp4', '.mov', '.avi', '.mpg', '.3gp')
 extensions_all = extensions_images + extensions_videos
 
@@ -39,7 +39,15 @@ class FunaniDatabase(object):
         srcfullpath = os.path.abspath(file_path)
         srcfullpath = os.path.realpath(srcfullpath)
 
+        #TODO: Build a DB table with "root paths" (repetitive Media base paths)
+        #      root paths shall not be substrings of each other
+        #TODO: Build a DB table with "root path id" | modtime | "relative path" | hash
+
+        #TODO: Try to find the modtime:/filepath in the DB -> if yes return that metadata
+
+        # otherwise fall back to this default behaviour
         hash_value = hash_file(srcfullpath)
+        print("hash:", hash_value)
         self.metadata_db.dump(hash_value)
 
     def _traverse(self, directory_path, reflink):
