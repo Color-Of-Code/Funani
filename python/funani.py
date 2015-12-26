@@ -1,4 +1,5 @@
 #!/usr/bin/python3
+# -*- coding: utf-8 -*-
 
 from funaniarg import parse_args
 from funanilog import setup_logging
