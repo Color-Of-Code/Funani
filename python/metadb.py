@@ -73,6 +73,7 @@ class MetadataDatabase(object):
         hash_value = hash_value.lower()
         reldirname = shard(hash_value, 2, 2)
         metaabsdirname = os.path.join(self.ROOT_PATH, *reldirname)
+        # TODO: detect rights issue in directory structure
         if os.path.isfile(metaabsdirname):
             lines = self._read_meta(metaabsdirname)
             for line in lines:

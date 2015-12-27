@@ -20,7 +20,8 @@ def parse_args():
 
     # meta
     parser_meta = subparsers.add_parser('meta', help='metadata operations')
-    parser_meta.add_argument('hash', metavar='SHA1', help='Get the metadata for specified hash')
+    parser_meta.add_argument('--fixdb', action='store_true', help='Check contents of the database and eventually fix it')
+    parser_meta.add_argument('hash', nargs='*', metavar='SHA1', help='Get the metadata for specified hash(es)')
 
     # check
     parser_check = subparsers.add_parser('check', help='check metadata for an existing file')

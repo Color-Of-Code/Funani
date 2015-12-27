@@ -33,8 +33,9 @@ class FunaniDatabase(object):
     def verify_files(self):
         self.media_db.verify_files()
 
-    def meta_get(self, hash_value):
-        self.metadata_db.dump(hash_value)
+    def meta_get(self, hash_values, fixdb):
+        for hash_value in hash_values:
+            self.metadata_db.dump(hash_value)
 
     def check_file(self, file_path):
         srcfullpath = os.path.abspath(file_path)
