@@ -23,7 +23,7 @@ if args.command == 'import':
             db.import_file(path, args.reflink)
 
 elif args.command == 'meta':
-    db.meta_get(args.hash)
+    db.meta_get(args.hash, args.fixdb)
 
 elif args.command == 'check':
     db.check_file(args.file)
