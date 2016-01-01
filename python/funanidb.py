@@ -30,8 +30,8 @@ class FunaniDatabase(object):
     def __str__(self):
         return 'FUNANIDB:{}'.format(self.ROOT_PATH)
 
-    def verify_files(self):
-        self.media_db.verify_files()
+    def verify_files(self, force):
+        self.media_db.verify_files(force)
 
     def meta_get(self, hash_values, fixdb):
         for hash_value in hash_values:

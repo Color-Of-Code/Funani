@@ -29,5 +29,5 @@ elif args.command == 'check':
     db.check_file(args.file)
 
 elif args.command == 'verify':
-    db.verify_files()
+    db.verify_files(args.force)
 

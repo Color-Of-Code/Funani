@@ -51,19 +51,34 @@ class MediaDatabase(object):
     def __str__(self):
         return 'MEDIADB:{}'.format(self.ROOT_PATH)
 
-    def _flush_verification_status(self, jsonfile, results):
-        with open(jsonfile, 'w') as fp:
-            json.dump(results, fp)
+    def _flush_verification_status(self, jsonfilepath, results):
+        with open(jsonfilepath, 'w') as jsonfile:
+            json.dump(results, jsonfile)
+
+    def _get_recheck_flag(self, force, results, name):
+        if force:
+            return True
+        recheck = False
+        if name in results:
+            lastcheck = results[name]
+            if lastcheck:
+                lastts = lastcheck['checked']
+                delta = datetime.now() - datetime.strptime(lastts, "%Y-%m-%dT%H:%M:%S.%f")
+                if delta.days < 60:
+                    recheck = False
+                    logger.debug('... skipping because was done already %i days ago',
+                                 delta.days)
+        return recheck
 
     # verification of files integrity
     # contains for each hash, timestamp of last hash check
-    def _verify_files_in_dir(self, reldirname, mediaabsdirname):
+    def _verify_files_in_dir(self, reldirname, mediaabsdirname, force):
         results = {}
-        jsonfile = os.path.join(mediaabsdirname, 'verify.json')
-        if os.path.isfile(jsonfile):
-            logger.debug('Reading %s', jsonfile)
-            with open(jsonfile, 'r') as fp:
-                results = json.load(fp)
+        jsonfilepath = os.path.join(mediaabsdirname, 'verify.json')
+        if os.path.isfile(jsonfilepath):
+            logger.debug('Reading %s', jsonfilepath)
+            with open(jsonfilepath, 'r') as jsonfile:
+                results = json.load(jsonfile)
                 #print(results)
         changed = False
         # go through all files in directory and check hash
@@ -71,18 +86,9 @@ class MediaDatabase(object):
             del dirs[:] # we do not want to recurse
             for name in files:
                 if not name.lower().endswith('.json'):
-                    recheck = True
-                    lastcheck = None
-                    if name in results:
-                        lastcheck = results[name]
-                        if lastcheck:
-                            lastts = lastcheck['checked']
-                            delta = datetime.now() - datetime.strptime(lastts, "%Y-%m-%dT%H:%M:%S.%f")
-                            if delta.days < 60:
-                                recheck = False
-                                logger.debug('... skipping because was done already %i days ago', delta.days)
+                    recheck = self._get_recheck_flag(force, results, name)
                     if recheck:
-                        file_to_verify = os.path.join(root, name);
+                        file_to_verify = os.path.join(root, name)
                         logger.debug("Verifying '%s'", file_to_verify)
                         actual_hash_value = hash_file(file_to_verify)
                         expected_hash_value = '{}{}{}'.format(reldirname[0], reldirname[1], name)
@@ -99,12 +105,12 @@ class MediaDatabase(object):
         
         for name in sorted(results.keys()):
             if results[name]['status'] != 'OK':
-                logger.error("Mismatching hash for file %s%s", (reldirname, name))
+                logger.error("Mismatching hash for file %s%s", reldirname, name)
             
         if changed:
-            self._flush_verification_status(jsonfile, results)
+            self._flush_verification_status(jsonfilepath, results)
 
-    def verify_files(self):
+    def verify_files(self, force):
         for start_hash in range(0x0000, 0xffff):
             sys.stdout.write("%d%% \r" % (start_hash*100>>16) )
             sys.stdout.flush()            
@@ -113,7 +119,7 @@ class MediaDatabase(object):
             mediaabsdirname = os.path.join(self.ROOT_PATH, *reldirname)
             if os.path.isdir(mediaabsdirname):
                 logger.debug('Verifying files in %s', mediaabsdirname)
-                self._verify_files_in_dir(reldirname, mediaabsdirname)
+                self._verify_files_in_dir(reldirname, mediaabsdirname, force)
 
     def import_file(self, srcfullpath, reldirname, reflink):
         mediaabsdirname = os.path.join(self.ROOT_PATH, *reldirname[:-1])
