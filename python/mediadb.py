@@ -5,6 +5,7 @@ import json
 import logging
 import os
 import subprocess
+import sys
 
 from address import shard, hash_file
 
@@ -96,11 +97,17 @@ class MediaDatabase(object):
                         else:
                             logger.info("OK - %s", actual_hash_value)
         
+        for name in sorted(results.keys()):
+            if results[name]['status'] != 'OK':
+                logger.error("Mismatching hash for file %s%s", (reldirname, name))
+            
         if changed:
             self._flush_verification_status(jsonfile, results)
 
     def verify_files(self):
         for start_hash in range(0x0000, 0xffff):
+            sys.stdout.write("%d%% \r" % (start_hash*100>>16) )
+            sys.stdout.flush()            
             hash_value = '{:04x}'.format(start_hash)
             reldirname = shard(hash_value, 2, 2)
             mediaabsdirname = os.path.join(self.ROOT_PATH, *reldirname)

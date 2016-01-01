@@ -7,7 +7,7 @@ logger = logging.getLogger('funani')
 
 def parse_config(args):
     config = configparser.ConfigParser()
-    cfg_file = 'funani.cfg'
+    cfg_file = args.config
     config.read(cfg_file)
     logger.debug("Read configuration file '%s'", cfg_file)
     return config

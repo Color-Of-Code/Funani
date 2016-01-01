@@ -2,8 +2,7 @@
 
 import argparse
 
-# TODO: argument for config file
-# TODO: export function
+# TODO: implement export function
 # TODO: meta datacheck
 
 def parse_args():
@@ -16,6 +15,11 @@ def parse_args():
         choices=['error', 'warning', 'info', 'debug'],
         help='Set the log level'
         )
+    parser.add_argument(
+        '--config',
+        default='funani.cfg',
+        help='specify the database configuration file'
+        )
     subparsers = parser.add_subparsers(
         dest='command',
         help='sub-command help'
@@ -26,7 +30,6 @@ def parse_args():
         'import',
         help='import files or directories'
         )
-
     parser_import.add_argument(
         '--reflink',
         action='store_true',
@@ -42,6 +45,33 @@ def parse_args():
         nargs='*',
         metavar='FILE',
         help='Files (and/or directories in recursive mode) to import in DB'
+        )
+
+    # export
+    parser_export = subparsers.add_parser(
+        'export',
+        help='export files or directories'
+        )
+    parser_export.add_argument(
+        '--reflink',
+        action='store_true',
+        help='Use speed optimized reflink copies for Btrfs'
+        )
+    parser_export.add_argument(
+        '--recursive',
+        action='store_true',
+        help='Export directory contents recursively'
+        )
+    parser_export.add_argument(
+        'destination',
+        metavar='DIR',
+        help='Destination directory, where the exported files will be copied into'
+        )
+    parser_export.add_argument(
+        'file',
+        nargs='*',
+        metavar='FILE',
+        help='Files (and/or directories in recursive mode) to export from DB'
         )
 
     # meta
@@ -76,6 +106,11 @@ def parse_args():
     parser_verify = subparsers.add_parser(
         'verify',
         help='verify integrity of the data in DB'
+        )
+    parser_verify.add_argument(
+        '--force',
+        action='store_true',
+        help='Force verification even for recently verified files (slow)'
         )
 
     return parser.parse_args()
