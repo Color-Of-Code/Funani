@@ -8,21 +8,37 @@ Wiki
 
 http://www.color-of-code.de/wiki/product:funani:start
 
+Modules
+-------
+
+- python/core: the low-level storage interface (usable)
+- python/rest: a RESTful API for accessing the data and metadata (todo)
+- python/web: a Web front end for end users (todo)
+
 Dependencies
 ------------
 
-Build:
+- all: python 3
+- python/core: Pillow
+- python/rest: eve, mongodb
+- python/web: angularjs, Flask, Nodejs, Bower
 
- The Build dependencies are solved using NuGet (integrated in both SharpDevelop & Visual Studio)
- * Catel: The software is based on the MVVM Catel framework.
- * MongoDB: The C# driver and the fluent extensions
+Runtime
+-------
 
-Runtime:
+The core library has no service dependencies, the data and metadata is stored in files.
 
-The MongoDB has to be downloaded and unpacked somewhere on your system. MongoDB can be downloaded here:
+The REST api server depends on a running mongodb server.
+
+The web fron end depends on a running REST api server.
+
+
+Installation
+------------
+
+The MongoDB has to be installed your system. MongoDB can be downloaded here:
 
 - http://www.mongodb.org/downloads
-
 
 Notes
 -----
