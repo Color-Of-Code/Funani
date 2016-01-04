@@ -64,6 +64,7 @@ class MediaDatabase(object):
             if lastcheck:
                 lastts = lastcheck['checked']
                 delta = datetime.now() - datetime.strptime(lastts, "%Y-%m-%dT%H:%M:%S.%f")
+                #TODO: make these 60 configurable (via config file verify-limit option)
                 if delta.days < 60:
                     recheck = False
                     logger.debug('... skipping because was done already %i days ago',
@@ -111,6 +112,8 @@ class MediaDatabase(object):
             self._flush_verification_status(jsonfilepath, results)
 
     def verify_files(self, force):
+        # TODO: randomize the order of processing so that for lengthy
+        # operations all files have a change to be checked        
         for start_hash in range(0x0000, 0xffff):
             sys.stdout.write("%d%% \r" % (start_hash*100>>16) )
             sys.stdout.flush()            
