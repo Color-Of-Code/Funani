@@ -24,8 +24,8 @@ angular.module('signup', ['base64','ngRoute'])
         	$http.defaults.headers.common.Pragma = "no-cache";
         	$http.defaults.headers.common['Authorization'] = 'Basic '+authdata;
         
-    	$http({method: 'GET', cache: false, url: 'http://127.0.0.1:5000/user/'+ username}).
-               success(function(data, status, headers, config) {
+    	$http({method: 'GET', cache: false, url: 'http://127.0.0.1:5000/accounts/'+ username}).
+                success(function(data, status, headers, config) {
             		console.log(data);
                 }).
                 error(function(data, status, headers, config) {
