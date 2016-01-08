@@ -19,5 +19,6 @@ FILE_SCHEMA = {
 FILE_ENDPOINT = {
     'item_title': 'file',
     'schema': FILE_SCHEMA,
-    'resource_methods': ['GET', 'POST', 'DELETE'],
+    'resource_methods': ['GET', 'POST'],
+    'item_methods': ['GET', 'PUT'],
 }
