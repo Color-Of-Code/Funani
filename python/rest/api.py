@@ -14,7 +14,7 @@ from werkzeug.security import check_password_hash
 class Authenticate(BasicAuth):
     def check_auth(self, username, password, allowed_roles,
                    resource, method):
-        print("check auth: username=", username)
+        #print("check auth: username=", username)
         if username == 'admin' and password == 'funani':
             return True
         # use Eve's own db driver; no additional connections/resources are used

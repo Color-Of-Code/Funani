@@ -14,7 +14,7 @@ PATH_SCHEMA = {
         'required': True,
         },
     'mtime': {
-        'type': 'integer',
+        'type': 'datetime',
         'required': True,
         },
     'size': {

@@ -51,6 +51,44 @@ def import_file_data(lines):
         r = r.json()
 
     return r;
+    
+def import_paths_data(lines):
+    sha1 = None
+    size = None
+    paths = []
+    for line in lines:
+        if line.startswith('sha1='):
+            sha1 = line[5:]
+        if line.startswith('size='):
+            size = int(line[5:])
+        if line.startswith('src='):
+            src = line[4:]
+            mtime = src[:19]
+            mtime = mtime.replace(' ', 'T')
+            path = src[20:]
+            paths.append((mtime, path))
+            # 'root':   'path':    'mtime':
+    for p in paths:
+        # size mtime path
+        r = requests.get(URIBASE + 'paths?where={'+
+            '"size": ' + str(size) + ', '+
+            '"path": "' + p[1] + '", '+
+            '"mtime": "' + p[0] + '" }')
+        print(r.url)
+        r = r.json()
+        r = r['_items']
+        if not r:
+            print("no item found, put")
+            payload = {
+                    'sha1': sha1,
+                    'size': size,
+                    'root': 'TODO',
+                    'mtime': p[0],
+                    'path': p[1],
+                }
+            r = requests.post(URIBASE + 'paths', json = payload)
+            r = r.json()
+    print(paths)
 
 def import_metadata_file(metapath):
     sha1 = ''.join(metapath.split('/')[-3:])
@@ -60,6 +98,8 @@ def import_metadata_file(metapath):
 
     filerecord = import_file_data(lines)
     print(filerecord)
+    pathdata = import_paths_data(lines)
+    print(pathdata)
 
 def parse_args():
     # setting up the command line options parser

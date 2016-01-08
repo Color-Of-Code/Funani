@@ -16,6 +16,8 @@ MONGO_DBNAME = os.environ.get('MONGO_DBNAME', 'funani')
 RESOURCE_METHODS = ['GET', 'POST']
 ITEM_METHODS = ['GET', 'PATCH']
 
+DATE_FORMAT = "%Y-%m-%dT%H:%M:%S"
+
 CACHE_CONTROL = 'max-age=20'
 CACHE_EXPIRES = 20
 
