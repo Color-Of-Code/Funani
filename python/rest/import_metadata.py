@@ -91,7 +91,7 @@ def import_paths_data(lines):
     print(paths)
 
 def import_metadata_file(metapath):
-    sha1 = ''.join(metapath.split('/')[-3:])
+    sha1 = ''.join(metapath.split(os.sep)[-3:])
     lines = _read_meta(metapath)
     lines.insert(0, 'sha1={}'.format(sha1))
     print(lines)
