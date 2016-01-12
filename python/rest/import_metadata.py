@@ -74,11 +74,10 @@ def import_paths_data(lines):
             '"size": ' + str(size) + ', '+
             '"path": "' + p[1] + '", '+
             '"mtime": "' + p[0] + '" }')
-        print(r.url)
         r = r.json()
         r = r['_items']
         if not r:
-            print("no item found, put")
+            print("no item found, adding", p)
             payload = {
                     'sha1': sha1,
                     'size': size,
@@ -88,7 +87,6 @@ def import_paths_data(lines):
                 }
             r = requests.post(URIBASE + 'paths', json = payload)
             r = r.json()
-    print(paths)
 
 def import_metadata_file(metapath):
     sha1 = ''.join(metapath.split(os.sep)[-3:])
@@ -97,9 +95,9 @@ def import_metadata_file(metapath):
     print(lines)
 
     filerecord = import_file_data(lines)
-    print(filerecord)
+    #print(filerecord)
     pathdata = import_paths_data(lines)
-    print(pathdata)
+    #print(pathdata)
 
 def parse_args():
     # setting up the command line options parser
