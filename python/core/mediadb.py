@@ -42,9 +42,11 @@ def _copy_stdfs(src, dst):
 class MediaDatabase(object):
 
     ROOT_PATH = ''
+    AUTO_REFLINK_ROOT = ''
 
-    def __init__(self, root):
+    def __init__(self, root, reflink_root):
         self.ROOT_PATH = os.path.join(root, '.media')
+        self.AUTO_REFLINK_ROOT = reflink_root
         os.makedirs(self.ROOT_PATH, dmode, True)
         logger.debug("Initialized media database at '%s'", self.ROOT_PATH)
 
@@ -128,6 +130,9 @@ class MediaDatabase(object):
         mediaabsdirname = os.path.join(self.ROOT_PATH, *reldirname[:-1])
         mediafullpath = os.path.join(mediaabsdirname, reldirname[-1])
         os.makedirs(mediaabsdirname, dmode, True)
+        # automatically use reflink if the root path is the same as specified
+        if self.AUTO_REFLINK_ROOT and srcfullpath.startswith(self.AUTO_REFLINK_ROOT):
+            reflink = True
         if reflink:
             return _copy_btrfs(srcfullpath, mediafullpath)
         else:

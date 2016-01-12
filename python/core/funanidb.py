@@ -24,7 +24,7 @@ class FunaniDatabase(object):
     def __init__(self, section):
         self.ROOT_PATH = section['path']
         self.metadata_db = MetadataDatabase(self.ROOT_PATH)
-        self.media_db = MediaDatabase(self.ROOT_PATH)
+        self.media_db = MediaDatabase(self.ROOT_PATH, section['auto-reflink'])
         logger.debug("Initialized database at '%s'", self.ROOT_PATH)
 
     def __str__(self):

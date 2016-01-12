@@ -12,3 +12,7 @@ metadb = funani_meta.db
 # Below this limit verification is skipped unless --force is
 # used
 verify-limit = 60
+
+# automatically use reflinks for paths beginning with
+auto-reflink = /home/data
+
