@@ -23,10 +23,26 @@ Dependencies
 - python/rest: eve, mongodb
 - python/web: angularjs, Flask, Nodejs, Bower
 
+
 Runtime
 -------
 
 The core library has no service dependencies, the data and metadata is stored in files.
+
+Examples of use:
+
+1) Importing using find (allows to use find options to filter the files based on conditions):
+
+  find /home/data/family/common/Pictures/ -type f  -exec ./funani.py --loglevel info import "{}" \;
+
+2) Importing using internal recursion feature:
+
+  ./funani.py --loglevel info import --recursive /home/data/family/common/Pictures/
+
+3) Importing a single file:
+
+  ./funani.py --loglevel info import /home/data/family/common/Pictures/picture1.jpg
+
 
 The REST api server depends on a running mongodb server.
 
@@ -47,4 +63,5 @@ JSON field deletion find, unset
 
 - { field: { $exists: true } }
 - { $unset: { field: 1 } }
+
 
