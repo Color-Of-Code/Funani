@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from datetime import datetime
+from random import shuffle
 import json
 import logging
 import os
@@ -117,11 +118,16 @@ class MediaDatabase(object):
             self._flush_verification_status(jsonfilepath, results)
 
     def verify_files(self, force):
-        # TODO: randomize the order of processing so that for lengthy
-        # operations all files have a change to be checked        
-        for start_hash in range(0x0000, 0xffff):
-            sys.stdout.write("%d%% \r" % (start_hash*100>>16) )
+        # randomize the order of processing so that for lengthy
+        # operations all files have a change to be checked if process has
+        # to be aborted and is restarted later
+        parentdirs = list(range(0x0000, 0xffff))
+        shuffle(parentdirs)
+        index = 0
+        for start_hash in parentdirs:
+            sys.stdout.write("%d%% \r" % (index*100>>16) )
             sys.stdout.flush()            
+            index = index + 1
             hash_value = '{:04x}'.format(start_hash)
             reldirname = shard(hash_value, 2, 2)
             mediaabsdirname = os.path.join(self.ROOT_PATH, *reldirname)
