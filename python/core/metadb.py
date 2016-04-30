@@ -106,7 +106,7 @@ class MetadataDatabase(object):
         srcsize = os.path.getsize(src)
         dstsize = os.path.getsize(dst)
         if srcsize != dstsize:
-            raise Exception("File size mismatch!")
+            raise Exception("File size mismatch! (src:{} / dst:{})".format(src, dst))
 
 
         ts = os.path.getmtime(src)

@@ -57,10 +57,13 @@ class MediaDatabase(object):
         with open(jsonfilepath, 'w') as jsonfile:
             json.dump(results, jsonfile)
 
+    # Determine if we have to recheck the file
     def _get_recheck_flag(self, force, results, name):
         if force:
+            # in this case, always do so
             return True
-        recheck = False
+        # assume we have to by default
+        recheck = True
         if name in results:
             lastcheck = results[name]
             if lastcheck:
