@@ -60,16 +60,19 @@ def _handle_exif(lines, image, metapath):
                         _check_add_line(lines, "exif:FNumber={}/{}".format(*value))
 
                     if tag == 34853 and value: # GPSInfo
-                        gps_latitude = _convert_to_degrees(value[2])
-                        gps_latitude_ref = value[1]
-                        _check_add_line(lines, "exif:GPSLatitude={}{}".format(gps_latitude, gps_latitude_ref))
-                        gps_longitude = _convert_to_degrees(value[4])
-                        gps_longitude_ref = value[3]
-                        _check_add_line(lines, "exif:GPSLongitude={}{}".format(gps_longitude, gps_longitude_ref))
-                        gps_altitude = round(float(value[6][0]) / float(value[6][1]))
-                        if value[5] != b'\x00':
-                            gps_altitude = -gps_altitude
-                        _check_add_line(lines, "exif:GPSAltitude={}".format(gps_altitude))
+                        if 2 in value: # not all devices provide latitude
+                            gps_latitude = _convert_to_degrees(value[2])
+                            gps_latitude_ref = value[1]
+                            _check_add_line(lines, "exif:GPSLatitude={}{}".format(gps_latitude, gps_latitude_ref))
+                        if 4 in value: # not all devices provide longitude
+                            gps_longitude = _convert_to_degrees(value[4])
+                            gps_longitude_ref = value[3]
+                            _check_add_line(lines, "exif:GPSLongitude={}{}".format(gps_longitude, gps_longitude_ref))
+                        if 6 in value: # not all devices provide altitude
+                            gps_altitude = round(float(value[6][0]) / float(value[6][1]))
+                            if value[5] != b'\x00':
+                                gps_altitude = -gps_altitude
+                            _check_add_line(lines, "exif:GPSAltitude={}".format(gps_altitude))
 
                     #if tag not in [271, 272, 274, 33434, 33437, 36867, 36868, 37382, 37385, 37386, 41483]:
                     #    decoded = PIL.ExifTags.TAGS.get(tag, tag)
