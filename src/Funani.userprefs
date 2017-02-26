@@ -1,9 +1,10 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="../../../../../../data/projects/Funani/git/src/Funani.Thumbnailer/Thumbnail.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="../../../../../../../usr/lib/mono/4.5/Microsoft.Common.targets">
     <Files>
       <File FileName="../../../../../../data/projects/Funani/git/src/Funani.Thumbnailer/Thumbnail.cs" Line="23" Column="23" />
-      <File FileName="../../../../../../data/projects/Funani/git/src/Funani.MetadataExtractor/Metadata.cs" Line="19" Column="19" />
+      <File FileName="../../../../../../data/projects/Funani/git/src/Funani.MetadataExtractor/Metadata.cs" Line="1" Column="1" />
+      <File FileName="../../../../../../../usr/lib/mono/4.5/Microsoft.Common.targets" Line="1" Column="1" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

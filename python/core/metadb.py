@@ -22,6 +22,13 @@ def _check_add_line(lines, line):
         lines.append(line) 
         #print("..Adding to metadata: ", line)
 
+def _convert_to_degrees(value):
+    get_float = lambda x: float(x[0]) / float(x[1])
+    d = get_float(value[0])
+    m = get_float(value[1])
+    s = get_float(value[2])
+    return round(d + (m / 60.0) + (s / 3600.0), 6)
+
 def _handle_exif(lines, im):
     try:
         exif = im._getexif()
@@ -51,10 +58,23 @@ def _handle_exif(lines, im):
                     if tag == 33437: # FNumber
                         _check_add_line(lines, "exif:FNumber={}/{}".format(*value))
 
+                    if tag == 34853: # GPSInfo
+                        gps_latitude = _convert_to_degrees(value[2])
+                        gps_latitude_ref = value[1]
+                        _check_add_line(lines, "exif:GPSLatitude={}{}".format(gps_latitude, gps_latitude_ref))
+                        gps_longitude = _convert_to_degrees(value[4])
+                        gps_longitude_ref = value[3]
+                        _check_add_line(lines, "exif:GPSLongitude={}{}".format(gps_longitude, gps_longitude_ref))
+                        gps_altitude = round(float(value[6][0]) / float(value[6][1]))
+                        if value[5] != b'\x00':
+                            gps_altitude = -gps_altitude
+                        _check_add_line(lines, "exif:GPSAltitude={}".format(gps_altitude))
+
                     #if tag not in [271, 272, 274, 33434, 33437, 36867, 36868, 37382, 37385, 37386, 41483]:
                     #    decoded = PIL.ExifTags.TAGS.get(tag, tag)
                     #    print('tag=', tag, " decoded=", decoded, '->', value)
     except Exception as error:
+        print("Exception: {}".format(error))
         _check_add_line(lines, "exif:__exception__=could not parse exif")
 
 class MetadataDatabase(object):
@@ -95,7 +115,6 @@ class MetadataDatabase(object):
                 lines = f.read().splitlines()
         return lines
 
-    
     # Format of the metadata file:
     # items are added if missing
     # src=<source path>
