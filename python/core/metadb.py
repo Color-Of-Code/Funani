@@ -4,6 +4,7 @@ from datetime import datetime
 import logging
 import os
 import subprocess
+import traceback
 from PIL import Image
 import PIL.ExifTags
 from address import shard
@@ -19,7 +20,7 @@ dmode = 0o700   # default directory creation mode
 
 def _check_add_line(lines, line):
     if line not in lines:
-        lines.append(line) 
+        lines.append(line)
         #print("..Adding to metadata: ", line)
 
 def _convert_to_degrees(value):
@@ -29,9 +30,9 @@ def _convert_to_degrees(value):
     s = get_float(value[2])
     return round(d + (m / 60.0) + (s / 3600.0), 6)
 
-def _handle_exif(lines, im):
+def _handle_exif(lines, image, metapath):
     try:
-        exif = im._getexif()
+        exif = image._getexif()
         if exif:
             for tag, value in exif.items():
                 if tag not in [37500, 50341, 37510, 282, 283, 40961, 296, 531]:
@@ -58,7 +59,7 @@ def _handle_exif(lines, im):
                     if tag == 33437: # FNumber
                         _check_add_line(lines, "exif:FNumber={}/{}".format(*value))
 
-                    if tag == 34853: # GPSInfo
+                    if tag == 34853 and value: # GPSInfo
                         gps_latitude = _convert_to_degrees(value[2])
                         gps_latitude_ref = value[1]
                         _check_add_line(lines, "exif:GPSLatitude={}{}".format(gps_latitude, gps_latitude_ref))
@@ -74,7 +75,8 @@ def _handle_exif(lines, im):
                     #    decoded = PIL.ExifTags.TAGS.get(tag, tag)
                     #    print('tag=', tag, " decoded=", decoded, '->', value)
     except Exception as error:
-        print("Exception: {}".format(error))
+        print("Exception: '{}', {}".format(metapath, error))
+        traceback.print_exc()
         _check_add_line(lines, "exif:__exception__=could not parse exif")
 
 class MetadataDatabase(object):
@@ -148,12 +150,12 @@ class MetadataDatabase(object):
                 pass
             else:
                 try:
-                    im = Image.open(dst)
-                    w = im.size[0]
-                    h = im.size[1]
+                    image = Image.open(dst)
+                    w = image.size[0]
+                    h = image.size[1]
                     _check_add_line(lines, "image-width={}".format(w))
                     _check_add_line(lines, "image-height={}".format(h))
-                    _handle_exif(lines, im)
+                    _handle_exif(lines, image, metapath)
                 except Exception as error:
                     logger.error("Could not use PIL to get metadata for file mime='%s' file='%s' (%s)", mime, metapath, error)
 

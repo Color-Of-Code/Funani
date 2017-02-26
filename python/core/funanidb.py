@@ -20,7 +20,7 @@ class FunaniDatabase(object):
     ROOT_PATH = ''
     metadata_db = None
     media_db = None
-    
+
     def __init__(self, section):
         self.ROOT_PATH = section['path']
         self.metadata_db = MetadataDatabase(self.ROOT_PATH)
@@ -75,7 +75,7 @@ class FunaniDatabase(object):
     def import_file(self, src, reflink):
         srcfullpath = os.path.abspath(src)
         srcfullpath = os.path.realpath(srcfullpath)
-        
+
         # compute the hash and relative path to the file
         hash_value = hash_file(srcfullpath)
         reldirname = shard(hash_value, 2, 2)
