@@ -125,7 +125,7 @@ class MediaDatabase(object):
         shuffle(parentdirs)
         index = 0
         for start_hash in parentdirs:
-            sys.stdout.write("%d%% \r" % (index*100>>16) )
+            sys.stdout.write("%d%% (%d) \r" % (index*100>>16, index) )
             sys.stdout.flush()            
             index = index + 1
             hash_value = '{:04x}'.format(start_hash)
