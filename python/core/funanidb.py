@@ -30,12 +30,18 @@ class FunaniDatabase(object):
     def __str__(self):
         return 'FUNANIDB:{}'.format(self.ROOT_PATH)
 
-    def verify_files(self, force):
-        self.media_db.verify_files(force)
+    def verify_files(self, force, metadata):
+        if metadata:
+            # TODO: check the metadata & SQL DB
+            pass
+        else:
+            # verify the files (data scrubbing)
+            self.media_db.verify_files(force)
 
     def meta_get(self, hash_values, fixdb):
         for hash_value in hash_values:
             self.metadata_db.dump(hash_value)
+        # TODO: check & upload the metadata in the SQL db too
 
     def check_file(self, file_path):
         srcfullpath = os.path.abspath(file_path)

@@ -109,11 +109,11 @@ class MediaDatabase(object):
                             logger.error("Mismatching hash for file %s", file_to_verify)
                         else:
                             logger.info("OK - %s", actual_hash_value)
-        
+
         for name in sorted(results.keys()):
             if results[name]['status'] != 'OK':
                 logger.error("Mismatching hash for file %s%s", reldirname, name)
-            
+
         if changed:
             self._flush_verification_status(jsonfilepath, results)
 
@@ -125,8 +125,8 @@ class MediaDatabase(object):
         shuffle(parentdirs)
         index = 0
         for start_hash in parentdirs:
-            sys.stdout.write("%d%% (%d) \r" % (index*100>>16, index) )
-            sys.stdout.flush()            
+            sys.stdout.write("%d%% (%d) \r" % (index*100>>16, index))
+            sys.stdout.flush()
             index = index + 1
             hash_value = '{:04x}'.format(start_hash)
             reldirname = shard(hash_value, 2, 2)

@@ -2,7 +2,7 @@
 
 import argparse
 
-#TODO: implement export function
+# TODO: implement export function
 # TODO: meta datacheck
 
 def parse_args():
@@ -111,6 +111,11 @@ def parse_args():
         '--force',
         action='store_true',
         help='Force verification even for recently verified files (slow)'
+        )
+    parser_verify.add_argument(
+        '--metadata',
+        action='store_true',
+        help='Start verification of the metadata (compare file to SQL DB)'
         )
 
     return parser.parse_args()

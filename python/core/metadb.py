@@ -25,10 +25,10 @@ def _check_add_line(lines, line):
 
 def _convert_to_degrees(value):
     get_float = lambda x: float(x[0]) / float(x[1])
-    d = get_float(value[0])
-    m = get_float(value[1])
-    s = get_float(value[2])
-    return round(d + (m / 60.0) + (s / 3600.0), 6)
+    degrees = get_float(value[0])
+    minutes = get_float(value[1])
+    seconds = get_float(value[2])
+    return round(degrees + (minutes / 60.0) + (seconds / 3600.0), 6)
 
 def _handle_exif(lines, image, metapath):
     try:
@@ -133,8 +133,8 @@ class MetadataDatabase(object):
             raise Exception("File size mismatch! (src:{} / dst:{})".format(src, dst))
 
 
-        ts = os.path.getmtime(src)
-        ts_iso = datetime.fromtimestamp(ts)
+        timestamp = os.path.getmtime(src)
+        ts_iso = datetime.fromtimestamp(timestamp)
         srcline = "src={}:{}".format(ts_iso.strftime('%Y-%m-%d %H:%M:%S'), src)
         _check_add_line(lines, srcline)
 
@@ -154,10 +154,10 @@ class MetadataDatabase(object):
             else:
                 try:
                     image = Image.open(dst)
-                    w = image.size[0]
-                    h = image.size[1]
-                    _check_add_line(lines, "image-width={}".format(w))
-                    _check_add_line(lines, "image-height={}".format(h))
+                    image_width = image.size[0]
+                    image_height = image.size[1]
+                    _check_add_line(lines, "image-width={}".format(image_width))
+                    _check_add_line(lines, "image-height={}".format(image_height))
                     _handle_exif(lines, image, metapath)
                 except Exception as error:
                     logger.error("Could not use PIL to get metadata for file mime='%s' file='%s' (%s)", mime, metapath, error)
@@ -171,4 +171,5 @@ class MetadataDatabase(object):
                 #print(content)
                 f.write(content)
             logger.info("Updated metadata for '%s'", src)
+            # TODO: also upload to the SQL DB!
 
