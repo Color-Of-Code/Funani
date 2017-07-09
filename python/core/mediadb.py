@@ -10,9 +10,9 @@ import sys
 
 from address import shard, hash_file
 
-logger = logging.getLogger('mediadb')
-dmode = 0o700   # default directory creation mode
-fmode = 0o400   # default file creation mode
+LOGGER = logging.getLogger('mediadb')
+DMODE = 0o700   # default directory creation mode
+FMODE = 0o400   # default file creation mode
 
 # Only copy file if it doesn't already exist.
 def _copy_btrfs(src, dst):
@@ -22,7 +22,7 @@ def _copy_btrfs(src, dst):
         #subprocess.run(["cp", "--reflink=always", src, dst], check=True)
         subprocess.check_call(["/bin/cp", "--reflink=always", src, dst])
         subprocess.check_call(["/bin/chmod", "400", dst])
-        logger.info("--> Imported '%s'", src)
+        LOGGER.info("--> Imported '%s'", src)
     else:
         is_duplicate = True
 
@@ -33,7 +33,7 @@ def _copy_stdfs(src, dst):
         is_duplicate = False
         subprocess.check_call(["/bin/cp", src, dst])
         subprocess.check_call(["/bin/chmod", "400", dst])
-        logger.info("--> Imported '%s'", src)
+        LOGGER.info("--> Imported '%s'", src)
     else:
         is_duplicate = True
 
@@ -48,8 +48,8 @@ class MediaDatabase(object):
     def __init__(self, root, reflink_root):
         self.ROOT_PATH = os.path.join(root, '.media')
         self.AUTO_REFLINK_ROOT = reflink_root
-        os.makedirs(self.ROOT_PATH, dmode, True)
-        logger.debug("Initialized media database at '%s'", self.ROOT_PATH)
+        os.makedirs(self.ROOT_PATH, DMODE, True)
+        LOGGER.debug("Initialized media database at '%s'", self.ROOT_PATH)
 
     def __str__(self):
         return 'MEDIADB:{}'.format(self.ROOT_PATH)
@@ -73,7 +73,7 @@ class MediaDatabase(object):
                 #TODO: make these 60 configurable (via config file verify-limit option)
                 if delta.days < 60:
                     recheck = False
-                    logger.debug('... skipping because was done already %i days ago',
+                    LOGGER.debug('... skipping because was done already %i days ago',
                                  delta.days)
         return recheck
 
@@ -83,7 +83,7 @@ class MediaDatabase(object):
         results = {}
         jsonfilepath = os.path.join(mediaabsdirname, 'verify.json')
         if os.path.isfile(jsonfilepath):
-            logger.debug('Reading %s', jsonfilepath)
+            LOGGER.debug('Reading %s', jsonfilepath)
             with open(jsonfilepath, 'r') as jsonfile:
                 results = json.load(jsonfile)
                 #print(results)
@@ -96,7 +96,7 @@ class MediaDatabase(object):
                     recheck = self._get_recheck_flag(force, results, name)
                     if recheck:
                         file_to_verify = os.path.join(root, name)
-                        logger.debug("Verifying '%s'", file_to_verify)
+                        LOGGER.debug("Verifying '%s'", file_to_verify)
                         actual_hash_value = hash_file(file_to_verify)
                         expected_hash_value = '{}{}{}'.format(reldirname[0], reldirname[1], name)
                         status = 'OK' if expected_hash_value == actual_hash_value else 'FAILED'
@@ -106,13 +106,13 @@ class MediaDatabase(object):
                         results[name]['status'] = status
                         results[name]['checked'] = timestamp
                         if status != 'OK':
-                            logger.error("Mismatching hash for file %s", file_to_verify)
+                            LOGGER.error("Mismatching hash for file %s", file_to_verify)
                         else:
-                            logger.info("OK - %s", actual_hash_value)
+                            LOGGER.info("OK - %s", actual_hash_value)
 
         for name in sorted(results.keys()):
             if results[name]['status'] != 'OK':
-                logger.error("Mismatching hash for file %s%s", reldirname, name)
+                LOGGER.error("Mismatching hash for file %s%s", reldirname, name)
 
         if changed:
             self._flush_verification_status(jsonfilepath, results)
@@ -132,13 +132,13 @@ class MediaDatabase(object):
             reldirname = shard(hash_value, 2, 2)
             mediaabsdirname = os.path.join(self.ROOT_PATH, *reldirname)
             if os.path.isdir(mediaabsdirname):
-                logger.debug('Verifying files in %s', mediaabsdirname)
+                LOGGER.debug('Verifying files in %s', mediaabsdirname)
                 self._verify_files_in_dir(reldirname, mediaabsdirname, force)
 
     def import_file(self, srcfullpath, reldirname, reflink):
         mediaabsdirname = os.path.join(self.ROOT_PATH, *reldirname[:-1])
         mediafullpath = os.path.join(mediaabsdirname, reldirname[-1])
-        os.makedirs(mediaabsdirname, dmode, True)
+        os.makedirs(mediaabsdirname, DMODE, True)
         # automatically use reflink if the root path is the same as specified
         if self.AUTO_REFLINK_ROOT and srcfullpath.startswith(self.AUTO_REFLINK_ROOT):
             reflink = True

@@ -6,14 +6,17 @@ from metadb import MetadataDatabase
 from mediadb import MediaDatabase
 from address import hash_file, shard
 
-logger = logging.getLogger('funanidb')
+LOGGER = logging.getLogger('funanidb')
 
-extensions_images = ('.jpg', '.jpeg', '.png', '.tif', '.tiff', '.pnm', '.cr2', '.bmp', '.xcf', '.gif')
-extensions_videos = ('.mp4', '.mov', '.avi', '.mpg', '.3gp')
-extensions_all = extensions_images + extensions_videos
+EXTENSIONS_IMAGES = (
+    '.jpg', '.jpeg', '.png',
+    '.tif', '.tiff', '.pnm', '.cr2', '.bmp',
+    '.xcf', '.gif')
+EXTENSIONS_VIDEOS = ('.mp4', '.mov', '.avi', '.mpg', '.3gp')
+EXTENSIONS_ALL = EXTENSIONS_IMAGES + EXTENSIONS_VIDEOS
 
 # extensions to use below
-extensions = extensions_all
+EXTENSIONS = EXTENSIONS_ALL
 
 class FunaniDatabase(object):
 
@@ -25,7 +28,7 @@ class FunaniDatabase(object):
         self.ROOT_PATH = section['path']
         self.metadata_db = MetadataDatabase(self.ROOT_PATH)
         self.media_db = MediaDatabase(self.ROOT_PATH, section['auto-reflink'])
-        logger.debug("Initialized database at '%s'", self.ROOT_PATH)
+        LOGGER.debug("Initialized database at '%s'", self.ROOT_PATH)
 
     def __str__(self):
         return 'FUNANIDB:{}'.format(self.ROOT_PATH)
@@ -59,16 +62,16 @@ class FunaniDatabase(object):
         self.metadata_db.dump(hash_value)
 
     def _traverse(self, directory_path, reflink):
-        logger.info("recursing through '%s'", directory_path)
+        LOGGER.info("recursing through '%s'", directory_path)
         for root, dirs, files in os.walk(directory_path):
             for name in files:
-                if name.lower().endswith(extensions):
+                if name.lower().endswith(EXTENSIONS):
                     srcfullpath = os.path.join(root, name)
                     self.import_file(srcfullpath, reflink)
                 else:
-                    if not name.lower().endswith(extensions_all):
+                    if not name.lower().endswith(EXTENSIONS_ALL):
                         if name.lower() != 'thumbs.db': # avoid noise in output
-                            logger.warning("skipping '%s'", os.path.join(root, name))
+                            LOGGER.warning("skipping '%s'", os.path.join(root, name))
 
     def import_recursive(self, src, reflink):
         srcfullpath = os.path.abspath(src)
