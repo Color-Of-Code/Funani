@@ -12,7 +12,7 @@ EXTENSIONS_IMAGES = (
     '.jpg', '.jpeg', '.png',
     '.tif', '.tiff', '.pnm', '.cr2', '.bmp',
     '.xcf', '.gif')
-EXTENSIONS_VIDEOS = ('.mp4', '.mov', '.avi', '.mpg', '.3gp')
+EXTENSIONS_VIDEOS = ('.mts', '.mp4', '.mov', '.avi', '.mpg', '.3gp')
 EXTENSIONS_ALL = EXTENSIONS_IMAGES + EXTENSIONS_VIDEOS
 
 # extensions to use below
