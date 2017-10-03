@@ -13,11 +13,11 @@ EXTENSIONS_IMAGES = (
     '.tif', '.tiff', '.pnm', '.cr2', '.bmp',
     '.xcf', '.gif')
 EXTENSIONS_VIDEO = ('.mts', '.mp4', '.mov', '.avi', '.mpg', '.3gp')
-EXTENSIONS_AUDIO = ('.m4a', '.mp3')
+EXTENSIONS_AUDIO = ('.aac', '.m4a', '.mp3')
 EXTENSIONS_ALL = EXTENSIONS_IMAGES + EXTENSIONS_VIDEO + EXTENSIONS_AUDIO
 
-# extensions to use below
-EXTENSIONS = EXTENSIONS_ALL
+# Files to fully ignore during processing
+IGNORE_FILES = ('thumbs.db', '.nomedia')
 
 class FunaniDatabase(object):
 
@@ -66,13 +66,12 @@ class FunaniDatabase(object):
         LOGGER.info("recursing through '%s'", directory_path)
         for root, dirs, files in os.walk(directory_path):
             for name in files:
-                if name.lower().endswith(EXTENSIONS):
+                if name.lower().endswith(EXTENSIONS_ALL):
                     srcfullpath = os.path.join(root, name)
                     self.import_file(srcfullpath, reflink)
                 else:
-                    if not name.lower().endswith(EXTENSIONS_ALL):
-                        if name.lower() != 'thumbs.db': # avoid noise in output
-                            LOGGER.warning("skipping '%s'", os.path.join(root, name))
+                    if name.lower() not in (IGNORE_FILES): # avoid noise in output
+                        LOGGER.warning("skipping '%s'", os.path.join(root, name))
 
     def import_recursive(self, src, reflink):
         """Import media from a src directory recusively.

@@ -70,7 +70,7 @@ def _handle_exif(lines, image, metapath):
                             _check_add_line(lines, "exif:GPSLongitude={}{}".format(gps_longitude, gps_longitude_ref))
                         if 6 in value: # not all devices provide altitude
                             gps_altitude = round(float(value[6][0]) / float(value[6][1]))
-                            if value[5] != b'\x00':
+                            if 5 in value and value[5] != b'\x00':
                                 gps_altitude = -gps_altitude
                             _check_add_line(lines, "exif:GPSAltitude={}".format(gps_altitude))
 
