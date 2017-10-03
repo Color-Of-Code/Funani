@@ -12,8 +12,9 @@ EXTENSIONS_IMAGES = (
     '.jpg', '.jpeg', '.png',
     '.tif', '.tiff', '.pnm', '.cr2', '.bmp',
     '.xcf', '.gif')
-EXTENSIONS_VIDEOS = ('.mts', '.mp4', '.mov', '.avi', '.mpg', '.3gp')
-EXTENSIONS_ALL = EXTENSIONS_IMAGES + EXTENSIONS_VIDEOS
+EXTENSIONS_VIDEO = ('.mts', '.mp4', '.mov', '.avi', '.mpg', '.3gp')
+EXTENSIONS_AUDIO = ('.m4a', '.mp3')
+EXTENSIONS_ALL = EXTENSIONS_IMAGES + EXTENSIONS_VIDEO + EXTENSIONS_AUDIO
 
 # extensions to use below
 EXTENSIONS = EXTENSIONS_ALL
@@ -74,6 +75,15 @@ class FunaniDatabase(object):
                             LOGGER.warning("skipping '%s'", os.path.join(root, name))
 
     def import_recursive(self, src, reflink):
+        """Import media from a src directory recusively.
+
+        Args:
+            src (str): The path to import
+            reflink (bool): Use reflinks if the backend FS supports it
+
+        Returns:
+            Nothing.
+        """
         srcfullpath = os.path.abspath(src)
         srcfullpath = os.path.realpath(src)
         if os.path.isfile(srcfullpath):
@@ -82,6 +92,15 @@ class FunaniDatabase(object):
             self._traverse(srcfullpath, reflink)
 
     def import_file(self, src, reflink):
+        """Import a single media file.
+
+        Args:
+            src (str): The path to the file to import
+            reflink (bool): Use a reflink if the backend FS supports it
+
+        Returns:
+            Nothing.
+        """
         srcfullpath = os.path.abspath(src)
         srcfullpath = os.path.realpath(srcfullpath)
 
