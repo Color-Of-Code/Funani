@@ -4,6 +4,7 @@ bin
 *.Cache
 __pycache__
 *~
+/python/venv
 /src/*.suo
 /src/*.vsp
 /src/*.psess
