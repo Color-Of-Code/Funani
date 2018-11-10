@@ -13,7 +13,7 @@ EXTENSIONS_IMAGES = (
     '.tif', '.tiff', '.pnm', '.cr2', '.bmp',
     '.xcf', '.gif')
 EXTENSIONS_VIDEO = ('.mts', '.mp4', '.mov', '.avi', '.mpg', '.3gp')
-EXTENSIONS_AUDIO = ('.aac', '.m4a', '.mp3')
+EXTENSIONS_AUDIO = ('.aac', '.m4a', '.mp3', '.opus')
 EXTENSIONS_ALL = EXTENSIONS_IMAGES + EXTENSIONS_VIDEO + EXTENSIONS_AUDIO
 
 # Files to fully ignore during processing
