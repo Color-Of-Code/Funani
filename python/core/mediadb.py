@@ -84,16 +84,24 @@ class MediaDatabase(object):
         jsonfilepath = os.path.join(mediaabsdirname, 'verify.json')
         if os.path.isfile(jsonfilepath):
             LOGGER.debug('Reading %s', jsonfilepath)
-            with open(jsonfilepath, 'r') as jsonfile:
-                results = json.load(jsonfile)
-                #print(results)
+            try:
+                with open(jsonfilepath, 'r') as jsonfile:
+                    results = json.load(jsonfile)
+                    #print(results)
+            except:
+                LOGGER.error("Error during reading json file %s", jsonfilepath)
+                raise
         changed = False
         # go through all files in directory and check hash
         for root, dirs, files in os.walk(mediaabsdirname):
             del dirs[:] # we do not want to recurse
             for name in files:
                 if not name.lower().endswith('.json'):
-                    recheck = self._get_recheck_flag(force, results, name)
+                    try:
+                        recheck = self._get_recheck_flag(force, results, name)
+                    except:
+                        LOGGER.error("Error during _get_recheck_flag for file %s/%s", (root, name))
+                        raise
                     if recheck:
                         file_to_verify = os.path.join(root, name)
                         LOGGER.debug("Verifying '%s'", file_to_verify)
@@ -106,7 +114,7 @@ class MediaDatabase(object):
                         results[name]['status'] = status
                         results[name]['checked'] = timestamp
                         if status != 'OK':
-                            LOGGER.error("Mismatching hash for file %s", file_to_verify)
+                            LOGGER.error("Mismatching hash for file %s/%s",  (root, name))
                         else:
                             LOGGER.info("OK - %s", actual_hash_value)
 
