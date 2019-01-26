@@ -3,10 +3,10 @@ Funani
 
 FUNANI is an open source project aiming at solving the management of large image and other media collections in a practical way.
 
-Wiki
-----
+Documentation
+-------------
 
-http://www.color-of-code.de/wiki/product:funani:start
+https://color-of-code.de/funani/architecture
 
 Modules
 -------
