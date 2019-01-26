@@ -1,7 +1,7 @@
 LICENCE
 =======
 
-Copyright (c) 2008-2018, Jaap de Haan <jaap.dehaan@color-of-code.de>
+Copyright (c) 2008-2019, Jaap de Haan <jaap.dehaan@color-of-code.de>
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
