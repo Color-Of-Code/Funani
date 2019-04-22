@@ -1,26 +1,14 @@
-﻿using NUnit.Framework;
+using System;
+using Xunit;
 
 namespace Funani.Tests
 {
-    [TestFixture]
-    public class FileDetection
+    public class UnitTest1
     {
-        [OneTimeSetUp]
-        public void Init()
+        [Fact]
+        public void Test1()
         {
-            // TODO: Add Init code.
-        }
 
-        [OneTimeTearDown]
-        public void Dispose()
-        {
-            // TODO: Add tear down code.
-        }
-
-        [Test]
-        public void TestMethod()
-        {
-            // TODO: Add your test.
         }
     }
 }
