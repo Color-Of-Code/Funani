@@ -1,11 +1,12 @@
 ﻿
-using ImageProcessor;
-using ImageProcessor.Imaging.Formats;
 using System;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Net.Sockets;
+
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.Processing;
 
 namespace Funani.Thumbnailer
 {
@@ -14,23 +15,12 @@ namespace Funani.Thumbnailer
         public static void Create(Uri uri, String mime, int thumbnailSize, FileInfo destination)
         {
             // Format is automatically detected though can be changed.
-            ISupportedImageFormat format = new PngFormat { };
             Size size = new Size(thumbnailSize, thumbnailSize);
-            using (var inStream = File.OpenRead(uri.LocalPath))
+            using (var image = Image.Load(uri.LocalPath))
             {
-                using (var outStream = File.Create(destination.FullName))
-                {
-                    // Initialize the ImageFactory using the overload to preserve EXIF metadata.
-                    using (ImageFactory imageFactory = new ImageFactory(preserveExifData:true))
-                    {
-                        // Load, resize, set the format and quality and save an image.
-                        imageFactory.Load(inStream)
-                                    .Resize(size)
-                                    .Format(format)
-                                    .Save(outStream);
-                    }
-                    // Do something with the stream.
-                }
+                image.Mutate(x => x.Resize(size.Width, size.Height));
+                // Automatic encoder selected based on extension.
+                image.Save(destination.FullName);
             }
         }
 
