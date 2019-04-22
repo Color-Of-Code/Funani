@@ -26,7 +26,7 @@ namespace Funani.Metadata
             _listener = ServiceLocator.Default.ResolveType<IConsoleRedirect>();
         }
 
-        public MongoDatabase Funani
+        public IMongoDatabase Funani
         {
             get { return _funani; }
         }
@@ -40,17 +40,17 @@ namespace Funani.Metadata
         {
             get
             {
-                MongoCollection<BsonDocument> files = Funani.GetCollection("fileinfo");
-                return files.AsQueryable<FileInformation>();
+                return Funani.GetCollection<FileInformation>("fileinfo")
+                    .AsQueryable<FileInformation>();
             }
         }
 
-        public IQueryable<Tag> Tag
+        public IEnumerable<Funani.Api.Metadata.Tag> Tag
         {
             get
             {
-                MongoCollection<BsonDocument> tags = Funani.GetCollection("tag");
-                return tags.AsQueryable<Tag>();
+                return Funani.GetCollection<Funani.Api.Metadata.Tag>("tag")
+                    .AsQueryable<Funani.Api.Metadata.Tag>();
             }
         }
 
@@ -68,9 +68,8 @@ namespace Funani.Metadata
 
         private readonly String _pathToDatabase;
         private readonly String _pathToMongod;
-        private MongoDatabase _funani;
-        private MongoClient _mongoClient;
-        private MongoServer _mongoServer;
+        private IMongoDatabase _funani;
+        private IMongoClient _mongoClient;
         private Process _process;
 
         #endregion
@@ -97,44 +96,44 @@ namespace Funani.Metadata
 
         public FileInformation Retrieve(String hash, FileInfo file)
         {
-            MongoCollection<BsonDocument> files = Funani.GetCollection("fileinfo");
-            var info = files.FindOneByIdAs<FileInformation>(hash);
+            var files = Funani.GetCollection<FileInformation>("fileinfo");
+            FileInformation info = null; //TODO: repair: files.FindAsync<FileInformation>(hash).Result;
             if (info == null)
             {
                 info = new FileInformation(file);
-                files.Insert(info);
+                files.InsertOne(info);
             }
             else
             {
                 info.AddPath(file);
-                files.Save(info);
+                // TODO: files.Save(info);
             }
             return info;
         }
 
         public void RefreshMetadata(FileInformation fileinfo, FileInfo file)
         {
-            MongoCollection<BsonDocument> files = Funani.GetCollection("fileinfo");
+            var files = Funani.GetCollection<FileInformation>("fileinfo");
             fileinfo.RefreshMetadata(file);
-            files.Save(fileinfo);
+            // TODO: files.Save(fileinfo);
         }
 
         public IEnumerable<String> GetCollectionNames()
         {
-            return Funani.GetCollectionNames();
+            return Funani.ListCollections().ToList().Select(x => x["name"].AsString);
         }
 
         public DatabaseStatsResult GetStats()
         {
-            return Funani.GetStats();
+            return null; //TODO: Funani.GetStats();
         }
 
         public FileInformation Retrieve(FileInfo file)
         {
-            MongoCollection<BsonDocument> files = Funani.GetCollection("fileinfo");
+            var files = Funani.GetCollection<FileInformation>("fileinfo");
             string path = file.FullName;
-            IQueryable<FileInformation> result = files.AsQueryable<FileInformation>()
-                                                      .Where(x => (x.FileSize == file.Length) && x.Paths.Contains(path));
+            var result = files.AsQueryable<FileInformation>()
+                              .Where(x => (x.FileSize == file.Length) && x.Paths.Contains(path));
 
             // TODO: Check why some have more than one!
             // return result.SingleOrDefault();
@@ -143,16 +142,16 @@ namespace Funani.Metadata
 
         public void RemovePath(FileInfo file)
         {
-            MongoCollection<BsonDocument> files = Funani.GetCollection("fileinfo");
+            var files = Funani.GetCollection<FileInformation>("fileinfo");
             string path = file.FullName;
             var list = new[] { path };
             var queryBuilder = new QueryBuilder<FileInformation>();
-            IMongoQuery query = queryBuilder.In(x => x.Paths, list);
-            var info = files.FindOneAs<FileInformation>(query);
+            var query = queryBuilder.In(x => x.Paths, list);
+            FileInformation info = null; //TODO: files.FindOneAs<FileInformation>(query);
             if (info != null)
             {
                 info.Paths.Remove(file.FullName);
-                files.Save(info);
+                //TODO: files.Save(info);
             }
         }
 
@@ -160,8 +159,8 @@ namespace Funani.Metadata
         {
             if (fileinfo != null)
             {
-                MongoCollection<BsonDocument> files = Funani.GetCollection("fileinfo");
-                files.Save(fileinfo);
+                var files = Funani.GetCollection<FileInformation>("fileinfo");
+                //TODO: files.Save(fileinfo);
             }
         }
 
@@ -204,28 +203,15 @@ namespace Funani.Metadata
             String connectionString = "mongodb://localhost:27017";
 
             _mongoClient = new MongoClient(connectionString);
-            _mongoServer = _mongoClient.GetServer();
-            _funani = _mongoServer.GetDatabase("Funani");
+            _funani = _mongoClient.GetDatabase("Funani");
         }
 
         public void Stop()
         {
             if (_process != null)
             {
-                if (_mongoServer != null)
-                {
-                    try
-                    {
-                        // according to the documentation there should not be a need to call disconnect
-                        _mongoServer.Shutdown();
-                    }
-                    catch (Exception ex)
-                    {
-                        Console.WriteLine(ex.Message);
-                    }
-                }
-
-                _mongoServer = null;
+                //TODO: stop server via command line
+                //_mongoClient.Cluster.Stop();
                 _mongoClient = null;
 
                 try

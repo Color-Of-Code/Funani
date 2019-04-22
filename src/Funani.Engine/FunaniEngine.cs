@@ -5,6 +5,7 @@ using System.Linq;
 
 using Catel.Data;
 using Catel.IoC;
+using Catel.Runtime.Serialization;
 
 using Funani.Api;
 using Funani.Api.Metadata;
@@ -70,7 +71,7 @@ namespace Funani.Engine
 
         public void CloseDatabase()
         {
-            DatabaseInfo.Save(DatabaseInfoPath, SerializationMode.Xml);
+            DatabaseInfo.Save(DatabaseInfoPath, SerializationFactory.GetXmlSerializer());
 
             _fileStorage.Stop();
             _metadata.Stop();
@@ -169,12 +170,12 @@ namespace Funani.Engine
                     Title = "<Give a title here>",
                     Description = "<Write a description here>"
                 };
-            DatabaseInfo.Save(DatabaseInfoPath, SerializationMode.Xml);
+            DatabaseInfo.Save(DatabaseInfoPath, SerializationFactory.GetXmlSerializer());
         }
 
         private void CommonCreationOpening(String pathToMongod, String path)
         {
-            _info = DatabaseInfo.Load(File.OpenRead(DatabaseInfoPath), SerializationMode.Xml);
+            _info = DatabaseInfo.Load(File.OpenRead(DatabaseInfoPath), SerializationFactory.GetXmlSerializer());
 
             // create the file database
             _fileStorage = new FileDatabase(path);
