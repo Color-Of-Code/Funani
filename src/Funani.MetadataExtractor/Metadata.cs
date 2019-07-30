@@ -1,7 +1,7 @@
 ﻿
 using System;
 using System.Collections.Generic;
-//using System.Windows.Media.Imaging;
+using MetadataExtractor;
 
 namespace Funani.MetadataExtractor
 {
@@ -12,9 +12,13 @@ namespace Funani.MetadataExtractor
             var dictionary = new Dictionary<String, String>();
             if (mime.StartsWith("image/"))
             {
-				throw new NotImplementedException();
+                var directories = ImageMetadataReader.ReadMetadata(uri.AbsolutePath);
+                foreach (var directory in directories)
+                    foreach (var tag in directory.Tags)
+                        Console.WriteLine($"{directory.Name} - {tag.Name} = {tag.Description}");
+                throw new NotImplementedException();
 
-				/* TODO: implement with an exif lib
+                /* TODO: implement with an exif lib
                 BitmapFrame frame = BitmapFrame.Create(uri, BitmapCreateOptions.None, BitmapCacheOption.None);
                 dictionary.Add("Width", Convert.ToString(frame.PixelWidth));
                 dictionary.Add("Height", Convert.ToString(frame.PixelHeight));
