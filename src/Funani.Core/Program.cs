@@ -1,18 +1,17 @@
-﻿using System;
-using CommandLine;
-
-namespace Funani.Core
+﻿namespace Funani.Core
 {
+    using CommandLine;
+
     public class Program
     {
 
-        public class Options
+        private class Options
         {
             [Option('v', "verbose", Required = false, HelpText = "Set output to verbose messages.")]
             public bool Verbose { get; set; }
         }
 
-        static void Main(string[] args)
+        private static void Main(string[] args)
         {
             Parser.Default.ParseArguments<Options>(args)
                    .WithParsed<Options>(o =>
@@ -21,9 +20,8 @@ namespace Funani.Core
                    });
         }
 
-        static void Run(Options o)
+        private static void Run(Options o)
         {
-
         }
     }
 }
