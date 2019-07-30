@@ -9,8 +9,6 @@ using Catel.IoC;
 
 using Funani.Api;
 using Funani.Api.Metadata;
-
-using MongoDB.Bson;
 using MongoDB.Driver;
 using MongoDB.Driver.Builders;
 using MongoDB.Driver.Linq;
@@ -37,7 +35,7 @@ namespace Funani.Metadata
             get { return _funani; }
         }
 
-        private IFileSystem _filesystem;
+        private readonly IFileSystem _filesystem;
 
         public IQueryable<FileInformation> FileInformation
         {
