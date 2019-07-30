@@ -2,11 +2,11 @@
 namespace Funani.MimeExtractor.Strategy
 {
     using System;
-    using System.IO;
+    using System.IO.Abstractions;
 
     internal class MimeTypeFromDataStrategy : IMimeTypeExtractor
     {
-        public string ExtractMimeType(FileInfo file)
+        public string ExtractMimeType(IFileInfo file)
         {
             return null;
         }

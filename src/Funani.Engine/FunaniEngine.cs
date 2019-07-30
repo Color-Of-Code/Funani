@@ -1,6 +1,7 @@
 ﻿
 using System;
 using System.IO;
+using System.IO.Abstractions;
 using System.Linq;
 
 using Catel.Data;
@@ -88,7 +89,7 @@ namespace Funani.Engine
             _metadata.Backup();
         }
 
-        public FileInformation AddFile(FileInfo file)
+        public FileInformation AddFile(IFileInfo file)
         {
             string hash = _fileStorage.StoreFile(file);
             FileInformation fileInformation = _metadata.Retrieve(hash, file);
@@ -96,7 +97,7 @@ namespace Funani.Engine
             return fileInformation;
         }
 
-        public void RemoveFile(FileInfo file)
+        public void RemoveFile(IFileInfo file)
         {
             _metadata.RemovePath(file);
         }
@@ -126,12 +127,12 @@ namespace Funani.Engine
             _metadata.Save(fileinfo);
         }
 
-        public FileInformation GetFileInformation(FileInfo file)
+        public FileInformation GetFileInformation(IFileInfo file)
         {
             return _metadata.Retrieve(file);
         }
 
-        public FileInfo GetThumbnail(String hash, String mime)
+        public IFileInfo GetThumbnail(String hash, String mime)
         {
             return _fileStorage.LoadThumbnail(hash, mime);
         }
@@ -143,7 +144,7 @@ namespace Funani.Engine
 
         public void RefreshMetadata(FileInformation fileinfo)
         {
-            FileInfo fi = _fileStorage.GetFileInfo(fileinfo.Id);
+            IFileInfo fi = _fileStorage.GetFileInfo(fileinfo.Id);
             _metadata.RefreshMetadata(fileinfo, fi);
         }
 
@@ -178,7 +179,7 @@ namespace Funani.Engine
             _info = DatabaseInfo.Load(File.OpenRead(DatabaseInfoPath), SerializationFactory.GetXmlSerializer());
 
             // create the file database
-            _fileStorage = new FileDatabase(path);
+            _fileStorage = new FileDatabase(path, new FileSystem());
             _fileStorage.Start();
 
             // create the mongodb

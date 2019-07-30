@@ -2,7 +2,7 @@
 namespace Funani.Api
 {
     using System;
-    using System.IO;
+    using System.IO.Abstractions;
 
     /// <summary>
     /// Description of IFileStorage.
@@ -23,12 +23,12 @@ namespace Funani.Api
 
         void DeleteFile(String hash);
 
-        String StoreFile(FileInfo file);
+        String StoreFile(IFileInfo file);
 
         byte[] LoadFile(String hash);
         
-        FileInfo LoadThumbnail(String hash, String mime);
+        IFileInfo LoadThumbnail(String hash, String mime);
         
-        FileInfo GetFileInfo(String hash);
+        IFileInfo GetFileInfo(String hash);
     }
 }

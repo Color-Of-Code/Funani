@@ -2,11 +2,11 @@
 namespace Funani.MimeExtractor.Strategy
 {
     using System;
-    using System.IO;
+    using System.IO.Abstractions;
 
     internal class MimeTypeFromExtensionStrategy : IMimeTypeExtractor
     {
-        public string ExtractMimeType(FileInfo file)
+        public string ExtractMimeType(IFileInfo file)
         {
         	if (file.Name.ToLowerInvariant() == "thumbs.db")
         		return "application/x-msthumbnails";

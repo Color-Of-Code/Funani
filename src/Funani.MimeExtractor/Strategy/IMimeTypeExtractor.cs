@@ -2,10 +2,10 @@
 namespace Funani.MimeExtractor.Strategy
 {
     using System;
-    using System.IO;
+    using System.IO.Abstractions;
 
     public interface IMimeTypeExtractor
     {
-        String ExtractMimeType(FileInfo file);
+        String ExtractMimeType(IFileInfo file);
     }
 }

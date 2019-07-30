@@ -1,7 +1,7 @@
 ﻿
 using System;
 using System.ComponentModel;
-using System.IO;
+using System.IO.Abstractions;
 using System.Linq;
 using Funani.Api.Metadata;
 
@@ -75,7 +75,7 @@ namespace Funani.Api
         /// </summary>
         /// <param name="file"></param>
         /// <returns></returns>
-        FileInformation AddFile(FileInfo file);
+        FileInformation AddFile(IFileInfo file);
 
         /// <summary>
         ///     Remove a file path from the metadata but leaves the file inside the storage area.
@@ -83,7 +83,7 @@ namespace Funani.Api
         /// </summary>
         /// <param name="file"></param>
         /// <returns></returns>
-        void RemoveFile(FileInfo file);
+        void RemoveFile(IFileInfo file);
 
         /// <summary>
         ///     Persist the fileinfo to the metadata database
@@ -99,7 +99,7 @@ namespace Funani.Api
         /// </summary>
         /// <param name="file"></param>
         /// <returns></returns>
-        FileInformation GetFileInformation(FileInfo file);
+        FileInformation GetFileInformation(IFileInfo file);
 
         /// <summary>
         ///     Return a bitmap source for the thumbnail of this file
@@ -107,7 +107,7 @@ namespace Funani.Api
         /// <param name="hash">Hash of the file to get a thumbnail for</param>
         /// <param name="mime">Mime-type of the file</param>
         /// <returns></returns>
-        FileInfo GetThumbnail(String hash, String mime);
+        IFileInfo GetThumbnail(String hash, String mime);
 
         /// <summary>
         ///     Returns the file data of the file with the given hash

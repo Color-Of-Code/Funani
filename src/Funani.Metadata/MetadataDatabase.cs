@@ -2,7 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.IO;
+using System.IO.Abstractions;
 using System.Linq;
 
 using Catel.IoC;
@@ -21,6 +21,7 @@ namespace Funani.Metadata
     {
         public MetadataDatabase(String pathToMongod, String path)
         {
+            _filesystem = new FileSystem();
             _pathToMongod = pathToMongod;
             _pathToDatabase = path;
             _listener = ServiceLocator.Default.ResolveType<IConsoleRedirect>();
@@ -35,6 +36,8 @@ namespace Funani.Metadata
         {
             get { return _funani; }
         }
+
+        private IFileSystem _filesystem;
 
         public IQueryable<FileInformation> FileInformation
         {
@@ -56,12 +59,12 @@ namespace Funani.Metadata
 
         private string DatabasePath
         {
-            get { return Path.Combine(_pathToDatabase, "metadata"); }
+            get { return _filesystem.Path.Combine(_pathToDatabase, "metadata"); }
         }
 
         private string JournalPath
         {
-            get { return Path.Combine(DatabasePath, "journal"); }
+            get { return _filesystem.Path.Combine(DatabasePath, "journal"); }
         }
 
         #region Private
@@ -94,7 +97,7 @@ namespace Funani.Metadata
 
         #endregion
 
-        public FileInformation Retrieve(String hash, FileInfo file)
+        public FileInformation Retrieve(String hash, IFileInfo file)
         {
             var files = Funani.GetCollection<FileInformation>("fileinfo");
             FileInformation info = null; //TODO: repair: files.FindAsync<FileInformation>(hash).Result;
@@ -111,7 +114,7 @@ namespace Funani.Metadata
             return info;
         }
 
-        public void RefreshMetadata(FileInformation fileinfo, FileInfo file)
+        public void RefreshMetadata(FileInformation fileinfo, IFileInfo file)
         {
             var files = Funani.GetCollection<FileInformation>("fileinfo");
             fileinfo.RefreshMetadata(file);
@@ -128,7 +131,7 @@ namespace Funani.Metadata
             return null; //TODO: Funani.GetStats();
         }
 
-        public FileInformation Retrieve(FileInfo file)
+        public FileInformation Retrieve(IFileInfo file)
         {
             var files = Funani.GetCollection<FileInformation>("fileinfo");
             string path = file.FullName;
@@ -140,7 +143,7 @@ namespace Funani.Metadata
             return result.FirstOrDefault();
         }
 
-        public void RemovePath(FileInfo file)
+        public void RemovePath(IFileInfo file)
         {
             var files = Funani.GetCollection<FileInformation>("fileinfo");
             string path = file.FullName;
@@ -167,7 +170,7 @@ namespace Funani.Metadata
         public void Backup()
         {
             var psi = new ProcessStartInfo();
-            psi.FileName = Path.Combine(_pathToMongod, "mongodump.exe");
+            psi.FileName = _filesystem.Path.Combine(_pathToMongod, "mongodump.exe");
             psi.Arguments = String.Format(" --db Funani --port {0}", 27017);
             psi.WorkingDirectory = _pathToMongod;
             Process.Start(psi).WaitForExit();
@@ -177,13 +180,13 @@ namespace Funani.Metadata
         {
             Stop();
 
-            if (!Directory.Exists(DatabasePath))
-                Directory.CreateDirectory(DatabasePath);
-            if (!Directory.Exists(JournalPath))
-                Directory.CreateDirectory(JournalPath);
+            if (!_filesystem.Directory.Exists(DatabasePath))
+                _filesystem.Directory.CreateDirectory(DatabasePath);
+            if (!_filesystem.Directory.Exists(JournalPath))
+                _filesystem.Directory.CreateDirectory(JournalPath);
 
             var psi = new ProcessStartInfo();
-            psi.FileName = Path.Combine(_pathToMongod, "mongod");
+            psi.FileName = _filesystem.Path.Combine(_pathToMongod, "mongod");
             psi.Arguments = String.Format(" --journal --dbpath \"{0}\" --port {1}",
                                           DatabasePath, 27017);
             psi.CreateNoWindow = true;

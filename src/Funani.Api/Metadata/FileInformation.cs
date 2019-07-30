@@ -1,10 +1,10 @@
 ﻿
 using System;
 using System.Collections.Generic;
-using System.IO;
+using System.IO.Abstractions;
 using Catel.Data;
 using Catel.IoC;
-using Funani.Api.Utils;
+using Funani.Core.Hash;
 
 namespace Funani.Api.Metadata
 {
@@ -33,10 +33,10 @@ namespace Funani.Api.Metadata
             _engine = ServiceLocator.Default.ResolveType<IEngine>();
         }
 
-        public FileInformation(FileInfo file)
+        public FileInformation(IFileInfo file)
             : this()
         {
-            Id = ComputeHash.SHA1(file);
+            Id = new Algorithms(file.FileSystem).ComputeSha1(file);
             FileSize = file.Length;
             Title = file.Name;
             MimeType = MimeExtractor.MimeType.Extract(file);
@@ -126,7 +126,7 @@ namespace Funani.Api.Metadata
             _engine.Save(this);
         }
 
-        public void AddPath(FileInfo file)
+        public void AddPath(IFileInfo file)
         {
             if (!Paths.Contains(file.FullName))
                 Paths.Add(file.FullName);
@@ -138,7 +138,7 @@ namespace Funani.Api.Metadata
             RaisePropertyChanged(string.Empty);
         }
 
-        public void RefreshMetadata(FileInfo file)
+        public void RefreshMetadata(IFileInfo file)
         {
             var uri = new Uri(file.FullName);
             Dictionary<string, string> metadata = MetadataExtractor.Metadata.Extract(uri, MimeType);

@@ -1,7 +1,7 @@
 ﻿
 
 using System;
-using System.IO;
+using System.IO.Abstractions;
 using Funani.Api;
 
 namespace Funani.Engine.Commands
@@ -11,7 +11,7 @@ namespace Funani.Engine.Commands
     /// </summary>
     public class AddFileCommand : ActionCommand
     {
-        public AddFileCommand(IEngine engine, FileInfo file)
+        public AddFileCommand(IEngine engine, IFileInfo file)
             : base(() => engine.AddFile(file))
         {
             Description = String.Format("Adding file '{0}'", file.FullName);

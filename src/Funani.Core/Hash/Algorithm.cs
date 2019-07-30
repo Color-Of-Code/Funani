@@ -19,16 +19,24 @@ namespace Funani.Core.Hash
             _fileSystem = new FileSystem();
         }
 
+        public string ComputeSha1(IFileInfo file)
+        {
+            return Execute(file, new SHA1CryptoServiceProvider());
+        }
+
         public string ComputeSha1(string path)
         {
-            var file = _fileSystem.FileInfo.FromFileName(path);
-            return Execute(file, new SHA1CryptoServiceProvider());
+            return ComputeSha1(_fileSystem.FileInfo.FromFileName(path));
+        }
+
+        public string ComputeSha256(IFileInfo file)
+        {
+            return Execute(file, new SHA256Managed());
         }
 
         public string ComputeSha256(string path)
         {
-            var file = _fileSystem.FileInfo.FromFileName(path);
-            return Execute(file, new SHA256Managed());
+            return ComputeSha256(_fileSystem.FileInfo.FromFileName(path));
         }
 
         private String Execute(IFileInfo file, HashAlgorithm hashAlgorithm)

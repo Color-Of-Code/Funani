@@ -1,7 +1,7 @@
 ﻿
 
 using System;
-using System.IO;
+using System.IO.Abstractions;
 using Funani.MimeExtractor.Strategy;
 
 namespace Funani.MimeExtractor
@@ -16,7 +16,7 @@ namespace Funani.MimeExtractor
         /// </summary>
         /// <param name="file"></param>
         /// <returns></returns>
-        public static String Extract(FileInfo file)
+        public static String Extract(IFileInfo file)
         {
             String mime;
 

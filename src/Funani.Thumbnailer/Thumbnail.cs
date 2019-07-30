@@ -1,8 +1,7 @@
 ﻿
 using System;
-using System.Diagnostics;
 using System.Drawing;
-using System.IO;
+using System.IO.Abstractions;
 using System.Net.Sockets;
 
 using SixLabors.ImageSharp;
@@ -12,7 +11,7 @@ namespace Funani.Thumbnailer
 {
     public static class Thumbnail
     {
-        public static void Create(Uri uri, String mime, int thumbnailSize, FileInfo destination)
+        public static void Create(Uri uri, String mime, int thumbnailSize, IFileInfo destination)
         {
             // Format is automatically detected though can be changed.
             Size size = new Size(thumbnailSize, thumbnailSize);
