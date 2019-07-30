@@ -29,17 +29,17 @@ namespace Funani.Api.Metadata
 
         public FileInformation()
         {
-            Paths = new List<String>();
+            this.Paths = new List<String>();
             _engine = ServiceLocator.Default.ResolveType<IEngine>();
         }
 
         public FileInformation(IFileInfo file)
             : this()
         {
-            Id = new Algorithms(file.FileSystem).ComputeSha1(file);
-            FileSize = file.Length;
-            Title = file.Name;
-            MimeType = MimeExtractor.MimeType.Extract(file);
+            this.Id = new Algorithms(file.FileSystem).ComputeSha1(file);
+            this.FileSize = file.Length;
+            this.Title = file.Name;
+            this.MimeType = MimeExtractor.MimeType.Extract(file);
             RefreshMetadata(file);
             AddPath(file);
         }
@@ -66,10 +66,10 @@ namespace Funani.Api.Metadata
 
         public String Title
         {
-            get { return _title; }
+            get { return this._title; }
             set
             {
-                _title = value;
+                this._title = value;
                 RaisePropertyChanged("Title");
             }
         }
@@ -85,20 +85,20 @@ namespace Funani.Api.Metadata
         // orientation for view
         public int? Angle
         {
-            get { return _angle; }
+            get { return this._angle; }
             set
             {
-                _angle = value;
+                this._angle = value;
                 RaisePropertyChanged("Angle");
             }
         }
 
         public Boolean IsDeleted
         {
-            get { return _isDeleted; }
+            get { return this._isDeleted; }
             set
             {
-                _isDeleted = value;
+                this._isDeleted = value;
                 RaisePropertyChanged("IsDeleted");
             }
         }
@@ -145,18 +145,18 @@ namespace Funani.Api.Metadata
             if (metadata != null)
             {
                 if (metadata.ContainsKey("Width"))
-                    Width = Convert.ToInt64(metadata["Width"]);
+                    this.Width = Convert.ToInt64(metadata["Width"]);
                 if (metadata.ContainsKey("Height"))
-                    Height = Convert.ToInt64(metadata["Height"]);
+                    this.Height = Convert.ToInt64(metadata["Height"]);
 
                 if (metadata.ContainsKey("Device"))
-                    Device = metadata["Device"];
+                    this.Device = metadata["Device"];
                 if (metadata.ContainsKey("DateTaken"))
-                    DateTaken = DateTime.ParseExact(metadata["DateTaken"], "dd.MM.yyyy HH:mm:ss", null);
+                    this.DateTaken = DateTime.ParseExact(metadata["DateTaken"], "dd.MM.yyyy HH:mm:ss", null);
                 if (metadata.ContainsKey("ApplicationName"))
-                    ApplicationName = metadata["ApplicationName"];
+                    this.ApplicationName = metadata["ApplicationName"];
                 if (metadata.ContainsKey("Angle"))
-                    Angle = int.Parse(metadata["Angle"]);
+                    this.Angle = int.Parse(metadata["Angle"]);
             }
         }
 

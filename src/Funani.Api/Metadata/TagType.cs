@@ -9,6 +9,6 @@ namespace Funani.Api.Metadata
         Location,
         Animal,
         Object,
-        Other
+        Other,
     }
 }
