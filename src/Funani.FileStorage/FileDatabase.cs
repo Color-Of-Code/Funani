@@ -36,7 +36,7 @@ namespace Funani.FileStorage
                 return hash;
 
             IFileInfo destination = GetFileInfo(hash);
-            Debug.Assert(destination != null, "destination filename is null");
+
             _filesystem.Directory.CreateDirectory(destination.DirectoryName);
             _filesystem.File.Copy(file.FullName, destination.FullName);
 
