@@ -1,5 +1,4 @@
 using System;
-using System.IO;
 using System.IO.Abstractions;
 using System.Security.Cryptography;
 using System.Text;
@@ -42,7 +41,7 @@ namespace Funani.Core.Hash
         private String Execute(IFileInfo file, HashAlgorithm hashAlgorithm)
         {
             String hashCode;
-            using (var fileStream = _fileSystem.FileStream.Create(file.FullName, FileMode.Open, FileAccess.Read))
+            using (var fileStream = _fileSystem.FileStream.Create(file.FullName, System.IO.FileMode.Open, System.IO.FileAccess.Read))
             {
                 hashAlgorithm.ComputeHash(fileStream);
                 var buff = new StringBuilder();

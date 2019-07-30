@@ -1,6 +1,5 @@
 ﻿
 using System;
-using System.IO;
 using System.IO.Abstractions;
 using System.Linq;
 
@@ -18,29 +17,31 @@ namespace Funani.Engine
     public class FunaniEngine : ObservableObject, IEngine
     {
         private IFileStorage _fileStorage;
+        private IFileSystem _filesystem;
         private DatabaseInfo _info;
         private MetadataDatabase _metadata;
         private String _rootPath;
 
         public FunaniEngine()
         {
+            _filesystem = new FileSystem();
             CommandQueue = ServiceLocator.Default.ResolveType<ICommandQueue>();
         }
 
         private String DatabaseInfoPath
         {
-            get { return Path.Combine(_rootPath, "funani.info"); }
+            get { return _filesystem.Path.Combine(_rootPath, "funani.info"); }
         }
 
         public Boolean IsValidDatabase(String path)
         {
             if (String.IsNullOrWhiteSpace(path) ||
-                !Directory.Exists(path))
+                !_filesystem.Directory.Exists(path))
                 return false;
-            if (!File.Exists(Path.Combine(path, "funani.info")))
+            if (!_filesystem.File.Exists(_filesystem.Path.Combine(path, "funani.info")))
                 return false;
-            if (!Directory.Exists(Path.Combine(path, "metadata")) ||
-                !Directory.Exists(Path.Combine(path, "data")))
+            if (!_filesystem.Directory.Exists(_filesystem.Path.Combine(path, "metadata")) ||
+                !_filesystem.Directory.Exists(_filesystem.Path.Combine(path, "data")))
                 return false;
             return true;
         }
@@ -54,7 +55,7 @@ namespace Funani.Engine
 
         public void OpenDatabase(String pathToMongod, String path)
         {
-            if (Directory.EnumerateFileSystemEntries(path).Any())
+            if (_filesystem.Directory.EnumerateFileSystemEntries(path).Any())
             {
                 if (!IsValidDatabase(path))
                     throw new Exception("Invalid Funani Database");
@@ -176,7 +177,7 @@ namespace Funani.Engine
 
         private void CommonCreationOpening(String pathToMongod, String path)
         {
-            _info = DatabaseInfo.Load(File.OpenRead(DatabaseInfoPath), SerializationFactory.GetXmlSerializer());
+            _info = DatabaseInfo.Load(_filesystem.File.OpenRead(DatabaseInfoPath), SerializationFactory.GetXmlSerializer());
 
             // create the file database
             _fileStorage = new FileDatabase(path, new FileSystem());
