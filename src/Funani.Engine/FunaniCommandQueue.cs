@@ -1,17 +1,15 @@
-﻿
-
-using System;
-using System.Collections.Generic;
-using System.Threading;
-using System.Windows.Input;
-using Funani.Api;
-
-namespace Funani.Engine
+﻿namespace Funani.Engine
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Threading;
+    using System.Windows.Input;
+    using Funani.Api;
+
     public class FunaniCommandQueue : ICommandQueue
     {
         private readonly Queue<ICommand> _actions;
-        private Int32 _processed;
+        private int _processed;
         private Thread _thread;
 
         public FunaniCommandQueue()
@@ -33,7 +31,7 @@ namespace Funani.Engine
             }
         }
 
-        public Int32 Count
+        public int Count
         {
             get
             {
@@ -58,9 +56,7 @@ namespace Funani.Engine
                 while (_actions.Count > 0)
                 {
                     ICommand command = _actions.Peek();
-                    EventHandler<CommandProgressEventArgs> handler = CommandStarted;
-                    if (handler != null)
-                        handler(this, new CommandProgressEventArgs(command));
+                    CommandStarted?.Invoke(this, new CommandProgressEventArgs(command));
 
                     command.Execute(null);
 
@@ -70,9 +66,7 @@ namespace Funani.Engine
                         _actions.Dequeue();
                     }
 
-                    handler = CommandEnded;
-                    if (handler != null)
-                        handler(this, new CommandProgressEventArgs(command));
+                    CommandEnded?.Invoke(this, new CommandProgressEventArgs(command));
                 }
             }
             finally
@@ -84,17 +78,13 @@ namespace Funani.Engine
         private void TearDown()
         {
             _thread = null;
-            EventHandler handler = ThreadEnded;
-            if (handler != null)
-                handler(this, null);
+            ThreadEnded?.Invoke(this, null);
         }
 
         private void Setup()
         {
             _processed = 0;
-            EventHandler handler = ThreadStarted;
-            if (handler != null)
-                handler(this, null);
+            ThreadStarted?.Invoke(this, null);
         }
     }
 }
