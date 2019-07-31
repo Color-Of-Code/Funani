@@ -1,21 +1,25 @@
-﻿
-using System;
-using System.Collections.Generic;
-using MetadataExtractor;
-
-namespace Funani.MetadataExtractor
+﻿namespace Funani.MetadataExtractor
 {
+    using System;
+    using System.Collections.Generic;
+    using ME = global::MetadataExtractor;
+
     public static class Metadata
     {
-        public static IDictionary<String, String> Extract(Uri uri, String mime)
+        public static IDictionary<string, string> Extract(Uri uri, string mime)
         {
-            var dictionary = new Dictionary<String, String>();
+            var dictionary = new Dictionary<string, string>();
             if (mime.StartsWith("image/"))
             {
-                var directories = ImageMetadataReader.ReadMetadata(uri.AbsolutePath);
+                var directories = ME.ImageMetadataReader.ReadMetadata(uri.AbsolutePath);
                 foreach (var directory in directories)
+                {
                     foreach (var tag in directory.Tags)
+                    {
                         Console.WriteLine($"{directory.Name} - {tag.Name} = {tag.Description}");
+                    }
+                }
+
                 throw new NotImplementedException();
 
                 /* TODO: implement with an exif lib

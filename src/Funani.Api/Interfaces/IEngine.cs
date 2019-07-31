@@ -1,5 +1,4 @@
-﻿
-namespace Funani.Api
+﻿namespace Funani.Api
 {
     using System.ComponentModel;
     using System.IO.Abstractions;

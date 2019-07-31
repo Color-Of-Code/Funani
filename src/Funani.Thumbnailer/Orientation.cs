@@ -1,5 +1,4 @@
-﻿
-namespace Funani.Thumbnailer
+﻿namespace Funani.Thumbnailer
 {
     internal enum Orientation
     {

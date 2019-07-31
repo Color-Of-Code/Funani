@@ -1,14 +1,14 @@
-﻿
-using System;
-using System.Drawing;
-using System.IO.Abstractions;
-using System.Net.Sockets;
-
-using SixLabors.ImageSharp;
-using SixLabors.ImageSharp.Processing;
-
-namespace Funani.Thumbnailer
+﻿namespace Funani.Thumbnailer
 {
+
+    using System;
+    using System.Drawing;
+    using System.IO.Abstractions;
+    using System.Net.Sockets;
+
+    using SixLabors.ImageSharp;
+    using SixLabors.ImageSharp.Processing;
+
     public static class Thumbnail
     {
         public static void Create(Uri uri, String mime, int thumbnailSize, IFileInfo destination)

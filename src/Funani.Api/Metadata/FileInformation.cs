@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Globalization;
     using System.IO.Abstractions;
     using Catel.IoC;
     using Funani.Core.Hash;
@@ -34,16 +35,16 @@
             this.FileSize = file.Length;
             this.Title = file.Name;
             this.MimeType = MimeExtractor.MimeType.Extract(file);
-            RefreshMetadata(file);
+            this.RefreshMetadata(file);
             this.AddPath(file);
         }
 
         /// <summary>
         ///     Gets or sets the Id value.
         /// </summary>
-        public String Id { get; private set; }
+        public string Id { get; private set; }
 
-        public Int64 FileSize { get; private set; }
+        public long FileSize { get; private set; }
 
         /// <summary>
         ///     Gets or sets the MimeType value.
@@ -53,15 +54,17 @@
         public IList<string> Paths { get; private set; }
 
         public long Width { get; private set; }
+
         public long Height { get; private set; }
 
         public double Latitude { get; set; }
+
         public double Longitude { get; set; }
 
         public string Title { get; set; }
 
         public DateTime? DateTaken { get; set; } // start date for video
-        public Int64 Duration { get; set; } // for videos, sound
+        public long Duration { get; set; } // for videos, sound
 
         public DateTime? LastModification { get; set; }
 
@@ -90,6 +93,11 @@
 
         public void AddPath(IFileInfo file)
         {
+            if (file == null)
+            {
+                throw new ArgumentNullException(nameof(file));
+            }
+
             if (!this.Paths.Contains(file.FullName))
             {
                 this.Paths.Add(file.FullName);
@@ -109,7 +117,7 @@
             {
                 if (metadata.ContainsKey("Width"))
                 {
-                    this.Width = Convert.ToInt64(metadata["Width"]);
+                    this.Width = Convert.ToInt64(metadata["Width"], CultureInfo.InvariantCulture);
                 }
 
                 if (metadata.ContainsKey("Height"))

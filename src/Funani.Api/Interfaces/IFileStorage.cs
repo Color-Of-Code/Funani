@@ -1,5 +1,4 @@
-﻿
-namespace Funani.Api
+﻿namespace Funani.Api
 {
     using System;
     using System.IO.Abstractions;
@@ -12,12 +11,12 @@ namespace Funani.Api
         /// <summary>
         /// Initialize and start the file storage service.
         /// </summary>
-        void Start();
+        void StartService();
 
         /// <summary>
-        /// Stop the file storage service.
+        /// StopService the file storage service.
         /// </summary>
-        void Stop();
+        void StopService();
 
         bool FileExists(string hash);
 

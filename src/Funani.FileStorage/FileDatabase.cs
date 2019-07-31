@@ -18,13 +18,13 @@ namespace Funani.FileStorage
             Algorithms = new Algorithms(filesystem);
         }
 
-        public void Start()
+        public void StartService()
         {
             Create(); // create if empty
             Connect();
         }
 
-        public void Stop()
+        public void StopService()
         {
             BaseDirectory = null;
         }

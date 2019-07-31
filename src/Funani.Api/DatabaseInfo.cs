@@ -1,8 +1,8 @@
-﻿using System;
-using Catel.Data;
-
-namespace Funani.Api
+﻿namespace Funani.Api
 {
+    using System;
+    using Catel.Data;
+
     public class DatabaseInfo : SavableModelBase<DatabaseInfo>
     {
         public DatabaseInfo()
@@ -10,7 +10,6 @@ namespace Funani.Api
             Guid = Guid.NewGuid();
         }
 
-        #region Property: Guid
         /// <summary>
         /// Guid.
         /// </summary>
@@ -20,30 +19,22 @@ namespace Funani.Api
             private set;
         }
 
-        #endregion
-
-        #region Property: Title
         /// <summary>
         /// Title.
         /// </summary>
-        public String Title
+        public string Title
         {
             get;
             set;
         }
 
-        #endregion
-
-        #region Property: Description
         /// <summary>
         /// Description.
         /// </summary>
-        public String Description
+        public string Description
         {
             get;
             set;
         }
-
-        #endregion
     }
 }
