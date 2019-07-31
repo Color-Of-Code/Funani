@@ -1,59 +1,61 @@
-﻿
-using System;
-using System.Diagnostics;
-using System.IO.Abstractions;
-using System.Linq;
-using Funani.Api;
-using Funani.Core.Hash;
-using Funani.Thumbnailer;
-
-namespace Funani.FileStorage
+﻿namespace Funani.FileStorage
 {
+    using System;
+    using System.Diagnostics;
+    using System.IO.Abstractions;
+    using System.Linq;
+    using Funani.Api;
+    using Funani.Core.Hash;
+    using Funani.Thumbnailer;
+
     public class FileDatabase : IFileStorage
     {
-        public FileDatabase(String baseDirectory, IFileSystem filesystem)
+        public FileDatabase(string baseDirectory, IFileSystem filesystem)
         {
-            BaseDirectory = baseDirectory;
-            _filesystem = filesystem;
-            Algorithms = new Algorithms(filesystem);
+            this.BaseDirectory = baseDirectory;
+            this.filesystem = filesystem;
+            this.Algorithms = new Algorithms(filesystem);
         }
 
         public void StartService()
         {
-            Create(); // create if empty
-            Connect();
+            this.Create(); // create if empty
+            this.Connect();
         }
 
         public void StopService()
         {
-            BaseDirectory = null;
+            this.BaseDirectory = null;
         }
 
-        public String StoreFile(IFileInfo file)
+        public string StoreFile(IFileInfo file)
         {
-            string hash = Algorithms.ComputeSha1(file);
-            if (FileExists(hash))
+            string hash = this.Algorithms.ComputeSha1(file);
+            if (this.FileExists(hash))
+            {
                 return hash;
+            }
 
-            IFileInfo destination = GetFileInfo(hash);
+            IFileInfo destination = this.GetFileInfo(hash);
 
-            _filesystem.Directory.CreateDirectory(destination.DirectoryName);
-            _filesystem.File.Copy(file.FullName, destination.FullName);
+            this.filesystem.Directory.CreateDirectory(destination.DirectoryName);
+            this.filesystem.File.Copy(file.FullName, destination.FullName);
 
             // verify the hash, paranoid, but would detect some possible hardware issues
-            string hashNew = Algorithms.ComputeSha1(destination);
+            string hashNew = this.Algorithms.ComputeSha1(destination);
             if (hash != hashNew)
             {
                 destination.Delete();
                 throw new Exception("Copy not equal to original image (SHA1 hash differs)");
             }
+
             destination.Attributes = destination.Attributes | System.IO.FileAttributes.ReadOnly;
             return hashNew;
         }
 
-        public void DeleteFile(String hash)
+        public void DeleteFile(string hash)
         {
-            IFileInfo source = GetFileInfo(hash);
+            IFileInfo source = this.GetFileInfo(hash);
             if (source.Exists)
             {
                 source.Attributes = System.IO.FileAttributes.Normal;
@@ -61,73 +63,86 @@ namespace Funani.FileStorage
             }
         }
 
-        public Boolean FileExists(String hash)
+        public bool FileExists(string hash)
         {
-            IFileInfo source = GetFileInfo(hash);
+            IFileInfo source = this.GetFileInfo(hash);
             return source.Exists;
         }
 
-        public IFileInfo GetFileInfo(String hash)
+        public IFileInfo GetFileInfo(string hash)
         {
             // distribute the data into 2^16 directories in 2 levels and store the files
             // under their hash as filename
-            String path = _filesystem.Path.Combine(DataPath, hash.Substring(0, 2), hash.Substring(2, 2), hash);
-            return _filesystem.FileInfo.FromFileName(path);
+            string path = this.filesystem.Path.Combine(this.DataPath, hash.Substring(0, 2), hash.Substring(2, 2), hash);
+            return this.filesystem.FileInfo.FromFileName(path);
         }
 
-        public IFileInfo LoadThumbnail(String hash, String mime)
+        public IFileInfo LoadThumbnail(string hash, string mime)
         {
-            IFileInfo source = GetThumbnailFileInfo(hash);
+            if (hash == null)
+            {
+                throw new ArgumentNullException(nameof(hash));
+            }
+
+            if (mime == null)
+            {
+                throw new ArgumentNullException(nameof(mime));
+            }
+
+            IFileInfo source = this.GetThumbnailFileInfo(hash);
             if (!source.Exists)
             {
                 if (mime.StartsWith("image/"))
                 {
-                    IFileInfo originalImage = GetFileInfo(hash);
+                    IFileInfo originalImage = this.GetFileInfo(hash);
                     Thumbnail.Create(new Uri(originalImage.FullName), mime, 256, source);
 
                     // if the thumbnail was not created for some reason...
                     if (!source.Exists)
+                    {
                         source = null;
+                    }
                 }
                 else
+                {
                     source = null;
+                }
             }
+
             return source;
         }
 
-        public byte[] LoadFile(String hash)
+        public byte[] LoadFile(string hash)
         {
-            IFileInfo source = GetFileInfo(hash);
+            IFileInfo source = this.GetFileInfo(hash);
             return LoadFileNoException(source);
         }
 
-        private IFileInfo GetThumbnailFileInfo(String hash)
+        private IFileInfo GetThumbnailFileInfo(string hash)
         {
-            String path = _filesystem.Path.Combine(ThumbnailPath, hash.Substring(0, 2), hash.Substring(2, 2), hash + ".png");
-            return _filesystem.FileInfo.FromFileName(path);
+            string path = this.filesystem.Path.Combine(this.ThumbnailPath, hash.Substring(0, 2), hash.Substring(2, 2), hash + ".png");
+            return this.filesystem.FileInfo.FromFileName(path);
         }
 
-        private Boolean Connect()
+        private bool Connect()
         {
-            if (!_filesystem.Directory.Exists(DataPath))
-                return false;
-            return true;
+            return this.filesystem.Directory.Exists(this.DataPath);
         }
-
-        #region Private
 
         private string BaseDirectory { get; set; }
+
         private Algorithms Algorithms { get; set; }
-        private IFileSystem _filesystem;
-        
+
+        private IFileSystem filesystem;
+
         private string DataPath
         {
-            get { return _filesystem.Path.Combine(BaseDirectory, "data"); }
+            get { return this.filesystem.Path.Combine(this.BaseDirectory, "data"); }
         }
 
         private string ThumbnailPath
         {
-            get { return _filesystem.Path.Combine(BaseDirectory, "thumbs"); }
+            get { return this.filesystem.Path.Combine(this.BaseDirectory, "thumbs"); }
         }
 
         private static byte[] LoadFileNoException(IFileInfo source)
@@ -144,24 +159,24 @@ namespace Funani.FileStorage
 
         private bool IsDirectoryEmpty(string path)
         {
-            return !_filesystem.Directory.EnumerateFileSystemEntries(path).Any();
+            return !this.filesystem.Directory.EnumerateFileSystemEntries(path).Any();
         }
 
         private void Create()
         {
-            if (IsDirectoryEmpty(BaseDirectory) || !_filesystem.Directory.Exists(DataPath))
-                CreateDataPaths();
+            if (this.IsDirectoryEmpty(this.BaseDirectory) || !this.filesystem.Directory.Exists(this.DataPath))
+            {
+                this.CreateDataPaths();
+            }
         }
 
         private void CreateDataPaths()
         {
-            var baseDir = _filesystem.DirectoryInfo.FromDirectoryName(DataPath);
+            var baseDir = this.filesystem.DirectoryInfo.FromDirectoryName(this.DataPath);
             baseDir.Create();
             baseDir.Attributes = System.IO.FileAttributes.Directory | System.IO.FileAttributes.Hidden;
 
             // the other subdirectories are created once needed
         }
-
-        #endregion
     }
 }
