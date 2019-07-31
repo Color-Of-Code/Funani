@@ -10,25 +10,25 @@ namespace Funani.Api
     public interface IFileStorage
     {
         /// <summary>
-        /// Initialize and start the file storage service
+        /// Initialize and start the file storage service.
         /// </summary>
         void Start();
 
         /// <summary>
-        /// Stop the file storage service
+        /// Stop the file storage service.
         /// </summary>
         void Stop();
 
-        Boolean FileExists(String hash);
+        bool FileExists(string hash);
 
-        void DeleteFile(String hash);
+        void DeleteFile(string hash);
 
-        String StoreFile(IFileInfo file);
+        string StoreFile(IFileInfo file);
 
-        byte[] LoadFile(String hash);
-        
-        IFileInfo LoadThumbnail(String hash, String mime);
-        
-        IFileInfo GetFileInfo(String hash);
+        byte[] LoadFile(string hash);
+
+        IFileInfo LoadThumbnail(string hash, string mime);
+
+        IFileInfo GetFileInfo(string hash);
     }
 }

@@ -1,5 +1,4 @@
-﻿
-namespace Funani.Api
+﻿namespace Funani.Api
 {
 	using System;
 	using System.Windows.Input;
@@ -21,7 +20,7 @@ namespace Funani.Api
 	{
         void AddCommand(ICommand action);
 
-        Int32 Count { get; }
+        int Count { get; }
 
         event EventHandler ThreadStarted;
         event EventHandler ThreadEnded;

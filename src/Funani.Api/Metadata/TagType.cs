@@ -1,6 +1,4 @@
-﻿
-
-namespace Funani.Api.Metadata
+﻿namespace Funani.Api.Metadata
 {
     public enum TagType
     {

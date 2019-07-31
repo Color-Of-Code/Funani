@@ -7,7 +7,7 @@ namespace Funani.MetadataExtractor
 {
     public static class Metadata
     {
-        public static Dictionary<String, String> Extract(Uri uri, String mime)
+        public static IDictionary<String, String> Extract(Uri uri, String mime)
         {
             var dictionary = new Dictionary<String, String>();
             if (mime.StartsWith("image/"))
