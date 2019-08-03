@@ -164,7 +164,8 @@
 
         private void Create()
         {
-            if (this.IsDirectoryEmpty(this.BaseDirectory) || !this.filesystem.Directory.Exists(this.DataPath))
+            if (this.IsDirectoryEmpty(this.BaseDirectory) ||
+                !this.filesystem.Directory.Exists(this.DataPath))
             {
                 this.CreateDataPaths();
             }

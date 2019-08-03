@@ -15,6 +15,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Funani.Core\Funani.Core.csproj" />
+    <ProjectReference Include="..\Funani.FileStorage\Funani.FileStorage.csproj" />
   </ItemGroup>
 
 </Project>
