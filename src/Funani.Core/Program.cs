@@ -4,7 +4,6 @@
 
     public class Program
     {
-
         private class Options
         {
             [Option('v', "verbose", Required = false, HelpText = "Set output to verbose messages.")]

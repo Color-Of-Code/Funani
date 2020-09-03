@@ -10,6 +10,6 @@
         Transpose = 5,
         Rotate270 = 6,
         Transverse = 7,
-        Rotate90 = 8
+        Rotate90 = 8,
     }
 }

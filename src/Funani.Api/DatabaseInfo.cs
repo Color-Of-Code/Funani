@@ -3,11 +3,12 @@
     using System;
     using Catel.Data;
 
+    [Serializable]
     public class DatabaseInfo : SavableModelBase<DatabaseInfo>
     {
         public DatabaseInfo()
         {
-            Guid = Guid.NewGuid();
+            this.Guid = Guid.NewGuid();
         }
 
         /// <summary>

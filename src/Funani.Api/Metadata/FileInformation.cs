@@ -20,12 +20,12 @@
     /// </summary>
     public class FileInformation
     {
-        private readonly IEngine _engine;
+        private readonly IEngine engine;
 
         public FileInformation()
         {
             this.Paths = new List<string>();
-            this._engine = ServiceLocator.Default.ResolveType<IEngine>();
+            this.engine = ServiceLocator.Default.ResolveType<IEngine>();
         }
 
         public FileInformation(IFileInfo file)
@@ -64,11 +64,13 @@
         public string Title { get; set; }
 
         public DateTime? DateTaken { get; set; } // start date for video
+
         public long Duration { get; set; } // for videos, sound
 
         public DateTime? LastModification { get; set; }
 
         public string Device { get; set; } // digitalizing device
+
         public string ApplicationName { get; set; } // application used to process the data
 
         // orientation for view
@@ -88,7 +90,7 @@
         /// </summary>
         public void Save()
         {
-            this._engine.Save(this);
+            this.engine.Save(this);
         }
 
         public void AddPath(IFileInfo file)
@@ -106,7 +108,7 @@
 
         public void RefreshMetadata()
         {
-            this._engine.RefreshMetadata(this);
+            this.engine.RefreshMetadata(this);
         }
 
         public void RefreshMetadata(IFileInfo file)
@@ -122,7 +124,7 @@
 
                 if (metadata.ContainsKey("Height"))
                 {
-                    this.Height = Convert.ToInt64(metadata["Height"]);
+                    this.Height = Convert.ToInt64(metadata["Height"], CultureInfo.InvariantCulture);
                 }
 
                 if (metadata.ContainsKey("Device"))
@@ -142,7 +144,7 @@
 
                 if (metadata.ContainsKey("Angle"))
                 {
-                    this.Angle = int.Parse(metadata["Angle"]);
+                    this.Angle = int.Parse(metadata["Angle"], CultureInfo.InvariantCulture);
                 }
             }
         }

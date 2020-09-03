@@ -1,6 +1,5 @@
 ﻿namespace Funani.Thumbnailer
 {
-
     using System;
     using System.Drawing;
     using System.IO.Abstractions;
@@ -11,13 +10,14 @@
 
     public static class Thumbnail
     {
-        public static void Create(Uri uri, String mime, int thumbnailSize, IFileInfo destination)
+        public static void Create(Uri uri, string mime, int thumbnailSize, IFileInfo destination)
         {
             // Format is automatically detected though can be changed.
-            Size size = new Size(thumbnailSize, thumbnailSize);
+            var size = new SixLabors.ImageSharp.Size(thumbnailSize, thumbnailSize);
             using (var image = Image.Load(uri.LocalPath))
             {
                 image.Mutate(x => x.Resize(size.Width, size.Height));
+
                 // Automatic encoder selected based on extension.
                 image.Save(destination.FullName);
             }

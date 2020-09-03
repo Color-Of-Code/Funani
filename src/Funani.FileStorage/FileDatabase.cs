@@ -92,7 +92,7 @@
             IFileInfo source = this.GetThumbnailFileInfo(hash);
             if (!source.Exists)
             {
-                if (mime.StartsWith("image/"))
+                if (mime.StartsWith("image/", StringComparison.InvariantCultureIgnoreCase))
                 {
                     IFileInfo originalImage = this.GetFileInfo(hash);
                     Thumbnail.Create(new Uri(originalImage.FullName), mime, 256, source);
