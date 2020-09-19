@@ -9,8 +9,8 @@ from address import hash_file, shard
 LOGGER = logging.getLogger('funanidb')
 
 EXTENSIONS_IMAGES = (
-    '.jpg', '.jpeg', '.png',
-    '.tif', '.tiff', '.pnm', '.cr2', '.bmp',
+    '.jpg', '.jpeg', '.png', '.dng',
+    '.tif', '.tiff', '.pnm', '.cr2', '.cr3', '.bmp',
     '.xcf', '.gif')
 EXTENSIONS_VIDEO = ('.mts', '.mp4', '.mov', '.avi', '.mpg', '.3gp')
 EXTENSIONS_AUDIO = ('.aac', '.m4a', '.mp3', '.opus')
