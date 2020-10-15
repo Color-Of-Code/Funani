@@ -1,0 +1,22 @@
+version: "3.3"
+services:
+  db:
+    container_name: forum-example-db
+    restart: always
+    image: forum-example-db
+    build:
+      context: ./db
+    volumes:
+      - db:/var/lib/postgresql/data
+    env_file:
+      - ./.env
+    networks:
+      - network
+    ports:
+      - 5432:5432
+
+networks:
+  network:
+
+volumes:
+  db:
