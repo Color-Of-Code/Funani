@@ -1,15 +1,5 @@
 # -*- coding: utf-8 -*-
 
-# mongod --dbpath= <PATH-TO> /data/db/
-
-from eve import Eve
-from eve.auth import BasicAuth
-
-from flask.ext.bootstrap import Bootstrap
-from eve_docs import eve_docs
-
-from werkzeug.security import check_password_hash
-
 
 class Authenticate(BasicAuth):
     def check_auth(self, username, password, allowed_roles,
@@ -32,4 +22,3 @@ if __name__ == '__main__':
     Bootstrap(app)
     app.register_blueprint(eve_docs, url_prefix='/docs')
     app.run()
-
