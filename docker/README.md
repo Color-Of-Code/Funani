@@ -2,8 +2,9 @@
 
 ## Containers
 
-* the database server running postgresql
-* the graphql server running postgraphile
+* db: the database server running postgresql
+* graphql: the graphql server running postgraphile
+* cas: the CAS command line tool for handling the file storage
 
 ## Setup
 

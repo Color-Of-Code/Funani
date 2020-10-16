@@ -11,22 +11,33 @@ https://color-of-code.de/funani/architecture
 Modules
 -------
 
-- python/core: the low-level storage interface (usable)
-- python/rest: a RESTful API for accessing the data and metadata (**todo**)
-
-Dependencies
-------------
-
-- all: python 3
-- python/core: Pillow
-- python/rest: eve, mongodb
+- docker/cas: the low-level storage interface (usable)
+- docker/db: postgresql database for storage
+- docker/graphql: graphql server
+- docker/web: web server: TODO
 
 Runtime
 -------
 
 The core library has no service dependencies, the data and metadata is stored in files.
 
-Examples of use:
+Build the CAS container:
+
+```bash
+cd docker/cas
+docker build . -t cas
+```
+
+Running the container:
+
+- the first volume mount is for the file storage itself (is read/write)
+- the home is mount onto /mnt in order to be able to import files (mounted files are read only)
+
+```bash
+docker run --rm -it -v /home/data/storage:/data -v /home:/mnt:ro cas:latest --help
+```
+
+Examples of use (seen from within the container, TODO: wrap in a script to operate from outside):
 
 1) Importing using find (allows to use find options to filter the files based on conditions):
 
@@ -47,4 +58,12 @@ find /home/data/family/common/Pictures/ -type f -exec
 ```bash
   ./funani.py --loglevel info import
       /home/data/family/common/Pictures/picture1.jpg
+```
+
+TODO: fix this documentation
+
+Command to import pictures mounted onto `/mnt`
+
+```bash
+docker run --rm -it -v /home/data/storage:/data -v /home:/mnt:ro cas:latest import --recursive /mnt/jdehaan/Pictures
 ```
