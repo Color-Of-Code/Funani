@@ -1,4 +1,4 @@
-\connect forum_example;
+\connect funani;
 
 /*Create some dummy users*/
 INSERT INTO public.user (username) VALUES

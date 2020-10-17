@@ -1,4 +1,4 @@
-\connect forum_example;
+\connect funani;
 
 /*Create user table in public schema*/
 CREATE TABLE public.user (

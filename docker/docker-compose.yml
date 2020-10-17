@@ -1,13 +1,13 @@
 version: "3.3"
 services:
   db:
-    container_name: forum-example-db
+    container_name: funani-db
     restart: always
-    image: forum-example-db
+    image: funani-db
     build:
       context: ./db
     volumes:
-      - db:/var/lib/postgresql/data
+      - funani-db:/var/lib/postgresql/data
     env_file:
       - ./.env
     networks:
@@ -16,9 +16,9 @@ services:
       - 5432:5432
 
   graphql:
-    container_name: forum-example-graphql
+    container_name: funani-graphql
     restart: always
-    image: forum-example-graphql
+    image: funani-graphql
     build:
       context: ./graphql
     env_file:
@@ -34,4 +34,4 @@ networks:
   network:
 
 volumes:
-  db:
+  funani-db:
