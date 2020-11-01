@@ -12,7 +12,7 @@ EXTENSIONS_IMAGES = (
     '.jpg', '.jpeg', '.png', '.dng',
     '.tif', '.tiff', '.pnm', '.cr2', '.cr3', '.bmp',
     '.xcf', '.gif')
-EXTENSIONS_VIDEO = ('.mts', '.mp4', '.mov', '.avi', '.mpg', '.3gp')
+EXTENSIONS_VIDEO = ('.mts', '.mp4', '.mov', '.avi', '.mpg', '.3gp', '.wmv')
 EXTENSIONS_AUDIO = ('.aac', '.m4a', '.mp3', '.opus')
 EXTENSIONS_ALL = EXTENSIONS_IMAGES + EXTENSIONS_VIDEO + EXTENSIONS_AUDIO
 
