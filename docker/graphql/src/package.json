@@ -1,16 +1,17 @@
 {
-    "name": "postgraphile-as-library",
+    "name": "funani-graphql",
     "version": "0.0.1",
-    "description": "PostGraphile as a library in a dockerized Node.js application.",
-    "author": "Alexis ROLLAND",
-    "license": "Apache-2.0",
+    "description": "Funani GraphQL: running PostGraphile.",
+    "author": "Jaap de Haan",
+    "license": "BSD-2-Clause",
+    "repository": "https://github.com/Color-Of-Code/Funani",
     "main": "server.js",
     "keywords": [
         "nodejs",
         "postgraphile"
     ],
     "dependencies": {
-        "postgraphile": "^4.5.5",
-        "postgraphile-plugin-connection-filter": "^1.1.3"
+        "postgraphile": "^4.9.2",
+        "postgraphile-plugin-connection-filter": "^2.1.0"
     }
 }

@@ -1,6 +1,12 @@
 \connect funani;
 
+/* crypt method to hash our passwords, uuid support */
 CREATE extension IF NOT EXISTS "pgcrypto";
+
+/* roles */
+CREATE ROLE ANONYMOUS_ROLE;
+CREATE ROLE ADMIN_ROLE;
+CREATE ROLE USER_ROLE;
 
 /*Create user table in public schema*/
 CREATE TABLE public.user (
@@ -15,6 +21,40 @@ CREATE TABLE public.user (
 
 COMMENT ON TABLE public.user IS
 'Funani users.';
+
+/* JWT for authentication */
+CREATE TYPE public.jwt_token as (
+  role text,      --db role of the user
+  exp integer,    --expiry date as the unix epoch
+  user_id integer,--db identifier of the user,
+  username text   --username used to sign in, user's email in our case
+);
+
+/* authentication function */
+create function public.authenticate(
+  email text,
+  password text
+) returns public.jwt_token as $$
+declare
+  account public.user;
+begin
+  select a.* into account
+    from public.user as a
+    where a.email = authenticate.email;
+
+  if account.password_hash = crypt(password, account.password_hash) then
+    return (
+      account.username,
+      extract(epoch from now() + interval '7 days'),
+      account.id,
+      account.email
+    )::public.jwt_token;
+  else
+    return null;
+  end if;
+end;
+$$ language plpgsql strict security definer;
+
 
 /*Create post table in public schema*/
 CREATE TABLE public.post (
