@@ -1,10 +1,10 @@
 \connect funani;
 
 /*Create some dummy users*/
-INSERT INTO public.user (id, username, email, password_hash) VALUES
-('2fc0c398-7d1b-4fcf-8408-7bc838fc2b0c', 'Benjie', 'a@example.com', crypt('123', gen_salt('bf')),
-('498241cf-4a35-428a-a877-be2dd9fc81f1', 'Singingwolfboy', 'b@example.com', crypt('123', gen_salt('bf')),
-('f80cacd4-3550-43b7-9b5d-c630037732dd', 'Lexius', 'c@example.com', crypt('123', gen_salt('bf'));
+INSERT INTO public.user (id, role, firstname, email, password_hash) VALUES
+('2fc0c398-7d1b-4fcf-8408-7bc838fc2b0c', 'admin', 'Benjie', 'a@example.com', crypt('123', gen_salt('bf'))),
+('498241cf-4a35-428a-a877-be2dd9fc81f1', 'editor', 'Singingwolfboy', 'b@example.com', crypt('123', gen_salt('bf'))),
+('f80cacd4-3550-43b7-9b5d-c630037732dd', 'editor','Lexius', 'c@example.com', crypt('123', gen_salt('bf')));
 
 /*Create some dummy posts*/
 INSERT INTO public.post (author_id, title, body) VALUES

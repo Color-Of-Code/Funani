@@ -10,6 +10,7 @@ http
       graphiql: true,
       jwtSecret: e.JWT_SECRET,
       jwtPgTypeIdentifier: e.JWT_PG_TYPE,
+      pgDefaultRole: e.DEFAULT_ROLE,
       watchPg: true,
     })
   )

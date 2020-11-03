@@ -4,14 +4,14 @@
 CREATE extension IF NOT EXISTS "pgcrypto";
 
 /* roles */
-CREATE ROLE ANONYMOUS_ROLE;
-CREATE ROLE ADMIN_ROLE;
-CREATE ROLE USER_ROLE;
+CREATE ROLE anonymous;
+CREATE ROLE admin;
+CREATE ROLE editor;
 
 /*Create user table in public schema*/
 CREATE TABLE public.user (
     id UUID PRIMARY KEY default gen_random_uuid(),
-    username TEXT,
+    role TEXT,
     firstname TEXT,
     lastname TEXT,
     email TEXT NOT NULL UNIQUE check (email ~* '^.+@.+\..+$'),
@@ -26,7 +26,7 @@ COMMENT ON TABLE public.user IS
 CREATE TYPE public.jwt_token as (
   role text,      --db role of the user
   exp integer,    --expiry date as the unix epoch
-  user_id integer,--db identifier of the user,
+  user_id text,   --uuid of the user,
   username text   --username used to sign in, user's email in our case
 );
 
@@ -44,7 +44,7 @@ begin
 
   if account.password_hash = crypt(password, account.password_hash) then
     return (
-      account.username,
+      account.role,
       extract(epoch from now() + interval '7 days'),
       account.id,
       account.email
