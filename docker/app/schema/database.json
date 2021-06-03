@@ -1,0 +1,9 @@
+{
+    "dev": {
+        "driver": "pg",
+        "host": "localhost",
+        "database": "funani",
+        "username": "postgres",
+        "password": "change_me"
+    }
+}

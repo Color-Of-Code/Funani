@@ -1,0 +1,3 @@
+DROP SCHEMA usr;
+DROP SCHEMA prv;
+DROP SCHEMA sys;
