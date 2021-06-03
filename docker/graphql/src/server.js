@@ -15,7 +15,7 @@ const postgraphileCommonOptions = {
 
   jwtSecret: e.JWT_SECRET,
   jwtPgTypeIdentifier: e.JWT_PG_TYPE,
-  pgDefaultRole: e.DEFAULT_ROLE
+  pgDefaultRole: e.DEFAULT_ROLE,
 };
 
 const postgraphileDevelopmentOptions = {
@@ -27,7 +27,6 @@ const postgraphileDevelopmentOptions = {
   graphiql: true,
   enhanceGraphiql: true,
   allowExplain(req) {
-    // TODO: customise condition!
     return true;
   },
   enableQueryBatching: true,
@@ -39,11 +38,17 @@ const postgraphileProductionOptions = {
   extendedErrors: ["errcode"],
   graphiql: false,
   enableQueryBatching: true,
-  disableQueryLog: true, // our default logging has performance issues, but do make sure you have a logging system in place!
+  disableQueryLog: true,
 };
 
 http
   .createServer(
-    postgraphile(e.DATABASE_URL, "public", postgraphileDevelopmentOptions)
+    postgraphile(
+      e.DATABASE_URL,
+      e.SCHEMA,
+      e.MODE === "production"
+        ? postgraphileProductionOptions
+        : postgraphileDevelopmentOptions
+    )
   )
   .listen(e.PORT);

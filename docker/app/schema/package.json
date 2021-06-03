@@ -1,0 +1,19 @@
+{
+    "name": "funani-migrations",
+    "version": "0.0.1",
+    "description": "Funani Database migrations.",
+    "author": "Jaap de Haan",
+    "license": "BSD-2-Clause",
+    "repository": "https://github.com/Color-Of-Code/Funani",
+    "main": "server.js",
+    "keywords": [
+        "nodejs",
+        "db",
+        "schema",
+        "migrations"
+    ],
+    "dependencies": {
+        "db-migrate": "^0.11.12",
+        "db-migrate-pg": "^1.2.2"
+    }
+}
