@@ -9,12 +9,12 @@ WORKDIR /home/node/app
 COPY ./src/package.json .
 COPY ./src/package-lock.json .
 
+# Copy application files
+COPY --chown=node:node ./src .
+
 # Install dependencies
 USER node
 RUN npm install
-
-# Copy application files
-COPY --chown=node:node ./src .
 
 EXPOSE 5433
 CMD [ "node", "server.js" ]
