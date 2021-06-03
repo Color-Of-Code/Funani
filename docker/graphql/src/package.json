@@ -11,7 +11,7 @@
         "postgraphile"
     ],
     "dependencies": {
-        "postgraphile": "^4.9.2",
-        "postgraphile-plugin-connection-filter": "^2.1.0"
+        "postgraphile": "^4.12.2",
+        "postgraphile-plugin-connection-filter": "^2.2.1"
     }
 }
