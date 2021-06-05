@@ -12,9 +12,11 @@ Modules
 -------
 
 - docker/cas: the low-level storage interface (usable)
-- docker/db: postgresql database for storage
-- docker/graphql: graphql server
-- docker/web: web server: TODO
+- docker/db: postgresql database for storage (generic, setup DB only)
+- docker/graphql: graphql server, postgraphile (generic setup with modules pre-installed)
+- docker/web: web server: started. TODO make it functional.
+  - docker/web/schema: contains the migrations to setup the DB correctly.
+  - docker/web/src: typescript react app.
 
 Runtime
 -------
