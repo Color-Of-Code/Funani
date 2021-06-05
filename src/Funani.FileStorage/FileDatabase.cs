@@ -71,6 +71,11 @@
 
         public IFileInfo GetFileInfo(string hash)
         {
+            if (hash == null)
+            {
+                throw new ArgumentNullException(nameof(hash));
+            }
+
             // distribute the data into 2^16 directories in 2 levels and store the files
             // under their hash as filename
             string path = this.filesystem.Path.Combine(this.DataPath, hash.Substring(0, 2), hash.Substring(2, 2), hash);
