@@ -10,7 +10,7 @@ import PIL.ExifTags
 from address import shard
 
 logger = logging.getLogger('metadb')
-dmode = 0o700   # default directory creation mode
+dir_mode = 0o700   # default directory creation mode
 
 # Exif standard: http://www.cipa.jp/std/documents/e/DC-008-2012_E.pdf
 
@@ -88,7 +88,7 @@ class MetadataDatabase(object):
 
     def __init__(self, root):
         self.ROOT_PATH = os.path.join(root, '.meta')
-        os.makedirs(self.ROOT_PATH, dmode, True)
+        os.makedirs(self.ROOT_PATH, dir_mode, True)
         logger.debug("Initialized metadata database at '%s'", self.ROOT_PATH)
 
     def __str__(self):
@@ -109,7 +109,7 @@ class MetadataDatabase(object):
     def import_file(self, srcfullpath, dstfullpath, reldirname):
         metaabsdirname = os.path.join(self.ROOT_PATH, *reldirname[:-1])
         metafullpath = os.path.join(metaabsdirname, reldirname[-1])
-        os.makedirs(metaabsdirname, dmode, True)
+        os.makedirs(metaabsdirname, dir_mode, True)
         self._append_meta(metafullpath, srcfullpath, dstfullpath)
         #print(dstfullpath, " | dup=", is_duplicate, " | ", dir_path, " | ", filename)
 
@@ -127,18 +127,18 @@ class MetadataDatabase(object):
     def _append_meta(self, metapath, src, dst):
         lines = self._read_meta(metapath)
         org_size = len(lines)
-        srcsize = os.path.getsize(src)
-        dstsize = os.path.getsize(dst)
-        if srcsize != dstsize:
+        source_size = os.path.getsize(src)
+        destination_size = os.path.getsize(dst)
+        if source_size != destination_size:
             raise Exception("File size mismatch! (src:{} / dst:{})".format(src, dst))
 
 
         timestamp = os.path.getmtime(src)
         ts_iso = datetime.fromtimestamp(timestamp)
-        srcline = "src={}:{}".format(ts_iso.strftime('%Y-%m-%d %H:%M:%S'), src)
-        _check_add_line(lines, srcline)
+        source_line = "src={}:{}".format(ts_iso.strftime('%Y-%m-%d %H:%M:%S'), src)
+        _check_add_line(lines, source_line)
 
-        sizeline = "size={}".format(dstsize)
+        sizeline = "size={}".format(destination_size)
         _check_add_line(lines, sizeline)
 
         mime = subprocess.check_output(["/usr/bin/file", "-bi", dst])
