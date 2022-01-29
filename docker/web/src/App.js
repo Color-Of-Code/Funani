@@ -1,4 +1,6 @@
-import logo from "./logo.svg";
+// see https://github.com/facebook/create-react-app/issues/11770
+// import logo from "./logo.svg";
+// <img src={logo} className="App-logo" alt="logo" />
 
 import Login from "./Login";
 
@@ -8,7 +10,6 @@ function App() {
   return (
     <div className="App">
       <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
         <p>FUNANI</p>
         <Login></Login>
       </header>
