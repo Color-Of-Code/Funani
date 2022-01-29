@@ -22,15 +22,27 @@
     {
         private readonly IEngine engine;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="FileInformation"/> class.
+        /// </summary>
         public FileInformation()
         {
             this.Paths = new List<string>();
             this.engine = ServiceLocator.Default.ResolveType<IEngine>();
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="FileInformation"/> class.
+        /// </summary>
+        /// <param name="file"></param>
         public FileInformation(IFileInfo file)
             : this()
         {
+            if (file is null)
+            {
+                throw new ArgumentNullException(nameof(file));
+            }
+
             this.Id = new Algorithms(file.FileSystem).ComputeSha1(file);
             this.FileSize = file.Length;
             this.Title = file.Name;
@@ -39,16 +51,10 @@
             this.AddPath(file);
         }
 
-        /// <summary>
-        ///     Gets or sets the Id value.
-        /// </summary>
         public string Id { get; private set; }
 
         public long FileSize { get; private set; }
 
-        /// <summary>
-        ///     Gets or sets the MimeType value.
-        /// </summary>
         public string MimeType { get; private set; }
 
         public IList<string> Paths { get; private set; }

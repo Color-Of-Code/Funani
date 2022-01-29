@@ -10,6 +10,11 @@
 
     public class FileDatabase : IFileStorage
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="FileDatabase"/> class.
+        /// </summary>
+        /// <param name="baseDirectory"></param>
+        /// <param name="filesystem"></param>
         public FileDatabase(string baseDirectory, IFileSystem filesystem)
         {
             this.BaseDirectory = baseDirectory;

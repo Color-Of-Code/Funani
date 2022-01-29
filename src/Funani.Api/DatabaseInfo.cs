@@ -1,6 +1,7 @@
 ﻿namespace Funani.Api
 {
     using System;
+    using System.Runtime.Serialization;
     using Catel.Data;
 
     [Serializable]
@@ -36,6 +37,11 @@
         {
             get;
             set;
+        }
+
+        protected DatabaseInfo(SerializationInfo serializationInfo, StreamingContext streamingContext)
+        {
+            throw new NotImplementedException();
         }
     }
 }
