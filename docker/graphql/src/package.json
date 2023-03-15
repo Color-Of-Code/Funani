@@ -12,7 +12,7 @@
     ],
     "dependencies": {
         "@graphile-contrib/pg-simplify-inflector": "^6.1.0",
-        "postgraphile": "^4.12.2",
+        "postgraphile": "^4.13.0",
         "postgraphile-plugin-connection-filter": "^2.2.1"
     }
 }
