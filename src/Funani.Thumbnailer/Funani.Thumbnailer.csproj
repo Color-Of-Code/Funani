@@ -3,7 +3,7 @@
     <TargetFramework>net5.0</TargetFramework>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="SixLabors.ImageSharp" Version="2.1.8"/>
+    <PackageReference Include="SixLabors.ImageSharp" Version="2.1.9"/>
     <PackageReference Include="SixLabors.ImageSharp.Drawing" Version="1.0.0-beta13"/>
     <PackageReference Include="StyleCop.Analyzers" Version="1.1.118">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
