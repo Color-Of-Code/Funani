@@ -1,15 +1,15 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <ItemGroup>
-    <ProjectReference Include="..\Funani.Api\Funani.Api.csproj"/>
-    <ProjectReference Include="..\Funani.Core\Funani.Core.csproj"/>
+    <ProjectReference Include="..\Funani.Api\Funani.Api.csproj" />
+    <ProjectReference Include="..\Funani.Core\Funani.Core.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="mongocsharpdriver" Version="2.13.1"/>
+    <PackageReference Include="mongocsharpdriver" Version="2.30.0" />
   </ItemGroup>
   <PropertyGroup>
     <TargetFramework>net9.0</TargetFramework>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="..\GlobalSuppressions.cs" Link="GlobalSuppressions.cs"/>
+    <Compile Include="..\GlobalSuppressions.cs" Link="GlobalSuppressions.cs" />
   </ItemGroup>
 </Project>

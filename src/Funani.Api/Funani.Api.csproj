@@ -3,18 +3,18 @@
     <TargetFramework>net9.0</TargetFramework>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Catel.Core" Version="5.12.18"/>
+    <PackageReference Include="Catel.Core" Version="6.0.7" />
     <PackageReference Include="StyleCop.Analyzers" Version="1.1.118">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
-    <PackageReference Include="System.IO.Abstractions" Version="13.2.47"/>
+    <PackageReference Include="System.IO.Abstractions" Version="22.0.12" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\GlobalSuppressions.cs" Link="GlobalSuppressions.cs"/>
+    <Compile Include="..\GlobalSuppressions.cs" Link="GlobalSuppressions.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Funani.MetadataExtractor\Funani.MetadataExtractor.csproj"/>
-    <ProjectReference Include="..\Funani.MimeExtractor\Funani.MimeExtractor.csproj"/>
+    <ProjectReference Include="..\Funani.MetadataExtractor\Funani.MetadataExtractor.csproj" />
+    <ProjectReference Include="..\Funani.MimeExtractor\Funani.MimeExtractor.csproj" />
   </ItemGroup>
 </Project>

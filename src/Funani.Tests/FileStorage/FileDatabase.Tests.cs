@@ -28,7 +28,7 @@ namespace Funani.FileStorage
             });
             var fileStorage = new FileDatabase("/db", fileSystem);
             fileStorage.StartService();
-            fileStorage.StoreFile(fileSystem.FileInfo.FromFileName("/home/empty"));
+            fileStorage.StoreFile(fileSystem.FileInfo.New("/home/empty"));
             Assert.True(fileSystem.File.Exists("/db/data/da/39/da39a3ee5e6b4b0d3255bfef95601890afd80709"));
         }
 

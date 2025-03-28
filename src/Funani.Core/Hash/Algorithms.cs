@@ -35,7 +35,7 @@ namespace Funani.Core.Hash
 
         public string ComputeSha1(string path)
         {
-            return this.ComputeSha1(this.filesystem.FileInfo.FromFileName(path));
+            return this.ComputeSha1(this.filesystem.FileInfo.New(path));
         }
 
         public string ComputeSha256(IFileInfo file)
@@ -53,13 +53,13 @@ namespace Funani.Core.Hash
 
         public string ComputeSha256(string path)
         {
-            return this.ComputeSha256(this.filesystem.FileInfo.FromFileName(path));
+            return this.ComputeSha256(this.filesystem.FileInfo.New(path));
         }
 
         private string Execute(IFileInfo file, HashAlgorithm hashAlgorithm)
         {
             string hashCode;
-            using (var fileStream = this.filesystem.FileStream.Create(file.FullName, System.IO.FileMode.Open, System.IO.FileAccess.Read))
+            using (var fileStream = this.filesystem.FileStream.New(file.FullName, System.IO.FileMode.Open, System.IO.FileAccess.Read))
             {
                 hashAlgorithm.ComputeHash(fileStream);
                 var buff = new StringBuilder();

@@ -100,7 +100,7 @@
             // distribute the data into 2^16 directories in 2 levels and store the files
             // under their hash as filename
             string path = this.filesystem.Path.Combine(this.DataPath, hash.Substring(0, 2), hash.Substring(2, 2), hash);
-            return this.filesystem.FileInfo.FromFileName(path);
+            return this.filesystem.FileInfo.New(path);
         }
 
         public IFileInfo LoadThumbnail(string hash, string mime)
@@ -159,7 +159,7 @@
         private IFileInfo GetThumbnailFileInfo(string hash)
         {
             string path = this.filesystem.Path.Combine(this.ThumbnailPath, hash.Substring(0, 2), hash.Substring(2, 2), hash + ".png");
-            return this.filesystem.FileInfo.FromFileName(path);
+            return this.filesystem.FileInfo.New(path);
         }
 
         private bool Connect()
@@ -183,7 +183,7 @@
 
         private void CreateDataPaths()
         {
-            var baseDir = this.filesystem.DirectoryInfo.FromDirectoryName(this.DataPath);
+            var baseDir = this.filesystem.DirectoryInfo.New(this.DataPath);
             baseDir.Create();
             baseDir.Attributes = System.IO.FileAttributes.Directory | System.IO.FileAttributes.Hidden;
 
