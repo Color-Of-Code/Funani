@@ -10,6 +10,8 @@
 
     public class FileDatabase : IFileStorage
     {
+        private IFileSystem filesystem;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="FileDatabase"/> class.
         /// </summary>
@@ -20,6 +22,20 @@
             this.BaseDirectory = baseDirectory;
             this.filesystem = filesystem;
             this.Algorithms = new Algorithms(filesystem);
+        }
+
+        private string BaseDirectory { get; set; }
+
+        private Algorithms Algorithms { get; set; }
+
+        private string DataPath
+        {
+            get { return this.filesystem.Path.Combine(this.BaseDirectory, "data"); }
+        }
+
+        private string ThumbnailPath
+        {
+            get { return this.filesystem.Path.Combine(this.BaseDirectory, "thumbs"); }
         }
 
         public void StartService()
@@ -128,33 +144,6 @@
             return LoadFileNoException(source);
         }
 
-        private IFileInfo GetThumbnailFileInfo(string hash)
-        {
-            string path = this.filesystem.Path.Combine(this.ThumbnailPath, hash.Substring(0, 2), hash.Substring(2, 2), hash + ".png");
-            return this.filesystem.FileInfo.FromFileName(path);
-        }
-
-        private bool Connect()
-        {
-            return this.filesystem.Directory.Exists(this.DataPath);
-        }
-
-        private string BaseDirectory { get; set; }
-
-        private Algorithms Algorithms { get; set; }
-
-        private IFileSystem filesystem;
-
-        private string DataPath
-        {
-            get { return this.filesystem.Path.Combine(this.BaseDirectory, "data"); }
-        }
-
-        private string ThumbnailPath
-        {
-            get { return this.filesystem.Path.Combine(this.BaseDirectory, "thumbs"); }
-        }
-
         private static byte[] LoadFileNoException(IFileInfo source)
         {
             try
@@ -165,6 +154,17 @@
             {
                 return null;
             }
+        }
+
+        private IFileInfo GetThumbnailFileInfo(string hash)
+        {
+            string path = this.filesystem.Path.Combine(this.ThumbnailPath, hash.Substring(0, 2), hash.Substring(2, 2), hash + ".png");
+            return this.filesystem.FileInfo.FromFileName(path);
+        }
+
+        private bool Connect()
+        {
+            return this.filesystem.Directory.Exists(this.DataPath);
         }
 
         private bool IsDirectoryEmpty(string path)
@@ -189,5 +189,5 @@
 
             // the other subdirectories are created once needed
         }
-    }
+   }
 }

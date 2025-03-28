@@ -4,12 +4,6 @@
 
     public static class Program
     {
-        private class Options
-        {
-            [Option('v', "verbose", Required = false, HelpText = "Set output to verbose messages.")]
-            public bool Verbose { get; set; }
-        }
-
         private static void Main(string[] args)
         {
             Parser.Default.ParseArguments<Options>(args)
@@ -21,6 +15,12 @@
 
         private static void Run(Options o)
         {
+        }
+
+        private class Options
+        {
+            [Option('v', "verbose", Required = false, HelpText = "Set output to verbose messages.")]
+            public bool Verbose { get; set; }
         }
     }
 }

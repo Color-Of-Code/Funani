@@ -12,6 +12,11 @@
             this.Guid = Guid.NewGuid();
         }
 
+        protected DatabaseInfo(SerializationInfo serializationInfo, StreamingContext streamingContext)
+        {
+            throw new NotImplementedException();
+        }
+
         /// <summary>
         /// Guid.
         /// </summary>
@@ -37,11 +42,6 @@
         {
             get;
             set;
-        }
-
-        protected DatabaseInfo(SerializationInfo serializationInfo, StreamingContext streamingContext)
-        {
-            throw new NotImplementedException();
         }
     }
 }

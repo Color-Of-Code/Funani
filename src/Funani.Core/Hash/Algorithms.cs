@@ -27,7 +27,7 @@ namespace Funani.Core.Hash
                 throw new ArgumentNullException(nameof(file));
             }
 
-            using (var hasher = new SHA1CryptoServiceProvider())
+            using (var hasher = SHA1.Create())
             {
                 return this.Execute(file, hasher);
             }
@@ -45,7 +45,7 @@ namespace Funani.Core.Hash
                 throw new ArgumentNullException(nameof(file));
             }
 
-            using (var hasher = new SHA256Managed())
+            using (var hasher = SHA256.Create())
             {
                 return this.Execute(file, hasher);
             }
