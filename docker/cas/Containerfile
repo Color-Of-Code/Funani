@@ -1,0 +1,33 @@
+FROM python:3.13-alpine
+
+RUN apk --no-cache add \
+    # funani dependencies
+    file \
+    # Pillow dependencies
+    freetype \
+    fribidi \
+    harfbuzz \
+    jpeg \
+    lcms2 \
+    openjpeg \
+    tcl \
+    tiff \
+    tk \
+    zlib
+
+RUN pip install --upgrade pip && \
+    pip install poetry
+
+COPY pyproject.toml poetry.* ./
+RUN poetry install
+
+RUN mkdir -p /data
+
+WORKDIR /code
+
+COPY src .
+
+ENV PATH=/root/.local:$PATH
+
+ENTRYPOINT [ "python", "./funani.py" ]
+CMD ["--help"]
