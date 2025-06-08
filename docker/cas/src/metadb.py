@@ -94,6 +94,9 @@ def _handle_gps_info(lines, gps_info):
 def _handle_exif(lines, image, metapath):
     """Process EXIF data from an image and append to metadata lines."""
     try:
+        if not hasattr(image, '_getexif'):
+            return
+
         exif_data = image._getexif()
         if not exif_data:
             return
