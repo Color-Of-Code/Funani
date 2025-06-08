@@ -60,13 +60,12 @@ def _format_tag_value(tag_name, value):
         return f"{value} {units[tag_name]}" if value is not None else None
     return str(value) if value is not None else None
 
-def _handle_gps_info(gps_info):
+def _handle_gps_info(lines, gps_info):
     """Extract and format GPS information."""
     if not isinstance(gps_info, dict):
-        return []
+        return
 
     gps_data = {GPSTAGS.get(tag, tag): value for tag, value in gps_info.items()}
-    lines = []
 
     # Latitude
     if 'GPSLatitude' in gps_data and 'GPSLatitudeRef' in gps_data:
@@ -91,8 +90,6 @@ def _handle_gps_info(gps_info):
             if 'GPSAltitudeRef' in gps_data and gps_data['GPSAltitudeRef'] != 0:
                 altitude = -altitude
             _check_add_line(lines, f"exif:GPSAltitude={altitude}")
-
-    return lines
 
 def _handle_exif(lines, image, metapath):
     """Process EXIF data from an image and append to metadata lines."""
@@ -119,8 +116,7 @@ def _handle_exif(lines, image, metapath):
 
         # Process GPSInfo separately
         if 'GPSInfo' in exif:
-            gps_lines = _handle_gps_info(exif['GPSInfo'])
-            lines.extend(gps_lines)
+            _handle_gps_info(lines, exif['GPSInfo'])
 
     except Exception as error:
         print("Exception: '{}', {}".format(metapath, error))
@@ -163,7 +159,7 @@ class MetadataDatabase(object):
         if os.path.isfile(metapath):
             with open(metapath, 'rt', encoding='utf-8') as f:
                 lines = f.read().splitlines()
-        return lines
+        return sorted(list(set(lines))) # Ensure unique lines
 
     # Format of the metadata file:
     # items are added if missing
