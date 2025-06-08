@@ -10,3 +10,4 @@ packages/
 /src/*.vsp
 /src/*.psess
 /src/*.user
+doc/

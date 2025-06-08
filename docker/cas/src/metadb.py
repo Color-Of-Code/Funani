@@ -6,9 +6,8 @@ import os
 import subprocess
 import traceback
 from PIL import Image
-import PIL.ExifTags
+from PIL.ExifTags import TAGS, GPSTAGS
 from address import shard
-
 logger = logging.getLogger('metadb')
 dir_mode = 0o700   # default directory creation mode
 
@@ -19,64 +18,110 @@ dir_mode = 0o700   # default directory creation mode
 # /usr/bin/identify     (image magick)
 
 def _check_add_line(lines, line):
+    """Add a unique line to the metadata lines list."""
     if line not in lines:
         lines.append(line)
-        #print("..Adding to metadata: ", line)
+
+def _convert_to_float(value):
+    """Convert a rational number (tuple or IFDRational) to a float."""
+    try:
+        if isinstance(value, tuple) and len(value) == 2:
+            return float(value[0]) / float(value[1])
+        elif hasattr(value, 'numerator') and hasattr(value, 'denominator'):
+            return float(value.numerator) / float(value.denominator)
+        return float(value)
+    except (TypeError, ZeroDivisionError, AttributeError):
+        return None
 
 def _convert_to_degrees(value):
-    get_float = lambda x: float(x[0]) / float(x[1])
-    degrees = get_float(value[0])
-    minutes = get_float(value[1])
-    seconds = get_float(value[2])
-    return round(degrees + (minutes / 60.0) + (seconds / 3600.0), 6)
+    """Convert GPS coordinates from (degrees, minutes, seconds) to decimal degrees."""
+    if not isinstance(value, (list, tuple)) or len(value) != 3:
+        return None
+    try:
+        degrees = _convert_to_float(value[0])
+        minutes = _convert_to_float(value[1])
+        seconds = _convert_to_float(value[2])
+        if None in (degrees, minutes, seconds):
+            return None
+        return round(degrees + (minutes / 60.0) + (seconds / 3600.0), 6)
+    except (TypeError, IndexError):
+        return None
+
+def _format_tag_value(tag_name, value):
+    """Format EXIF tag value based on tag-specific rules."""
+    units = {
+        'SubjectDistance': 'm',
+        'FocalLength': 'mm',
+        'FlashEnergy': 'BCPS',
+        'ExposureTime': 's',
+    }
+    if tag_name in units and value is not None:
+        value = _convert_to_float(value)
+        return f"{value} {units[tag_name]}" if value is not None else None
+    return str(value) if value is not None else None
+
+def _handle_gps_info(gps_info):
+    """Extract and format GPS information."""
+    if not isinstance(gps_info, dict):
+        return []
+
+    gps_data = {GPSTAGS.get(tag, tag): value for tag, value in gps_info.items()}
+    lines = []
+
+    # Latitude
+    if 'GPSLatitude' in gps_data and 'GPSLatitudeRef' in gps_data:
+        latitude = _convert_to_degrees(gps_data['GPSLatitude'])
+        lat_ref = gps_data['GPSLatitudeRef']
+        if latitude is not None:
+            latitude = -latitude if lat_ref == 'S' else latitude
+            _check_add_line(lines, f"exif:GPSLatitude={latitude}{lat_ref}")
+
+    # Longitude
+    if 'GPSLongitude' in gps_data and 'GPSLongitudeRef' in gps_data:
+        longitude = _convert_to_degrees(gps_data['GPSLongitude'])
+        lon_ref = gps_data['GPSLongitudeRef']
+        if longitude is not None:
+            longitude = -longitude if lon_ref == 'W' else longitude
+            _check_add_line(lines, f"exif:GPSLongitude={longitude}{lon_ref}")
+
+    # Altitude
+    if 'GPSAltitude' in gps_data:
+        altitude = _convert_to_float(gps_data['GPSAltitude'])
+        if altitude is not None:
+            if 'GPSAltitudeRef' in gps_data and gps_data['GPSAltitudeRef'] != 0:
+                altitude = -altitude
+            _check_add_line(lines, f"exif:GPSAltitude={altitude}")
+
+    return lines
 
 def _handle_exif(lines, image, metapath):
+    """Process EXIF data from an image and append to metadata lines."""
     try:
-        exif = image._getexif()
-        if exif:
-            for tag, value in exif.items():
-                if tag not in [37500, 50341, 37510, 282, 283, 40961, 296, 531]:
-                    if tag == 271: # Make
-                        _check_add_line(lines, "exif:Make={}".format(value))
-                    if tag == 272: # Model
-                        _check_add_line(lines, "exif:Model={}".format(value))
-                    if tag == 274: # Orientation
-                        _check_add_line(lines, "exif:Orientation={}".format(value))
-                    if tag == 36867: # DateTimeOriginal
-                        _check_add_line(lines, "exif:DateTimeOriginal={}".format(value))
-                    if tag == 36868: # DateTimeDigitized
-                        _check_add_line(lines, "exif:DateTimeDigitized={}".format(value))
-                    if tag == 37382: # SubjectDistance
-                        _check_add_line(lines, "exif:SubjectDistance={}/{} m".format(*value))
-                    if tag == 37385: # Flash
-                        _check_add_line(lines, "exif:Flash={}".format(value))
-                    if tag == 41483: # FlashEnergy
-                        _check_add_line(lines, "exif:FlashEnergy={}/{} BCPS".format(*value))
-                    if tag == 37386: # FocalLength
-                        _check_add_line(lines, "exif:FocalLength={}/{} mm".format(*value))
-                    if tag == 33434: # ExposureTime
-                        _check_add_line(lines, "exif:ExposureTime={}/{} s".format(*value))
-                    if tag == 33437: # FNumber
-                        _check_add_line(lines, "exif:FNumber={}/{}".format(*value))
+        exif_data = image._getexif()
+        if not exif_data:
+            return
 
-                    if tag == 34853 and value: # GPSInfo
-                        if 2 in value: # not all devices provide latitude
-                            gps_latitude = _convert_to_degrees(value[2])
-                            gps_latitude_ref = value[1]
-                            _check_add_line(lines, "exif:GPSLatitude={}{}".format(gps_latitude, gps_latitude_ref))
-                        if 4 in value: # not all devices provide longitude
-                            gps_longitude = _convert_to_degrees(value[4])
-                            gps_longitude_ref = value[3]
-                            _check_add_line(lines, "exif:GPSLongitude={}{}".format(gps_longitude, gps_longitude_ref))
-                        if 6 in value: # not all devices provide altitude
-                            gps_altitude = round(float(value[6][0]) / float(value[6][1]))
-                            if 5 in value and value[5] != b'\x00':
-                                gps_altitude = -gps_altitude
-                            _check_add_line(lines, "exif:GPSAltitude={}".format(gps_altitude))
+        # Map EXIF tag IDs to names
+        exif = {TAGS.get(tag, tag): value for tag, value in exif_data.items()}
 
-                    #if tag not in [271, 272, 274, 33434, 33437, 36867, 36868, 37382, 37385, 37386, 41483]:
-                    #    decoded = PIL.ExifTags.TAGS.get(tag, tag)
-                    #    print('tag=', tag, " decoded=", decoded, '->', value)
+        # Tags to process with specific formatting
+        tag_formats = [
+            'Make', 'Model', 'Orientation', 'DateTimeOriginal', 'DateTimeDigitized',
+            'SubjectDistance', 'Flash', 'FlashEnergy', 'FocalLength', 'ExposureTime', 'FNumber'
+        ]
+
+        # Process standard EXIF tags
+        for tag_name in tag_formats:
+            if tag_name in exif:
+                formatted_value = _format_tag_value(tag_name, exif[tag_name])
+                if formatted_value:
+                    _check_add_line(lines, f"exif:{tag_name}={formatted_value}")
+
+        # Process GPSInfo separately
+        if 'GPSInfo' in exif:
+            gps_lines = _handle_gps_info(exif['GPSInfo'])
+            lines.extend(gps_lines)
+
     except Exception as error:
         print("Exception: '{}', {}".format(metapath, error))
         traceback.print_exc()
