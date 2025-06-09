@@ -13,7 +13,14 @@ RUN apk --no-cache add \
     tcl \
     tiff \
     tk \
+    # TODO: remote this once UTC is used consistently
+    tzdata \
     zlib
+
+# HACK:
+# precedently used metadata is using this timezone need to
+# convert to UTC inside the metadata
+ENV TZ=Europe/Berlin
 
 WORKDIR /home
 

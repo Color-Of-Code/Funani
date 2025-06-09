@@ -22,3 +22,26 @@ poetry update
 ## Test
 
 ## Run
+
+Inside the provided `funani.cfg` file, `/data` is the storage path. Mount a volume on that path to provide the container wih
+the storage of your choice.
+
+```bash
+docker run -it --rm \
+    -v /home/Funani/database:/data \
+    -v /home:/home \
+    funani-cas \
+    check '/home/data/family/Pictures/some-picture.jpg'
+```
+
+With a proper alias like `funani` on the command, things get simple to use
+
+```bash
+alias funani="docker run -it --rm -v /home/Funani/database:/data -v /home:/home funani-cas"
+```
+
+Provided the alias is active the upper command boils down to:
+
+```bash
+funani check '/home/data/family/Pictures/some-picture.jpg'
+```
